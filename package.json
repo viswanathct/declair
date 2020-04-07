@@ -6,12 +6,12 @@
   "scripts": {
     "start": "npm run build && npm run dev",
     "copy": "cp ./package.json ./ReadMe.md ./LICENSE ./dist/",
-    "build": "rm -rf ./dist && babel --ignore '**/*.spec.js' -d ./dist ./src && npm run copy",
+    "build": "babel --ignore '**/*.spec.js' -d ./dist ./src && npm run copy",
     "dev": "node -e 'require(\"./dist/index.js\").main()'",
     "test": "jest --no-cache",
     "lint": "eslint .",
     "prepublishOnly": "echo \"Error: Don't run 'npm publish' in root. Use 'npm run dist' instead.\" && exit 1",
-    "prepareDist": "npm run lint && npm test && npm run build",
+    "prepareDist": "npm run lint && npm test && rm -rf ./dist && npm run build",
     "dist": "npm run prepareDist && cd dist && npm publish --ignore-scripts"
   },
   "engines": {
@@ -31,12 +31,14 @@
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.9.4",
     "@babel/runtime": "^7.7.2",
     "acorn": "^6.3.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.19.0",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
     "regenerator-runtime": "^0.13.2"
@@ -67,5 +69,12 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@laufire/utils": "^1.2.0",
+    "expo": "^37.0.5"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-native": "^0.62.1"
+  }
 }

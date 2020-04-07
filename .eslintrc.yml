@@ -5,13 +5,14 @@ parserOptions:
   ecmaVersion: 2015
   ecmaFeatures:
     globalReturn: false
+    jsx: true
   babelOptions:
     configFile: "babel.config.js"
 env:
   es6: true
   node: true
   jest: true
-extends: 'eslint:recommended'
+extends: ["eslint:recommended", "plugin:react/recommended"]
 rules:
   # Styling
   arrow-body-style: ["error", "as-needed"]
@@ -60,10 +61,10 @@ rules:
   }]
   line-comment-position: ["error", { "position": "above" }]
   lines-around-comment: ["error", {
-		"beforeLineComment": false,
-		"afterLineComment": false,
-		"applyDefaultIgnorePatterns": true,
-		"ignorePattern": "Helpers|Tasks|Exports|Tested|Mocks"
+    "beforeLineComment": false,
+    "afterLineComment": false,
+    "applyDefaultIgnorePatterns": true,
+    "ignorePattern": "Helpers|Tasks|Exports|Tested|Mocks"
   }]
   lines-between-class-members: ["error", "always"]
   linebreak-style: ["error", "unix"]
@@ -164,7 +165,8 @@ rules:
     - error
     - single
   require-yield: error
-
+  react/display-name: never
+  react/prop-types: never
   symbol-description: error
   template-curly-spacing: ["error", "always"]
   yield-star-spacing: ["error", "after"]
