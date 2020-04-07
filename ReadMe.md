@@ -17,7 +17,7 @@ $ npm install declair
 
 ## Notes
 
-* *None, yet.*
+* Tests wouldn't be written, until the structure reaches some stability.
 
 # Development
 
