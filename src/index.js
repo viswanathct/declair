@@ -1,9 +1,6 @@
-/* The main entry. */
+import native from './native';
 
 /* Exports */
-const root = () => {
-};
-
 export {
-	root,
+	native,
 };
