@@ -29,12 +29,14 @@ const element = {
 				})))
 		}
 	</View>,
+	type: 'widget',
 };
 
 const types = {
 	element: element,
 	text: {
 		handler: (props) => <Text {...props}>{ props.data }</Text>,
+		type: 'widget',
 	},
 };
 
