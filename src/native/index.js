@@ -20,7 +20,10 @@ const element = {
 		{
 			values(collect(props.items, (itemProps, key) =>
 				props.context.mount({
-					...props.data[key] ? { data: props.data[key] } : {},
+					...props,
+					...{ data: itemProps.source
+						? props.state[itemProps.source]
+						: props.data[key] || {}},
 					...itemProps,
 					key,
 				})))

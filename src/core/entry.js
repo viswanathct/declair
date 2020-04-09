@@ -6,7 +6,7 @@ const entry = (config) => {
 	const next = (() => {
 		let index = 0;
 
-		return ({ props }) => providers[index++]({ ...props, next });
+		return (props) => providers[index++]({ ...props, next });
 	})();
 
 	return next({ config });
