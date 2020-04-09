@@ -41,10 +41,10 @@ const providerConfig = {
 	types,
 };
 
-const declair = (consumerConfig) => {
-	const mount = parse(providerConfig, consumerConfig);
+const setup = ({ config }) => {
+	const mount = parse(providerConfig, config);
 
 	return (props) => mount(props);
 };
 
-export default declair;
+export default setup;
