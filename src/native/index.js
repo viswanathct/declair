@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { collect, values } from '@laufire/utils/collection';
-import parse from 'declair/core/parse';
+import { collect, filter, merge, values } from '@laufire/utils/collection';
+import getMount from '../core/mount';
 
 const styles = StyleSheet.create({
 	element: {
@@ -40,14 +40,12 @@ const types = {
 	},
 };
 
-const providerConfig = {
-	types,
-};
-
 const setup = ({ config }) => {
-	const mount = parse(providerConfig, config);
+	const widgetTypes = filter(merge(
+		{}, config.types, types
+	), (type) => type.type === 'widget');
 
-	return (props) => mount(props);
+	return getMount(widgetTypes);
 };
 
 export default setup;
