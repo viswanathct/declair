@@ -1,4 +1,4 @@
-import { values } from '@laufire/utils/dist/collection';
+import { values } from '@laufire/utils/collection';
 
 /* Exports */
 const entry = (config) => {

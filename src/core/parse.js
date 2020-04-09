@@ -1,7 +1,5 @@
-import { collection } from '@laufire/utils';
+import { merge } from '@laufire/utils/collection';
 import defaults from './defaults';
-
-const { merge } = collection;
 
 const normalizeProps = (types, props) => {
 	const type = props.type || defaults.type;

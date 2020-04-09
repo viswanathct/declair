@@ -1,9 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { collection } from '@laufire/utils';
+import { collect, values } from '@laufire/utils/collection';
 import parse from 'declair/core/parse';
-
-const { collect, values } = collection;
 
 const styles = StyleSheet.create({
 	element: {
