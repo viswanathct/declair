@@ -4,7 +4,8 @@
 
 ## The `Why`
 
-* The need for the project.
+* Allows for full stack developers to work with UI, without knowing the nuances.
+* Enables Frontend developers to focus on structure and style, instead of wiring things up and writing boilerplate code.
 
 ## Installation
 ```sh

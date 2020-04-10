@@ -11,6 +11,13 @@
 * Flex by default.
 * Flow direction of containers are often opposite to that of content.
 
+# MVP
+* Navigation and Deep Linking.
+* Themes and UI Components.
+* Simple table from a resource.
+* Graphs.
+* Platform specific components.
+
 # Structure
 * Providers
   * theme
