@@ -1,8 +1,7 @@
-/* eslint-disable max-lines-per-function */
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { collect, filter, merge, values } from '@laufire/utils/collection';
-import getMount from '../core/mount';
+import mount from 'declair/core/mount';
 
 const styles = StyleSheet.create({
 	element: {
@@ -17,44 +16,23 @@ const element = {
 	config: {
 		style: styles.element,
 	},
-	handler: (config) => {
-		const children = collect(config.items, (itemConfig, key) =>
-			({
-				config: itemConfig,
-				render: config.context.mount({
-					...itemConfig,
-					key,
-				}),
-			}));
-
-		return ({ state }) => <View { ...config }>
-			{
-				values(collect(children, (child, key) =>
-					<React.Fragment {...{ key }}>
-						{
-							child.render({
-								state,
-								...{
-									data: child.config.source
-										? state[child.config.source]
-										: child.config.hasOwnProperty('data')
-											? child.config.data
-											: config.data[key] || {},
-								},
-							})
-						}
-					</React.Fragment>))
-			}
-		</View>;
-	},
+	handler: (config) => ({ state }) => <View { ...config }>
+		{
+			values(collect(config.children, (dummy, key) =>
+				<React.Fragment {...{ key }}>
+					{
+						config.renderChild(key, state)
+					}
+				</React.Fragment>))
+		}
+	</View>,
 	type: 'widget',
 };
 
 const types = {
 	element: element,
 	text: {
-		handler: (config) =>
-			({ data }) => <Text { ...config }>{ data }</Text>,
+		handler: (config) => ({ data }) => <Text { ...config }>{ data }</Text>,
 		type: 'widget',
 	},
 };
@@ -66,7 +44,7 @@ const setup = (SetupProps) => {
 	), (type) => type.type === 'widget');
 
 	SetupProps.next(SetupProps);
-	const Root = getMount(widgetTypes, SetupProps.mount);
+	const Root = mount(widgetTypes, SetupProps.mount);
 
 	return Root;
 };
