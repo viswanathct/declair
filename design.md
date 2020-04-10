@@ -141,3 +141,9 @@
   * Named actors.
   * Utils.pipe.
   * Unhandled messages are passed over.
+
+# Pending
+* Decide on allowing external subscriptions and control for the sources.
+  * It might help in using the package as a plugin.
+  * But the package is supposed to be a complete implementation.
+  * It might meddle with the envisioned, platform independence.

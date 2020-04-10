@@ -20,21 +20,23 @@ const setup = (props) => { // eslint-disable-line max-lines-per-function
 		Store.initialState = merge(Store.initialState, data);
 	};
 	const publish = (data) => Store.publish(data);
+	const context = props.next({ ...props, mount, publish });
 
-	const ConfigRoot = props.next({ ...props, mount, publish });
+	return {
+		...context,
+		Root: (configProps) => {
+			const [state, setState] = useState(Store.initialState);
 
-	return (configProps) => {
-		const [state, setState] = useState(Store.initialState);
+			if(!Store.initialized) {
+				Store.initialized = true;
+				Store.publish = (data) => setState(merge(state, data));
+				Store.Root = context.Root(configProps);
 
-		if(!Store.initialized) {
-			Store.initialized = true;
-			Store.publish = (data) => setState(merge(state, data));
-			Store.Root = ConfigRoot(configProps);
+				return <Store.Root { ...{ state: Store.initialState } }/>;
+			}
 
-			return <Store.Root { ...{ state: Store.initialState } }/>;
-		}
-
-		return <Store.Root { ...{ state } }/>;
+			return <Store.Root { ...{ state } }/>;
+		},
 	};
 };
 

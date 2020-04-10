@@ -10,7 +10,7 @@ const setup = (SetupProps) => {
 	SetupProps.next(SetupProps);
 	const Root = mount(widgetTypes, SetupProps.mount);
 
-	return Root;
+	return { Root };
 };
 
 export default setup;
