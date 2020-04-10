@@ -1,19 +1,41 @@
 // TODO: Implement a proper store. It's crude, due to a lack of knowledge.
-import { useState } from 'react';
-import { patch } from '@laufire/utils/collection';
+import React, { useState, memo } from 'react';
+import { equals, merge } from '@laufire/utils/collection';
 
 /* State */
-const Store = {};
+const Store = {
+	initialState: {},
+};
 
 /* Exports */
-const setup = (props) => {
-	const [state, setState] = useState({});
+const setup = (props) => { // eslint-disable-line max-lines-per-function
+	const mount = (mounted) => {
+		const Memoized = memo(mounted, equals);
 
-	return Store.renderRoot
-		? (renderProps) => Store.renderRoot({ ...renderProps, state })
-		: (Store.renderRoot = props.next({ ...props,
-			publish: (data) => setState(patch(state, data)) }))
-			&& (() => null);
+		return (params) => <Memoized { ...params }/>
+		;
+	};
+
+	Store.publish = (data) => {
+		Store.initialState = merge(Store.initialState, data);
+	};
+	const publish = (data) => Store.publish(data);
+
+	const ConfigRoot = props.next({ ...props, mount, publish });
+
+	return (configProps) => {
+		const [state, setState] = useState(Store.initialState);
+
+		if(!Store.initialized) {
+			Store.initialized = true;
+			Store.publish = (data) => setState(merge(state, data));
+			Store.Root = ConfigRoot(configProps);
+
+			return <Store.Root { ...{ state: Store.initialState } }/>;
+		}
+
+		return <Store.Root { ...{ state } }/>;
+	};
 };
 
 export default setup;

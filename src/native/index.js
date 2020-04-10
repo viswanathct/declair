@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { collect, filter, merge, values } from '@laufire/utils/collection';
@@ -16,36 +17,58 @@ const element = {
 	config: {
 		style: styles.element,
 	},
-	handler: (props) => <View { ...props }>
-		{
-			values(collect(props.items, (itemProps, key) =>
-				props.context.mount({
-					...props,
-					...{ data: itemProps.source
-						? props.state[itemProps.source]
-						: props.data[key] || {}},
-					...itemProps,
+	handler: (config) => {
+		const children = collect(config.items, (itemConfig, key) =>
+			({
+				config: itemConfig,
+				render: config.context.mount({
+					...itemConfig,
 					key,
-				})))
-		}
-	</View>,
+				}),
+			}));
+
+		return ({ state }) => <View { ...config }>
+			{
+				values(collect(children, (child, key) =>
+					<React.Fragment {...{ key }}>
+						{
+							child.render({
+								state,
+								...{
+									data: child.config.source
+										? state[child.config.source]
+										: child.config.hasOwnProperty('data')
+											? child.config.data
+											: config.data[key] || {},
+								},
+							})
+						}
+					</React.Fragment>))
+			}
+		</View>;
+	},
 	type: 'widget',
 };
 
 const types = {
 	element: element,
 	text: {
-		handler: (props) => <Text {...props}>{ props.data }</Text>,
+		handler: (config) =>
+			({ data }) => <Text { ...config }>{ data }</Text>,
 		type: 'widget',
 	},
 };
 
-const setup = ({ config }) => {
+const setup = (SetupProps) => {
+	const { types: typeCustomizations } = SetupProps;
 	const widgetTypes = filter(merge(
-		{}, config.types, types
+		{}, typeCustomizations, types
 	), (type) => type.type === 'widget');
 
-	return getMount(widgetTypes);
+	SetupProps.next(SetupProps);
+	const Root = getMount(widgetTypes, SetupProps.mount);
+
+	return Root;
 };
 
 export default setup;

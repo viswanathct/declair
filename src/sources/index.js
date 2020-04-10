@@ -3,10 +3,10 @@ import { collect, filter, merge } from '@laufire/utils/collection';
 
 /* Exports */
 const setup = (props) => {
-	const { config, publish } = props;
-	const { sources: sourceConfig } = config;
+	const { publish, sources: sourceConfig,
+		types: typeCustomizations } = props;
 	const sourceTypes = filter(merge(
-		{}, config.types, types
+		{}, typeCustomizations, types
 	), (type) => type.type === 'source',);
 	const sources = collect(sourceConfig, (source, name) => {
 		const type = sourceTypes[source.type];
