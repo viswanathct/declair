@@ -1,16 +1,22 @@
-import { merge } from '@laufire/utils/collection';
+import { pick, merge, map, values } from '@laufire/utils/collection';
+import coreTypes from './config/types';
 import defaults from './defaults';
 
-/* Exports */
-const normalizeProps = (types, props) => {
-	const type = props.type || defaults.type;
+const configKey = 'config';
 
-	return merge(
-		{}, { type }, defaults.typeConfigs[type],
-		types[type]?.config, props
+/* Exports */
+const normalizeConfig = (configuredTypes, userExtensions) => {
+	const type = userExtensions.type || defaults.type;
+	const typeCascade = pick({ coreTypes, configuredTypes }, type);
+	const config = merge(
+		{}, ...values(pick(typeCascade, configKey)), userExtensions
 	);
+
+	map(typeCascade, (cursor) => (cursor.normalize || (() => {}))(config));
+
+	return config;
 };
 
 export {
-	normalizeProps,
+	normalizeConfig,
 };

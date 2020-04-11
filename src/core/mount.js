@@ -1,4 +1,4 @@
-import { normalizeProps } from './utils';
+import { normalizeConfig } from './utils';
 import { map } from '@laufire/utils/collection';
 
 /* Helpers */
@@ -7,9 +7,7 @@ const parseChildren = (config, mountWorker) => {
 		(state) => mountWorker({ ...itemConfig, key })({
 			data: itemConfig.source
 				? state[itemConfig.source]
-				: itemConfig.hasOwnProperty('data')
-					? itemConfig.data
-					: config.data[key] || {},
+				: itemConfig.data,
 			state: state,
 		}));
 
@@ -18,15 +16,15 @@ const parseChildren = (config, mountWorker) => {
 
 /* Exports */
 const mount = (types, mountHook) => {
-	const mountWorker = (props) => {
-		const normalizedProps = normalizeProps(types, props);
-		const type = types[normalizedProps.type];
+	const mountWorker = (config) => {
+		const normalizedConfig = normalizeConfig(types, config);
+		const type = types[normalizedConfig.type];
 
 		return mountHook(type.handler({
-			...normalizedProps.type !== 'element'
+			...normalizedConfig.type !== 'element'
 				? {}
-				: parseChildren(normalizedProps, mountWorker),
-			...normalizedProps,
+				: parseChildren(normalizedConfig, mountWorker),
+			...normalizedConfig,
 		}));
 	};
 
