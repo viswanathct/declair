@@ -1,4 +1,4 @@
-import { merge, pick, spread } from '@laufire/utils/collection';
+import { map, merge, pick, spread } from '@laufire/utils/collection';
 
 export default {
 	config: {
@@ -6,7 +6,10 @@ export default {
 		items: {},
 		type: 'element',
 	},
-	normalize: (config) =>
-		spread(config.items,
-			{ data: merge(config.data, pick(config.items, 'data')) }),
+	normalize: (config, normalize) => {
+		const { items, data } = config;
+
+		spread(items, { data: merge(data, pick(items, 'data')) });
+		config.items = map(items, normalize);
+	},
 };
