@@ -3,13 +3,13 @@ import { normalizeConfig } from './utils';
 
 /* Helpers */
 const parseChildren = (config, mountWorker) => {
-	const children = map(config.items, (itemConfig, key) =>
-		(state) => mountWorker({ ...itemConfig, key })({
-			data: itemConfig.source
-				? state[itemConfig.source]
-				: itemConfig.data,
-			state: state,
-		}));
+	const children = map(config.items, (itemConfig) =>
+		(state) => mountWorker({
+			...itemConfig,
+			getData: itemConfig.source
+				? () => state[itemConfig.source]
+				: () => itemConfig.data,
+		})(state));
 
 	return { children };
 };

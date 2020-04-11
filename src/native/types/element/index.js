@@ -1,14 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
-import { map, values } from '@laufire/utils/collection';
+import { map, omit, values } from '@laufire/utils/collection';
 import styles from '../../styles';
 
 const element = {
 	config: {
 		style: styles.element,
 	},
-	handler: (config) => ({ state }) =>
-		<View { ...config }>
+	handler: (config) => (state) =>
+		<View { ...omit(config, ['getData']) }>
 			{
 				values(map(config.children, (child, key) =>
 					<React.Fragment {...{ key }}>
