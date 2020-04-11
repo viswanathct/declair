@@ -7,12 +7,12 @@ const element = {
 	config: {
 		style: styles.element,
 	},
-	handler: (config) => (state) =>
+	handler: (config) => ({ state }) =>
 		<View { ...omit(config, ['getData']) }>
 			{
 				values(map(config.children, (child, key) =>
 					<React.Fragment {...{ key }}>
-						{ child(state) }
+						{ child({ state }) }
 					</React.Fragment>))
 			}
 		</View>,

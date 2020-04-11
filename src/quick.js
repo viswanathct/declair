@@ -3,12 +3,12 @@
  */
 
 import entry from 'declair/core/entry';
-import reactState from 'declair/reactState';
+import mobxReact from 'declair/mobxReact';
 import sources from 'declair/sources';
 import native from 'declair/native';
 
 /* Data */
-const providers = [reactState, sources, native];
+const providers = [mobxReact, sources, native];
 
 /* Exports */
 const quick = (props) =>

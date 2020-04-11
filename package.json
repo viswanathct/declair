@@ -73,7 +73,9 @@
     "test": "test"
   },
   "dependencies": {
-    "@laufire/utils": "^2.3.0"
+    "@laufire/utils": "^2.3.0",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2"
   },
   "peerDependencies": {
     "react": "~16.9.0",
