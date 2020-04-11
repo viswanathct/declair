@@ -4,23 +4,16 @@ import { collect } from '@laufire/utils/collection';
 /* Helpers */
 const parseChildren = (config, mountWorker) => {
 	const children = collect(config.items, (itemConfig, key) =>
-		({ config: itemConfig, render: mountWorker({ ...itemConfig, key }) }));
-	const renderChild = (key, state) => {
-		const child = children[key];
+		(state) => mountWorker({ ...itemConfig, key })({
+			data: itemConfig.source
+				? state[itemConfig.source]
+				: itemConfig.hasOwnProperty('data')
+					? itemConfig.data
+					: config.data[key] || {},
+			state: state,
+		}));
 
-		return child.render({
-			state,
-			...{
-				data: child.config.source
-					? state[child.config.source]
-					: child.config.hasOwnProperty('data')
-						? child.config.data
-						: config.data[key] || {},
-			},
-		});
-	};
-
-	return { children, renderChild };
+	return { children };
 };
 
 /* Exports */

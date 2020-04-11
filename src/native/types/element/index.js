@@ -10,11 +10,9 @@ const element = {
 	handler: (config) => ({ state }) =>
 		<View { ...config }>
 			{
-				values(collect(config.children, (dummy, key) =>
+				values(collect(config.children, (child, key) =>
 					<React.Fragment {...{ key }}>
-						{
-							config.renderChild(key, state)
-						}
+						{ child(state) }
 					</React.Fragment>))
 			}
 		</View>,
