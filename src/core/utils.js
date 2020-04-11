@@ -6,7 +6,7 @@ const normalizeProps = (types, props) => {
 	const type = props.type || defaults.type;
 
 	return merge(
-		{ type }, defaults.typeConfigs[type],
+		{}, { type }, defaults.typeConfigs[type],
 		types[type]?.config, props
 	);
 };

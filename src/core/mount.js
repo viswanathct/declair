@@ -1,9 +1,9 @@
 import { normalizeProps } from './utils';
-import { collect } from '@laufire/utils/collection';
+import { map } from '@laufire/utils/collection';
 
 /* Helpers */
 const parseChildren = (config, mountWorker) => {
-	const children = collect(config.items, (itemConfig, key) =>
+	const children = map(config.items, (itemConfig, key) =>
 		(state) => mountWorker({ ...itemConfig, key })({
 			data: itemConfig.source
 				? state[itemConfig.source]

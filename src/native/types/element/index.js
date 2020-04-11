@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { collect, values } from '@laufire/utils/collection';
+import { map, values } from '@laufire/utils/collection';
 import styles from '../../styles';
 
 const element = {
@@ -10,7 +10,7 @@ const element = {
 	handler: (config) => ({ state }) =>
 		<View { ...config }>
 			{
-				values(collect(config.children, (child, key) =>
+				values(map(config.children, (child, key) =>
 					<React.Fragment {...{ key }}>
 						{ child(state) }
 					</React.Fragment>))
