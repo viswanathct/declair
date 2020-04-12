@@ -6,7 +6,7 @@ const text = {
 	setup: (config) => () => <Text { ...omit(config, ['getData']) }>
 		{ config.getData() }
 	</Text>,
-	type: 'widget',
+	type: 'uiComponent',
 };
 
 export default text;

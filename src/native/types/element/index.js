@@ -16,7 +16,7 @@ const element = {
 					</React.Fragment>))
 			}
 		</View>,
-	type: 'widget',
+	type: 'uiComponent',
 };
 
 export default element;
