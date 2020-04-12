@@ -10,7 +10,7 @@ const Store = {
 };
 
 /* Exports */
-const setup = (props) => { // eslint-disable-line max-lines-per-function
+const setup = (config) => { // eslint-disable-line max-lines-per-function
 	Store.publish = (data) => merge(Store.initialState, data);
 
 	const state = observable({});
@@ -23,16 +23,16 @@ const setup = (props) => { // eslint-disable-line max-lines-per-function
 
 		return (params) => <Memoized { ...params }/>;
 	};
-	const context = props.next({ ...props, mount, publish });
+	const context = config.next({ ...config, mount, publish });
 
 	return {
 		...context,
-		Root: (configProps) => {
+		structure: () => {
 			Store.publish = (data) => merge(state, data);
-			Store.Root = context.Root(configProps);
+			const Root = context.structure();
 
 			merge(state, Store.initialState);
-			return <Store.Root { ...{ state } }/>;
+			return <Root { ...{ state } }/>;
 		},
 	};
 };

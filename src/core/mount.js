@@ -1,5 +1,4 @@
-import { filter, map, merge } from '@laufire/utils/collection';
-import { normalizeConfig } from './utils';
+import { map } from '@laufire/utils/collection';
 
 /* Helpers */
 const parseChildren = (config, mountWorker) => {
@@ -15,12 +14,7 @@ const parseChildren = (config, mountWorker) => {
 };
 
 /* Exports */
-const mount = (SetupProps, handlerTypes) => {
-	const { mount: mountHook, types: typeCustomizations } = SetupProps;
-	const types = filter(merge(
-		{}, typeCustomizations, handlerTypes
-	), (type) => type.type === 'widget');
-
+const mount = ({ mount: mountHook, structure, types }) => {
 	const mountWorker = (config) => {
 		const mountConfig = {
 			...config,
@@ -29,11 +23,11 @@ const mount = (SetupProps, handlerTypes) => {
 				: parseChildren(config, mountWorker),
 		};
 
-		return mountHook(types[config.type].handler(mountConfig), mountConfig);
+		return mountHook(types[config.type].handler(mountConfig),
+			mountConfig);
 	};
-	const root = (config) => mountWorker(normalizeConfig(types, config));
 
-	return root;
+	return (state) => mountWorker({ ...structure, state });
 };
 
 export default mount;
