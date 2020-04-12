@@ -1,28 +1,36 @@
-import { pick, merge, map, values } from '@laufire/utils/collection';
-import coreTypes from './types';
+import { merge, map } from '@laufire/utils/collection';
 import defaults from '../defaults';
 
-/* Data */
-const configKey = 'config';
-
 /* Helpers */
+const normalizeConfig = ({ config, normalize, type }) => {
+	const { processors, normalize: typeNormalizer } = type;
+
+	processors && map(processors, (processor, prop) =>
+		(config[prop] = processor({
+			prop: config[prop],
+			config: config,
+			normalize: normalize,
+		})));
+
+	typeNormalizer && typeNormalizer({ config, normalize });
+};
+
 const getNormalizer = (types) => {
-	const normalizer = (extensions) => {
-		const type = extensions.type || defaults.type;
-		const typeCascade = pick({ coreTypes, types }, type);
-		const childConfig = merge(
-			{},
-			...values(pick(typeCascade, configKey)),
-			extensions,
+	const normalize = (extensions) => {
+		const typeName = extensions.type || defaults.type;
+		const type = types[typeName];
+		const config = merge(
+			{}, type.config, extensions
 		);
 
-		map(typeCascade, (cursor) =>
-			(cursor.normalize || (() => {}))(childConfig, normalizer));
+		normalizeConfig({
+			config, normalize, type,
+		});
 
-		return childConfig;
+		return config;
 	};
 
-	return normalizer;
+	return normalize;
 };
 
 /* Exports */

@@ -1,15 +1,10 @@
-import { clone, values, map } from '@laufire/utils/collection';
+import { values, map, sanitize } from '@laufire/utils/collection';
 import setupTypes from './config/setup/types';
 import normalize from './config/normalize';
-
-/* Data */
-const doNothing = (x) => x;
+import doNothing from './utils';
 
 /* Tasks */
-const setupProvider = (provider, config) => {
-	(provider.normalize || doNothing)(config);
-	return provider.setup(config);
-};
+const setupProvider = (provider, config) => provider.setup(config);
 
 const setupProviders = (context) => {
 	const providers = values(context.providers);
@@ -30,7 +25,7 @@ const setupProviders = (context) => {
 
 /* Exports */
 const entry = (config) => {
-	const context = clone(config);
+	const context = sanitize(config);
 
 	return map([setupTypes, normalize, setupProviders],
 		(f) => f(context)).pop();

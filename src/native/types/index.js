@@ -1,7 +1,16 @@
+import { merge, map } from '@laufire/utils/collection';
+import typeDefaults from '../defaults/type';
+
 import element from './element';
 import text from './text';
 
-export default {
+const types = {
 	element,
 	text,
 };
+
+const augmented = map(types, (type) => merge(
+	{}, typeDefaults, type
+));
+
+export default augmented;
