@@ -1,4 +1,4 @@
-import { filter, pick, merge, map, values } from '@laufire/utils/collection';
+import { pick, merge, map, values } from '@laufire/utils/collection';
 import coreTypes from './types';
 import defaults from '../defaults';
 
@@ -26,16 +26,10 @@ const getNormalizer = (types) => {
 };
 
 /* Exports */
-const normalize = ({ context, types: handlerTypes }) => {
-	const { types: typeCustomizations } = context;
-	const types = filter(merge(
-		{}, handlerTypes, typeCustomizations,
-	), (type) => type.type === 'widget');
+const normalize = (context) => {
+	const { structure, types } = context;
 
-	return {
-		structure: getNormalizer(types)(context.structure),
-		types: types,
-	};
+	context.structure = getNormalizer(types)(structure);
 };
 
 export default normalize;

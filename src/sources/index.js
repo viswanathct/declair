@@ -1,29 +1,32 @@
-import types from './types';
-import { map, filter, merge } from '@laufire/utils/collection';
+import providerTypes from './types';
+import { map, merge } from '@laufire/utils/collection';
 
 /* Exports */
-const setup = (props) => {
+const config = {
+	types: providerTypes,
+};
+
+const setup = (context) => {
 	const { publish, sources: sourceConfig,
-		types: typeCustomizations } = props;
-	const sourceTypes = filter(merge(
-		{}, typeCustomizations, types
-	),
-	(type) => type.type === 'source',);
+		types } = context;
+
 	const sources = map(sourceConfig, (source, name) => {
-		const type = sourceTypes[source.type];
+		const type = types[source.type];
 
 		return type.setup({
 			publish: publish,
 			source: { name, ...merge(
-				{},
 				{}, type.config, source
 			) },
 		});
 	});
 
-	const context = props.next({ ...props, sources });
+	const ret = context.next({ ...context, sources });
 
-	return { ...context, sources };
+	return { ...ret, sources };
 };
 
-export default { setup };
+export default {
+	config,
+	setup,
+};
