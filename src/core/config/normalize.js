@@ -26,14 +26,14 @@ const getNormalizer = (types) => {
 };
 
 /* Exports */
-const normalize = ({ config, types: handlerTypes }) => {
-	const { types: typeCustomizations } = config;
+const normalize = ({ context, types: handlerTypes }) => {
+	const { types: typeCustomizations } = context;
 	const types = filter(merge(
 		{}, handlerTypes, typeCustomizations,
 	), (type) => type.type === 'widget');
 
 	return {
-		structure: getNormalizer(types)(config.structure),
+		structure: getNormalizer(types)(context.structure),
 		types: types,
 	};
 };

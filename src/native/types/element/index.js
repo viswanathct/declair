@@ -7,7 +7,7 @@ const element = {
 	config: {
 		style: styles.element,
 	},
-	handler: (config) => ({ state }) =>
+	setup: (config) => ({ state }) =>
 		<View { ...omit(config, ['getData']) }>
 			{
 				values(map(config.children, (child, key) =>

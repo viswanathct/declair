@@ -47,4 +47,4 @@ const setup = (props) => { // eslint-disable-line max-lines-per-function
 	};
 };
 
-export default setup;
+export default { setup };

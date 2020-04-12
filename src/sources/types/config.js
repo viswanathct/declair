@@ -4,7 +4,7 @@
 
 const config = {
 	config: {},
-	handler: ({ source, publish }) => {
+	setup: ({ source, publish }) => {
 		const parsed = {
 			update: (value) => publish({ [source.name]: value }),
 		};

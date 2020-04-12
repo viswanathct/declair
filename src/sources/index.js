@@ -12,7 +12,7 @@ const setup = (props) => {
 	const sources = map(sourceConfig, (source, name) => {
 		const type = sourceTypes[source.type];
 
-		return type.handler({
+		return type.setup({
 			publish: publish,
 			source: { name, ...merge(
 				{},
@@ -26,4 +26,4 @@ const setup = (props) => {
 	return { ...context, sources };
 };
 
-export default setup;
+export default { setup };

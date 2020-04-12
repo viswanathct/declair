@@ -2,15 +2,22 @@ import mount from 'declair/core/mount';
 import normalize from 'declair/core/config/normalize';
 import types from './types';
 
-const setup = (config) => {
-	config.next(config);
+const config = {
+	types,
+};
+
+const setup = (context) => {
+	context.next(context);
 
 	return {
 		structure: mount({
-			...config,
-			...normalize({ config, types }),
+			...context,
+			...normalize({ context, types }),
 		}),
 	};
 };
 
-export default setup;
+export default {
+	config,
+	setup,
+};

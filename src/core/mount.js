@@ -23,7 +23,7 @@ const mount = ({ mount: mountHook, structure, types }) => {
 				: parseChildren(config, mountWorker),
 		};
 
-		return mountHook(types[config.type].handler(mountConfig),
+		return mountHook(types[config.type].setup(mountConfig),
 			mountConfig);
 	};
 

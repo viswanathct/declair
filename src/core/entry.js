@@ -10,7 +10,7 @@ const entry = (config) => {
 
 		return (props) =>
 			(index < providers.length
-				? providers[index++]({ mount, ...props, next })
+				? providers[index++].setup({ mount, ...props, next })
 				: () => {});
 	})();
 
