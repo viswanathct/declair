@@ -25,6 +25,9 @@
   * navigation / history.
   * error handling.
 * Collections and Resources.
+* Contexts
+  * References are resolved from the closest context, up till the global context.
+  * When a name isn't resolved, it would be considered to be a literal (when no type is mentioned). This helps in deriving implicit DSL-s.
 * Component Properties
   * type
   * style
@@ -32,8 +35,9 @@
   * config
 * Sources
   * Local
+  * Transformations
   * Remote
-  * Embedded
+  * Embedded?
 * Collection
   * Sorting
   * Filtering
@@ -85,6 +89,7 @@
   * Renderer
 * A root is just an element with a store as the source and a registry for types.
   * Types are resolved from local to global.
+* Most, if not all attributes should have access to sources.
 * Component arguments
   * config
   * data
