@@ -1,7 +1,7 @@
 import { merge, map, pick } from '@laufire/utils/collection';
 
 /* Helpers */
-const parseConfig = ({ context, parse, type }) => {
+const parseWorker = ({ context, parse, type }) => {
 	const { props, parse: typeParser } = type;
 	const propParsers = pick(props, 'parse');
 	const parsedProps = map(propParsers, (propParser, prop) =>
@@ -20,7 +20,7 @@ const getParser = (types) => {
 	const parse = (context) => {
 		const type = types[context.type];
 
-		parseConfig({
+		parseWorker({
 			context, parse, type,
 		});
 
@@ -31,8 +31,8 @@ const getParser = (types) => {
 };
 
 /* Exports */
-const parse = ({ context }) => {
+const parseConfig = ({ context }) => {
 	context.structure = getParser(context.types)(context.structure);
 };
 
-export default parse;
+export default parseConfig;

@@ -1,7 +1,7 @@
 import { values, map, sanitize } from '@laufire/utils/collection';
-import setupTypes from './config/setup/types';
-import normalize from './config/normalize';
-import parse from './config/parse';
+import normalizeTypes from './context/normalizeTypes';
+import normalizeConfig from './context/normalizeConfig';
+import parseConfig from './context/parseConfig';
 import doNothing from './utils';
 
 /* Tasks */
@@ -28,7 +28,7 @@ const setupProviders = ({ context }) => {
 const entry = (config) => {
 	const context = sanitize(config);
 
-	return map([setupTypes, normalize, parse, setupProviders],
+	return map([normalizeTypes, normalizeConfig, parseConfig, setupProviders],
 		(f) => f({ config, context })).pop();
 };
 
