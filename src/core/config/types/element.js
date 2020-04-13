@@ -1,20 +1,25 @@
 import { map, merge, pick, select, spread } from '@laufire/utils/collection';
 
 export default {
-	config: {
-		data: {},
-		items: {},
-		type: 'element',
-	},
-	processors: {
-		data: ({ prop, config }) => {
-			const { items } = config;
-			const data = merge(prop, pick(items, 'data'));
+	props: {
+		data: {
+			default: {},
+			normalize: ({ prop, context }) => {
+				const { items } = context;
+				const data = merge(prop, pick(items, 'data'));
 
-			spread(items, { data: select(data, items) });
+				spread(items, { data: select(data, items) });
 
-			return data;
+				return data;
+			},
 		},
-		items: ({ prop, normalize }) => map(prop, normalize),
+		items: {
+			default: {},
+			normalize: ({ prop, normalize }) => map(prop, normalize),
+			parse: ({ prop, parse }) => map(prop, parse),
+		},
+		type: {
+			default: 'element',
+		},
 	},
 };

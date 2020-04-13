@@ -3,12 +3,17 @@ import { View } from 'react-native';
 import { map, omit, values } from '@laufire/utils/collection';
 
 const element = {
-	config: {
+	props: {
+		type: {
+			default: 'element',
+		},
 		style: {
-			alignItems: 'center',
-			flex: 1,
-			flexDirection: 'column',
-			justifyContent: 'center',
+			default: {
+				alignItems: 'center',
+				flex: 1,
+				flexDirection: 'column',
+				justifyContent: 'center',
+			},
 		},
 	},
 	setup: (config) => ({ state }) =>

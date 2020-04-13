@@ -3,7 +3,11 @@
  */
 
 const config = {
-	config: {},
+	props: {
+		type: {
+			default: 'source',
+		},
+	},
 	setup: ({ source, publish }) => {
 		const parsed = {
 			update: (value) => publish({ [source.name]: value }),
@@ -13,7 +17,6 @@ const config = {
 
 		return parsed;
 	},
-	type: 'source',
 };
 
 export default config;

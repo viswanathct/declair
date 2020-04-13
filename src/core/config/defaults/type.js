@@ -1,7 +1,10 @@
 import { doNothing } from '../../utils';
 
-export default {
+const type = {
 	props: {},
 	normalize: doNothing,
+	parse: doNothing,
 	setup: doNothing,
 };
+
+export default type;

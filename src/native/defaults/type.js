@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 const type = {
-	processors: {
-		style: ({ prop }) => StyleSheet.create({ style: prop }).style,
+	props: {
+		style: {
+			parse: ({ prop }) => StyleSheet.create({ style: prop }).style,
+		},
 	},
 	type: 'uiComponent',
 };
