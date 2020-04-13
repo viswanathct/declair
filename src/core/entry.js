@@ -2,34 +2,50 @@ import { values, map, sanitize } from '@laufire/utils/collection';
 import normalizeTypes from './context/normalizeTypes';
 import normalizeConfig from './context/normalizeConfig';
 import parseConfig from './context/parseConfig';
-import doNothing from './utils';
+import mount from './context/mount';
+import { doNothing } from './utils';
 
 /* Tasks */
-const setupProvider = (provider, config) => provider.setup(config);
+const setupProvider = (
+	provider, context, config
+) =>
+	(provider.setup || doNothing)({ context, config });
 
-const setupProviders = ({ context }) => {
+const publish = doNothing;
+
+const setupProviders = ({ context, config }) => {
 	const providers = values(context.providers);
-	const mount = doNothing;
 
-	const next = (() => {
+	context.next = (() => {
 		let index = 0;
 
-		return (providerContext) =>
+		return () =>
 			(index < providers.length
-				? setupProvider(providers[index++],
-					{ mount, ...providerContext, next })
+				? setupProvider(
+					providers[index++], context, config
+				)
 				: doNothing);
 	})();
 
-	return next(context);
+	context.next();
 };
 
 /* Exports */
 const entry = (config) => {
-	const context = sanitize(config);
+	const context = { ...sanitize(config), mount, publish };
+	const executeAction = (f) => f({ config, context });
 
-	return map([normalizeTypes, normalizeConfig, parseConfig, setupProviders],
-		(f) => f({ config, context })).pop();
+	map({
+		normalizeTypes, normalizeConfig,
+		parseConfig, setupProviders,
+	}, executeAction);
+
+	const { root, sources } = context;
+
+	return {
+		root,
+		sources,
+	};
 };
 
 export default entry;

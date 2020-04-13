@@ -6,11 +6,10 @@ const config = {
 	types: providerTypes,
 };
 
-const setup = (context) => {
-	const { publish, sources: sourceConfig,
-		types } = context;
+const setup = ({ context }) => {
+	const { publish, sources, types } = context;
 
-	const sources = map(sourceConfig, (source, name) => {
+	context.sources = map(sources, (source, name) => {
 		const type = types[source.type];
 
 		return type.setup({
@@ -21,9 +20,7 @@ const setup = (context) => {
 		});
 	});
 
-	const ret = context.next({ ...context, sources });
-
-	return { ...ret, sources };
+	context.next();
 };
 
 export default {

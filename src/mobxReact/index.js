@@ -4,37 +4,26 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { merge } from '@laufire/utils/collection';
 
-/* State */
-const Store = {
-	initialState: {},
+/* Workers */
+const hook = (mounted, mountConfig) => {
+	if(!mountConfig.source)
+		return mounted;
+
+	const Memoized = observer(mounted);
+
+	return (params) => <Memoized { ...params }/>;
 };
 
 /* Exports */
-const setup = (config) => { // eslint-disable-line max-lines-per-function
-	Store.publish = (data) => merge(Store.initialState, data);
-
+const setup = ({ context }) => {
 	const state = observable({});
-	const publish = (data) => Store.publish(data);
-	const mount = (mounted, mountConfig) => {
-		if(!mountConfig.source)
-			return mounted;
 
-		const Memoized = observer(mounted);
+	context.hook = hook;
+	context.publish = (data) => merge(state, data);
 
-		return (params) => <Memoized { ...params }/>;
-	};
-	const context = config.next({ ...config, mount, publish });
+	context.next();
 
-	return {
-		...context,
-		structure: () => {
-			Store.publish = (data) => merge(state, data);
-			const Root = context.structure();
-
-			merge(state, Store.initialState);
-			return <Root { ...{ state } }/>;
-		},
-	};
+	context.root = context.mount(context)(state);
 };
 
 export default { setup };
