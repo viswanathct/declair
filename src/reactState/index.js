@@ -1,21 +1,10 @@
 // TODO: Implement a proper store. It's crude, due to a lack of knowledge.
-import React, { useState, memo } from 'react';
-import { equals, merge } from '@laufire/utils/collection';
-import { hook } from '../core/utils';
+import React, { useState } from 'react';
+import { merge } from '@laufire/utils/collection';
 
 /* State */
 const Store = {
 	initialState: {},
-};
-
-/* Workers */
-const mountHook = (mounted, parsed) => {
-	if(!parsed.hasSource)
-		return mounted;
-
-	const Memoized = memo(mounted, equals);
-
-	return (params) => <Memoized { ...params }/>;
 };
 
 const init = () =>
@@ -25,7 +14,6 @@ const init = () =>
 const setup = ({ context }) => { // eslint-disable-line max-lines-per-function
 	init();
 
-	context.mount = hook(context.mount, mountHook);
 	context.publish = (data) => Store.publish(data);
 	context.next();
 
@@ -42,7 +30,7 @@ const setup = ({ context }) => { // eslint-disable-line max-lines-per-function
 
 		context.state = state;
 
-		return <Store.Root { ...{ state } }/>;
+		return <Store.Root />;
 	};
 };
 

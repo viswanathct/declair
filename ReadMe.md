@@ -19,6 +19,7 @@ $ npm install declair
 ## Notes
 
 * Tests wouldn't be written, until the structure reaches some stability.
+* MobX is preferred over react state hooks, for it's simplicity.
 
 # Development
 

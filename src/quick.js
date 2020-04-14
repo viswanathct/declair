@@ -2,10 +2,10 @@
  * Helps in spinning up the app with default providers.
  */
 
-import entry from 'declair/core/entry';
-import mobxReact from 'declair/mobxReact';
-import sources from 'declair/sources';
-import native from 'declair/native';
+import entry from './core/entry';
+import mobxReact from './mobxReact';
+import sources from './sources';
+import native from './native';
 
 /* Data */
 const providers = [mobxReact, sources, native];
