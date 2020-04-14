@@ -12,6 +12,7 @@ export default {
 
 				return data;
 			},
+			primitive: false,
 		},
 		items: {
 			default: {},

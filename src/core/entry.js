@@ -37,7 +37,7 @@ const entry = (config) => {
 
 	map({
 		normalizeTypes, normalizeConfig,
-		parseConfig, setupProviders,
+		setupProviders, parseConfig,
 	}, executeAction);
 
 	const { root, sources } = context;

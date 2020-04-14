@@ -7,6 +7,9 @@ const element = {
 		type: {
 			default: 'element',
 		},
+		data: {
+			primitive: false,
+		},
 		style: {
 			default: {
 				alignItems: 'center',

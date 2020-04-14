@@ -73,7 +73,7 @@
     "test": "test"
   },
   "dependencies": {
-    "@laufire/utils": "^2.4.0",
+    "@laufire/utils": "^2.5.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2"
   },

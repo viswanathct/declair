@@ -1,4 +1,5 @@
-// TODO: Implement mobx observer batching. It's not implemented, due to some platform specific implementation
+// TODO: Implement MobX observer batching. It's not implemented, due to some platform specific implementation.
+// TODO: Nodes are re-rendered for every property access. Batch this.
 import React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
@@ -22,7 +23,7 @@ const setup = ({ context }) => {
 	context.publish = (data) => merge(context.state, data);
 
 	context.next();
-	context.root = context.mount(context.parsed);
+	context.root = () => context.mount(context.parsed)();
 };
 
 export default { setup };
