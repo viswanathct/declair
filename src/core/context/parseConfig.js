@@ -1,30 +1,37 @@
-import { merge, map, pick } from '@laufire/utils/collection';
+import { map, pick } from '@laufire/utils/collection';
+import getResolver from './resolve';
 
 /* Helpers */
-const parseWorker = ({ context, parse, type }) => {
-	const { props, parse: typeParser } = type;
-	const propParsers = pick(props, 'parse');
-	const parsedProps = map(propParsers, (propParser, prop) =>
-		context[prop] !== undefined && propParser({
-			prop: context[prop],
-			context: context,
-			parse: parse,
-		}));
+const parseWorker = (params) => {
+	const { context, config, parse, type } = params;
+	const { props: typeProps, parse: typeParser } = type;
+	const propParsers = pick(typeProps, 'parse');
+	let hasSource = false;
+	const props = map(propParsers, (propParser, propKey) => {
+		const prop = config[propKey];
+		const propEvaluator = propParser({
+			context, config, prop, parse,
+		});
+		const resolved = getResolver(
+			context, prop, propEvaluator
+		);
 
-	merge(context, parsedProps);
+		hasSource = hasSource || resolved.hasSource;
 
-	return typeParser && typeParser({ context, parse });
+		return resolved.resolver;
+	});
+
+	return typeParser({ hasSource, props, type });
 };
 
-const getParser = (types) => {
-	const parse = (context) => {
-		const type = types[context.type];
+const getParser = (context) => {
+	const { types } = context;
+	const parse = ({ config }) => {
+		const type = types[config.type];
 
-		parseWorker({
-			context, parse, type,
+		return parseWorker({
+			context, config, parse, type,
 		});
-
-		return context;
 	};
 
 	return parse;
@@ -32,7 +39,7 @@ const getParser = (types) => {
 
 /* Exports */
 const parseConfig = ({ context }) => {
-	context.structure = getParser(context.types)(context.structure);
+	context.parsed = getParser(context)({ config: context.structure });
 };
 
 export default parseConfig;

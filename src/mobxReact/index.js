@@ -3,10 +3,11 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { merge } from '@laufire/utils/collection';
+import { hook } from '../core/utils';
 
 /* Workers */
-const hook = (mounted, mountConfig) => {
-	if(!mountConfig.source)
+const mountHook = (mounted, parsed) => {
+	if(!parsed.hasSource)
 		return mounted;
 
 	const Memoized = observer(mounted);
@@ -16,14 +17,12 @@ const hook = (mounted, mountConfig) => {
 
 /* Exports */
 const setup = ({ context }) => {
-	const state = observable({});
-
-	context.hook = hook;
-	context.publish = (data) => merge(state, data);
+	context.state = observable({});
+	context.mount = hook(context.mount, mountHook);
+	context.publish = (data) => merge(context.state, data);
 
 	context.next();
-
-	context.root = context.mount(context)(state);
+	context.root = context.mount(context.parsed);
 };
 
 export default { setup };

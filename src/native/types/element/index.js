@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { map, omit, values } from '@laufire/utils/collection';
+import { map, values } from '@laufire/utils/collection';
 
 const element = {
 	props: {
@@ -16,12 +16,12 @@ const element = {
 			},
 		},
 	},
-	setup: (config) => ({ state }) =>
-		<View { ...omit(config, ['getData']) }>
+	setup: (context) => () =>
+		<View { ...{ style: context.style() } }>
 			{
-				values(map(config.children, (child, key) =>
+				values(map(context.items(), (item, key) =>
 					<React.Fragment {...{ key }}>
-						{ child({ state }) }
+						{ item() }
 					</React.Fragment>))
 			}
 		</View>,

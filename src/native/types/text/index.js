@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { omit } from '@laufire/utils/collection';
 
 const text = {
 	props: {
@@ -13,8 +12,8 @@ const text = {
 			default: 'text',
 		},
 	},
-	setup: (config) => () => <Text { ...omit(config, ['getData']) }>
-		{ config.getData() }
+	setup: (context) => () => <Text { ...{ style: context.style() } }>
+		{ context.data() }
 	</Text>,
 };
 

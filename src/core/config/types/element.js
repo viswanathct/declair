@@ -16,7 +16,8 @@ export default {
 		items: {
 			default: {},
 			normalize: ({ prop, normalize }) => map(prop, normalize),
-			parse: ({ prop, parse }) => map(prop, parse),
+			parse: ({ context, prop, parse }) => () =>
+				map(prop, (item) => context.mount(parse({ config: item }))),
 		},
 		type: {
 			default: 'element',
