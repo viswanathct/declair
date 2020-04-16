@@ -1,10 +1,11 @@
-// TODO: Implement MobX observer batching. It's not implemented, due to some platform specific implementation.
 // TODO: Nodes are re-rendered for every property access. Batch this.
 import React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { merge } from '@laufire/utils/collection';
 import { hook } from '../core/utils';
+
+import 'mobx-react/batchingForReactNative';
 
 /* Workers */
 const mountHook = (mounted, parsed) => {
