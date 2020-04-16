@@ -1,5 +1,4 @@
-import { StyleSheet } from 'react-native';
-import { clone as bypassFreezing } from '@laufire/utils/collection';
+import { doNothing } from '../../core/utils';
 
 const type = {
 	props: {
@@ -9,8 +8,7 @@ const type = {
 		},
 		style: {
 			primitive: true,
-			parse: () => (data) =>
-				StyleSheet.create({ style: bypassFreezing(data) }).style,
+			parse: () => doNothing,
 		},
 	},
 	type: 'uiComponent',
