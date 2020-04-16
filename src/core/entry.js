@@ -11,7 +11,7 @@ const setupProvider = (
 ) =>
 	(provider.setup || doNothing)({ context, config });
 
-const publish = doNothing;
+const fillerPublish = doNothing;
 
 const setupProviders = ({ context, config }) => {
 	const providers = values(context.providers);
@@ -32,7 +32,11 @@ const setupProviders = ({ context, config }) => {
 
 /* Exports */
 const entry = (config) => {
-	const context = { ...sanitize(config), mount, publish };
+	const context = {
+		...sanitize(config),
+		mount: mount,
+		publish: fillerPublish,
+	};
 	const executeAction = (f) => f({ config, context });
 
 	map({
@@ -40,11 +44,12 @@ const entry = (config) => {
 		setupProviders, parseConfig,
 	}, executeAction);
 
-	const { root, sources } = context;
+	const { publish, sources, root } = context;
 
 	return {
-		root,
+		publish,
 		sources,
+		root,
 	};
 };
 
