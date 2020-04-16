@@ -30,4 +30,4 @@ $ sh ./setup.sh
 
 ## ToDo
 
-* *None, yet.*
+* Decide on the state providers between MobX and ReactHooks.

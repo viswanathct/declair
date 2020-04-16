@@ -3,12 +3,12 @@
  */
 
 import entry from './core/entry';
-import mobxReact from './mobxReact';
+import reactState from './reactState';
 import sources from './sources';
 import native from './native';
 
 /* Data */
-const providers = [mobxReact, sources, native];
+const providers = [reactState, sources, native];
 
 /* Exports */
 const quick = (props) =>
