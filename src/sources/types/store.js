@@ -5,10 +5,8 @@
 const store = {
 	parse: ({ source, publish }) => {
 		const parsed = {
-			update: (value) => publish({ [source.name]: value }),
+			update: (data) => publish({ [source.name]: data }),
 		};
-
-		typeof source.value !== 'undefined' && parsed.update(source.value);
 
 		return parsed;
 	},

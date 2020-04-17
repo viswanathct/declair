@@ -1,7 +1,7 @@
 const type = {
 	setup: ({ context }) => {
-		typeof context.value !== undefined
-			&& context.parsed.update(context.value);
+		typeof context.data !== undefined
+			&& context.parsed.update(context.data);
 	},
 };
 
