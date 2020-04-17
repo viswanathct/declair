@@ -3,9 +3,11 @@ import typeDefaults from '../defaults/type';
 
 import element from './element';
 import text from './text';
+import input from './input';
 
 const types = {
 	element,
+	input,
 	text,
 };
 

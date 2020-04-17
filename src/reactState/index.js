@@ -2,35 +2,41 @@
 import React, { useState } from 'react';
 import { merge } from '@laufire/utils/collection';
 
-/* State */
-const Store = {
-	initialState: {},
+/* Tasks */
+const init = (
+	context, store, setState
+) => {
+	if(!store.initialized) {
+		store.initialized = true;
+		store.Root = () => context.mount(context.parsed)();
+		store.publish = (data) => setState(merge(
+			{}, store.state, data
+		));
+	}
 };
 
-const init = () =>
-	(Store.publish = (data) => merge(Store.initialState, data));
-
 /* Exports */
-const setup = ({ context }) => { // eslint-disable-line max-lines-per-function
-	init();
+const setup = ({ context }) => {
+	const store = {
+		publish: (data) => merge(store.state, data),
+		state: {},
+	};
 
-	context.publish = (data) => Store.publish(data);
+	context.publish = (data) => store.publish(data);
 	context.next();
 
 	context.root = () => {
-		const [state, setState] = useState(Store.initialState);
+		const [state, setState] = useState(store.state);
 
-		if(!Store.initialized) {
-			Store.initialized = true;
-			Store.Root = () => context.mount(context.parsed)();
-			Store.publish = (data) => setState(merge(
-				{}, state, data
-			));
-		}
+		init(
+			context, store, setState
+		);
+
+		merge(store.state, state);
 
 		context.state = state;
 
-		return <Store.Root />;
+		return <store.Root />;
 	};
 };
 

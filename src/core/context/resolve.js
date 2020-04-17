@@ -18,7 +18,9 @@ const hasSourceWorker = (sources, prop) => {
 
 const resolverBuilder = (context, prop) =>
 	(context.sources[prop]
-		? () => context.state[prop]
+		? (data) => (data !== undefined
+			? context.sources[prop].parsed.update(data)
+			: context.state[prop])
 		: () => prop);
 
 const buildResolutionTree = (context, prop) =>
@@ -26,13 +28,14 @@ const buildResolutionTree = (context, prop) =>
 		? resolverBuilder(context, prop)
 		: traverse(prop, (value) => resolverBuilder(context, value)));
 
-const resolve = (resolutionTree) =>
+const resolve = (resolutionTree, data) =>
 	(inferType(resolutionTree) !== 'object'
-		? resolutionTree()
-		: traverse(resolutionTree, (propResolver) => propResolver()));
+		? resolutionTree(data)
+		: traverse(resolutionTree, (propResolver) => propResolver(data)));
 
 const getTreeResolver = (worker, resolutionTree) =>
-	() => worker(resolve(resolutionTree));
+	(data) => worker(resolve(resolutionTree, data));
+
 /* Exports */
 const getResolver = (
 	context, prop, worker
