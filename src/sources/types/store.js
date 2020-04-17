@@ -2,7 +2,7 @@
  * A simple store.
  */
 
-const config = {
+const store = {
 	parse: ({ source, publish }) => {
 		const parsed = {
 			update: (value) => publish({ [source.name]: value }),
@@ -12,7 +12,7 @@ const config = {
 
 		return parsed;
 	},
-	type: 'config',
+	type: 'store',
 };
 
-export default config;
+export default store;

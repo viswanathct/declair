@@ -1,10 +1,10 @@
 import { fill, map } from '@laufire/utils/collection';
 import typeDefaults from '../defaults/type';
 
-import config from './config';
+import store from './store';
 
 const types = {
-	config,
+	store,
 };
 
 const augmented = map(types, (type) => fill(type, typeDefaults));
