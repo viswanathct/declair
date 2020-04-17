@@ -1,5 +1,5 @@
 import providerTypes from './types';
-import { map, merge } from '@laufire/utils/collection';
+import { map, merge, spread } from '@laufire/utils/collection';
 
 /* Exports */
 const config = {
@@ -8,11 +8,10 @@ const config = {
 
 const setup = ({ context }) => {
 	const { publish, sources, types } = context;
-
-	context.sources = map(sources, (source, name) => {
+	const parsed = map(sources, (source, name) => {
 		const type = types[source.type];
 
-		return type.setup({
+		return type.parse({
 			publish: publish,
 			source: { name, ...merge(
 				{}, type.config, source
@@ -20,10 +19,17 @@ const setup = ({ context }) => {
 		});
 	});
 
+	spread(context.sources, { parsed });
+
 	context.next();
 };
 
+const init = ({ context }) => {
+	const { sources, types } = context;
+
+	map(sources, (source) => types[source.type].setup({ context: source }));
+};
+
 export default {
-	config,
-	setup,
+	config,	init,	setup,
 };

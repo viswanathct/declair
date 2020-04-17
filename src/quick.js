@@ -8,7 +8,7 @@ import sources from './sources';
 import native from './native';
 
 /* Data */
-const providers = [reactState, sources, native];
+const providers = { native, sources, reactState };
 
 /* Exports */
 const quick = (props) =>

@@ -9,6 +9,7 @@ const types = {
 	text,
 };
 
+// TODO: Use fill, instead of merge.
 const augmented = map(types, (type) => merge(
 	{}, typeDefaults, type
 ));

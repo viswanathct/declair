@@ -1,4 +1,4 @@
-import { map, merge, pick, fill } from '@laufire/utils/collection';
+import { fill, map, merge, pick, values } from '@laufire/utils/collection';
 import coreTypes from '../config/types';
 import typeDefaults from '../config/defaults/type';
 
@@ -6,7 +6,7 @@ import typeDefaults from '../config/defaults/type';
 const normalizeTypes = ({ context }) => {
 	const providerTypes = merge(
 		{}, coreTypes,
-		merge({}, ...context.providers).config.types
+		merge({}, ...values(context.providers)).config.types
 	);
 
 	map(providerTypes, (type) => fill(type, typeDefaults));
