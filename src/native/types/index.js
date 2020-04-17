@@ -1,4 +1,4 @@
-import { merge, map } from '@laufire/utils/collection';
+import { fill, map } from '@laufire/utils/collection';
 import typeDefaults from '../defaults/type';
 
 import element from './element';
@@ -11,9 +11,6 @@ const types = {
 	text,
 };
 
-// TODO: Use fill, instead of merge.
-const augmented = map(types, (type) => merge(
-	{}, typeDefaults, type
-));
+const augmented = map(types, (type) => fill(type, typeDefaults));
 
 export default augmented;

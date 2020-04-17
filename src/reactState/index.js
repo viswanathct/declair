@@ -1,4 +1,4 @@
-// TODO: Implement a proper store. It's crude, due to a lack of knowledge.
+// TODO: Implement proper state-management. It's crude, due to a lack of knowledge.
 import React, { useState } from 'react';
 import { merge } from '@laufire/utils/collection';
 

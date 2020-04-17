@@ -1,5 +1,5 @@
 import { has, traverse, walk } from '@laufire/utils/collection';
-import { inferType } from '@laufire/utils/reflection';
+import { isObject, inferType } from '@laufire/utils/reflection';
 
 /* Helpers */
 const hasSourceProcessors = {
@@ -24,14 +24,16 @@ const resolverBuilder = (context, prop) =>
 		: () => prop);
 
 const buildResolutionTree = (context, prop) =>
-	(inferType(prop) !== 'object'
-		? resolverBuilder(context, prop)
-		: traverse(prop, (value) => resolverBuilder(context, value)));
+	(isObject(prop)
+		? traverse(prop, (value) => resolverBuilder(context, value))
+		: resolverBuilder(context, prop)
+	);
 
 const resolve = (resolutionTree, data) =>
-	(inferType(resolutionTree) !== 'object'
-		? resolutionTree(data)
-		: traverse(resolutionTree, (propResolver) => propResolver(data)));
+	(isObject(resolutionTree)
+		? traverse(resolutionTree, (propResolver) => propResolver(data))
+		: resolutionTree(data)
+	);
 
 const getTreeResolver = (worker, resolutionTree) =>
 	(data) => worker(resolve(resolutionTree, data));
