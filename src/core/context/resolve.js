@@ -19,7 +19,7 @@ const hasSourceWorker = (sources, prop) => {
 const resolverBuilder = (context, prop) =>
 	(context.sources[prop]
 		? (data) => (data !== undefined
-			? context.sources[prop].parsed.update(data)
+			? context.sources[prop].update(data)
 			: context.state[prop])
 		: () => prop);
 

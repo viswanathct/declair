@@ -1,4 +1,4 @@
-import { filter, map, pick, sanitize, values } from '@laufire/utils/collection';
+import { filter, map, sanitize, values } from '@laufire/utils/collection';
 import normalizeTypes from './context/normalizeTypes';
 import normalizeConfig from './context/normalizeConfig';
 import parseConfig from './context/parseConfig';
@@ -56,9 +56,9 @@ const entry = (config) => {
 	const { publish, sources, root } = context;
 
 	return {
-		publish: publish,
-		sources: pick(sources, 'parsed'),
-		root: root,
+		publish,
+		sources,
+		root,
 	};
 };
 
