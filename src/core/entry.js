@@ -1,12 +1,12 @@
-import { filter, map, sanitize, values } from '@laufire/utils/collection';
+import {
+	filter, map, merge,
+	sanitize, values,
+} from '@laufire/utils/collection';
 import normalizeTypes from './context/normalizeTypes';
 import normalizeConfig from './context/normalizeConfig';
 import parseConfig from './context/parseConfig';
 import mount from './context/mount';
 import { doNothing } from './utils';
-
-/* Data */
-const fillerPublish = doNothing;
 
 /* Tasks */
 const setupProvider = (
@@ -43,8 +43,10 @@ const initProviders = ({ config, context }) => {
 const entry = (inConfig) => {
 	const config = sanitize(inConfig);
 	const context = {
+		state: {},
 		mount: mount,
-		publish: fillerPublish,
+		publish: (data) => merge(context.state, data),
+		root: () => context.mount(context.structure)(),
 	};
 	const executeAction = (f) => f({ config, context });
 
