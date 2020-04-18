@@ -5,7 +5,7 @@
 const store = {
 	parse: ({ source, publish }) => {
 		const parsed = {
-			update: (data) => publish({ [source.name]: data }),
+			data: (data) => publish({ [source.name]: data }),
 		};
 
 		return parsed;
