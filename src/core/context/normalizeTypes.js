@@ -3,16 +3,16 @@ import coreTypes from '../config/types';
 import typeDefaults from '../config/defaults/type';
 
 /* Exports */
-const normalizeTypes = ({ context }) => {
+const normalizeTypes = ({ config, context }) => {
 	const providerTypes = merge(
 		{}, coreTypes,
-		merge({}, ...values(context.providers)).config.types
+		merge({}, ...values(config.providers)).config.types
 	);
 
 	map(providerTypes, (type) => fill(type, typeDefaults));
 
 	map(pick(providerTypes, 'props'), (type, typeName) =>
-		merge(pick(type, 'default'), context.types[typeName]));
+		merge(pick(type, 'default'), config.types[typeName]));
 
 	context.types = providerTypes;
 };

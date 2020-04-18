@@ -1,5 +1,5 @@
 import providerTypes from './types';
-import { map, merge, spread } from '@laufire/utils/collection';
+import { map, merge } from '@laufire/utils/collection';
 
 /* Helpers */
 const getPublisher = (context) =>

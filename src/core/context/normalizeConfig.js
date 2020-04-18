@@ -36,10 +36,8 @@ const getNormalizer = (types) => {
 };
 
 /* Exports */
-const normalizeConfig = ({ context }) => {
-	const { structure, types } = context;
-
-	context.structure = getNormalizer(types)(structure);
+const normalizeConfig = ({ config, context }) => {
+	config.structure = getNormalizer(context.types)(config.structure);
 };
 
 export default normalizeConfig;

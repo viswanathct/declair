@@ -24,7 +24,7 @@ const setup = ({ context }) => {
 	context.publish = (data) => merge(context.state, data);
 
 	context.next();
-	context.root = () => context.mount(context.parsed)();
+	context.root = () => context.mount(context.structure)();
 };
 
 export default { setup };

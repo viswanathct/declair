@@ -15,7 +15,7 @@ const setupProvider = (
 	provider.setup({ context, config });
 
 const setupProviders = ({ config, context }) => {
-	const providers = values(filter(context.providers,
+	const providers = values(filter(config.providers,
 		(provider) => provider.setup));
 
 	context.next = (() => {
@@ -33,16 +33,16 @@ const setupProviders = ({ config, context }) => {
 };
 
 const initProviders = ({ config, context }) => {
-	const providers = values(context.providers);
+	const providers = values(config.providers);
 
 	map(providers, (provider) =>
 		(provider.init || doNothing)({ config, context }));
 };
 
 /* Exports */
-const entry = (config) => {
+const entry = (inConfig) => {
+	const config = sanitize(inConfig);
 	const context = {
-		...sanitize(config),
 		mount: mount,
 		publish: fillerPublish,
 	};

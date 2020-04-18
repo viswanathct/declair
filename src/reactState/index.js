@@ -8,7 +8,7 @@ const init = (
 ) => {
 	if(!store.initialized) {
 		store.initialized = true;
-		store.Root = () => context.mount(context.parsed)();
+		store.Root = () => context.mount(context.structure)();
 		store.publish = (data) => setState(merge(
 			{}, store.state, data
 		));

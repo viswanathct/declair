@@ -5,8 +5,7 @@ import getResolver from './resolve';
 const parseWorker = (params) => {
 	let hasSource = false;
 	const { context, config, parse, type } = params;
-	const { props: typeProps, parse: typeParser } = type;
-	const parsable = filter(typeProps, (typeProp) => typeProp.parse);
+	const parsable = filter(type.props, (typeProp) => typeProp.parse);
 
 	const props = map(parsable, (typeProp, propKey) => {
 		const { primitive, parse: propParser } = typeProp;
@@ -24,7 +23,7 @@ const parseWorker = (params) => {
 		return resolved.resolver;
 	});
 
-	return typeParser({ hasSource, props, type });
+	return type.parse({ hasSource, props, type });
 };
 
 /* Exports */
@@ -42,8 +41,8 @@ const getParser = (context) => {
 };
 
 /* Exports */
-const parseConfig = ({ context }) => {
-	context.parsed = getParser(context)({ config: context.structure });
+const parseConfig = ({ config, context }) => {
+	context.structure = getParser(context)({ config: config.structure });
 };
 
 export default parseConfig;
