@@ -1,16 +1,18 @@
-import { map, filter } from '@laufire/utils/collection';
+import { filter, map, pick } from '@laufire/utils/collection';
 import getResolver from './resolve';
 
 /* Helpers */
 const parseWorker = (params) => {
 	let hasSource = false;
 	const { context, config, parse, type } = params;
+	const { name } = config;
 	const parsable = filter(type.props, (typeProp) => typeProp.parse);
 
 	const props = map(parsable, (typeProp, propKey) => {
 		const { primitive, parse: propParser } = typeProp;
 		const prop = config[propKey];
-		const propEvaluator = propParser({ context, config, prop, parse });
+		const propEvaluator = propParser({ context, config, name,
+			prop, parse });
 
 		if(!primitive)
 			return propEvaluator;
@@ -42,7 +44,11 @@ const getParser = (context) => {
 
 /* Exports */
 const parseConfig = ({ config, context }) => {
-	context.structure = getParser(context)({ config: config.structure });
+	const parser = getParser(context);
+
+	context.structure = parser({ config: config.structure });
+	context.sources = pick(map(config.sources,
+		(source) => parser({ config: source })), 'props');
 };
 
 export default parseConfig;

@@ -1,5 +1,5 @@
 import providerTypes from './types';
-import { map, merge } from '@laufire/utils/collection';
+import { map } from '@laufire/utils/collection';
 
 /* Helpers */
 const getPublisher = (context) =>
@@ -11,18 +11,10 @@ const providerConfig = {
 };
 
 const setup = ({ config, context }) => {
-	const { types } = context;
-
-	context.sources = map(config.sources, (source, name) => {
-		const type = types[source.type];
-
-		return type.parse({
-			publish: getPublisher(context),
-			source: { name, ...merge(
-				{}, type.config, source
-			) },
-		});
-	});
+	context.sources = map(config.sources, (source,) => ({
+		publish: getPublisher(context),
+		...source,
+	}));
 
 	context.next();
 };

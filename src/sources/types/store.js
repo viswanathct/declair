@@ -1,14 +1,12 @@
 /**
  * A simple store.
  */
-
 const store = {
-	parse: ({ source, publish }) => {
-		const parsed = {
-			data: (data) => publish({ [source.name]: data }),
-		};
-
-		return parsed;
+	props: {
+		data: {
+			parse: ({ name, context }) =>
+				(data) => context.publish({ [name]: data }),
+		},
 	},
 	type: 'store',
 };

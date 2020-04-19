@@ -6,8 +6,8 @@ export default {
 	props: {
 		data: {
 			default: {},
-			normalize: ({ prop, context }) => {
-				const { items } = context;
+			normalize: ({ prop, config }) => {
+				const { items } = config;
 				const data = merge(prop, pick(items, 'data'));
 
 				spread(items, { data: select(data, items) });

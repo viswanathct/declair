@@ -2,34 +2,34 @@ import { merge, map, pick } from '@laufire/utils/collection';
 import defaults from '../defaults';
 
 /* Helpers */
-const normalizeWorker = ({ context, normalize, type }) => {
+const normalizeWorker = ({ config, normalize, type }) => {
 	const { props, normalize: typeNormalizer } = type;
 	const propNormalizers = pick(props, 'normalize');
 	const normalizedProps = map(propNormalizers, (propNormalizer, prop) =>
 		propNormalizer({
-			prop: context[prop],
-			context: context,
+			prop: config[prop],
+			config: config,
 			normalize: normalize,
 		}));
 
-	merge(context, normalizedProps);
+	merge(config, normalizedProps);
 
-	typeNormalizer({ context, normalize });
+	typeNormalizer({ config, normalize });
 };
 
 const getNormalizer = (types) => {
 	const normalize = (extensions) => {
 		const typeName = extensions.type || defaults.type;
 		const type = types[typeName];
-		const context = merge(
+		const config = merge(
 			{}, pick(type.props, 'default'), extensions
 		);
 
 		normalizeWorker({
-			context, normalize, type,
+			config, normalize, type,
 		});
 
-		return context;
+		return config;
 	};
 
 	return normalize;
@@ -37,7 +37,11 @@ const getNormalizer = (types) => {
 
 /* Exports */
 const normalizeConfig = ({ config, context }) => {
-	config.structure = getNormalizer(context.types)(config.structure);
+	const normalize = getNormalizer(context.types);
+
+	config.structure = normalize(config.structure);
+	config.sources = map(config.sources,
+		(source, name) => normalize({ ...source, name }));
 };
 
 export default normalizeConfig;

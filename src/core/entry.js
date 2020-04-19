@@ -48,11 +48,7 @@ const entry = (inConfig) => {
 
 	const { publish, sources, root } = context;
 
-	return {
-		publish,
-		sources,
-		root,
-	};
+	return { publish, sources, root };
 };
 
 export default entry;
