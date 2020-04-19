@@ -6,14 +6,8 @@ import normalizeTypes from './context/normalizeTypes';
 import normalizeConfig from './context/normalizeConfig';
 import parseConfig from './context/parseConfig';
 import mount from './context/mount';
-import { doNothing } from './utils';
 
 /* Tasks */
-const setupProvider = (
-	provider, context, config
-) =>
-	provider.setup({ context, config });
-
 const setupProviders = ({ config, context }) => {
 	const providers = values(filter(config.providers,
 		(provider) => provider.setup));
@@ -22,21 +16,18 @@ const setupProviders = ({ config, context }) => {
 		let index = 0;
 
 		return () =>
-			(index < providers.length
-				? setupProvider(
-					providers[index++], context, config
-				)
-				: doNothing);
+			index < providers.length
+				&& providers[index++].setup({ context, config });
 	})();
 
 	context.next();
 };
 
 const initProviders = ({ config, context }) => {
-	const providers = values(config.providers);
+	const providers = values(filter(config.providers,
+		(provider) => provider.init));
 
-	map(providers, (provider) =>
-		(provider.init || doNothing)({ config, context }));
+	map(providers, (provider) => provider.init({ config, context }));
 };
 
 /* Exports */

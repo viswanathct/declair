@@ -1,6 +1,6 @@
 import { map, merge, pick, select, spread } from '@laufire/utils/collection';
 
-const itemMounter = (parsed, mount) => () => map(parsed, mount);
+const mountItems = (parsedItems, mount) => () => map(parsedItems, mount);
 
 export default {
 	props: {
@@ -20,9 +20,10 @@ export default {
 			default: {},
 			normalize: ({ prop, normalize }) => map(prop, normalize),
 			parse: ({ context, prop, parse }) => {
-				const parsed = map(prop, (item) => parse({ config: item }));
+				const parsedItems = map(prop, (item) =>
+					parse({ config: item }));
 
-				return itemMounter(parsed, context.mount);
+				return mountItems(parsedItems, context.mount);
 			},
 		},
 		type: {

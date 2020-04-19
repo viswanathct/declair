@@ -4,7 +4,7 @@ const type = {
 	props: {
 		data: {
 			primitive: true,
-			parse: () => (data) => data,
+			parse: () => doNothing,
 		},
 		style: {
 			primitive: true,
