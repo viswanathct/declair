@@ -1,22 +1,9 @@
 import providerTypes from './types';
 import { map } from '@laufire/utils/collection';
 
-/* Helpers */
-const getPublisher = (context) =>
-	(data) => context.publish(data);
-
 /* Exports */
 const providerConfig = {
 	types: providerTypes,
-};
-
-const setup = ({ config, context }) => {
-	context.sources = map(config.sources, (source,) => ({
-		publish: getPublisher(context),
-		...source,
-	}));
-
-	context.next();
 };
 
 const init = ({ config, context }) =>
@@ -29,5 +16,4 @@ const init = ({ config, context }) =>
 export default {
 	config: providerConfig,
 	init: init,
-	setup: setup,
 };

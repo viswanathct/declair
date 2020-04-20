@@ -21,7 +21,7 @@ export default {
 			normalize: ({ prop, normalize }) => map(prop, normalize),
 			parse: ({ context, prop, parse }) => {
 				const parsedItems = map(prop, (item) =>
-					parse({ config: item }));
+					parse({ parsing: item }));
 
 				return mountItems(parsedItems, context.mount);
 			},

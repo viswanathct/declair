@@ -4,38 +4,38 @@ import getResolver from './resolve';
 /* Helpers */
 const parseWorker = (params) => {
 	let hasSource = false;
-	const { context, config, parse, type } = params;
-	const { name } = config;
+	const { config, context, parsing, parse, type } = params;
+	const { name } = parsing;
 	const parsable = filter(type.props, (typeProp) => typeProp.parse);
 
 	const props = map(parsable, (typeProp, propKey) => {
 		const { primitive, parse: propParser } = typeProp;
-		const prop = config[propKey];
-		const propEvaluator = propParser({ context, config, name,
+		const prop = parsing[propKey];
+		const propEvaluator = propParser({ config, context, parsing, name,
 			prop, parse });
 
 		if(!primitive)
 			return propEvaluator;
 
 		const resolved = getResolver(
-			context, prop, propEvaluator
+			config, context, prop, propEvaluator
 		);
 
 		hasSource = hasSource || resolved.hasSource;
 		return resolved.resolver;
 	});
 
-	return type.parse({ hasSource, props, type });
+	return type.parse({ context, config, hasSource, props, type });
 };
 
 /* Exports */
-const getParser = (context) => {
+const getParser = ({ config, context }) => {
 	const { types } = context;
-	const parse = ({ config }) => {
-		const type = types[config.type];
+	const parse = ({ parsing }) => {
+		const type = types[parsing.type];
 
 		return parseWorker({
-			context, config, parse, type,
+			context, config, parsing, parse, type,
 		});
 	};
 
@@ -44,11 +44,11 @@ const getParser = (context) => {
 
 /* Exports */
 const parseConfig = ({ config, context }) => {
-	const parser = getParser(context);
+	const parser = getParser({ config, context });
 
-	context.structure = parser({ config: config.structure });
 	context.sources = pick(map(config.sources,
-		(source) => parser({ config: source })), 'props');
+		(source) => parser({ parsing: source })), 'props');
+	context.structure = parser({ parsing: config.structure });
 };
 
 export default parseConfig;

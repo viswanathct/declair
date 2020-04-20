@@ -40,9 +40,9 @@ const getTreeResolver = (worker, resolutionTree) =>
 
 /* Exports */
 const getResolver = (
-	context, prop, worker
+	config, context, prop, worker
 ) => {
-	const hasSource = hasSourceWorker(context.sources, prop);
+	const hasSource = hasSourceWorker(config.sources, prop);
 	const resolutionTree = hasSource
 		? buildResolutionTree(context, prop)
 		: null;
