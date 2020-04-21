@@ -7,7 +7,7 @@ const type = {
 					: (data) => (data !== undefined
 						? context.publish({ [name]: data })
 						: context.state[name])),
-			primitive: false,
+			observing: false,
 		},
 	},
 	setup: ({ data }) => (value) => data(value),

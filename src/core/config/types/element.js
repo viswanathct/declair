@@ -14,7 +14,7 @@ export default {
 
 				return data;
 			},
-			primitive: false,
+			observing: false,
 		},
 		items: {
 			default: {},

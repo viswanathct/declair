@@ -8,7 +8,7 @@ const element = {
 			default: 'element',
 		},
 		data: {
-			primitive: false,
+			observing: false,
 		},
 		style: {
 			default: {

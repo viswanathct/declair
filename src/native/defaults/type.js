@@ -3,11 +3,11 @@ import { doNothing } from '../../core/utils';
 const type = {
 	props: {
 		data: {
-			primitive: true,
+			observing: true,
 			parse: () => doNothing,
 		},
 		style: {
-			primitive: true,
+			observing: true,
 			parse: () => doNothing,
 		},
 	},

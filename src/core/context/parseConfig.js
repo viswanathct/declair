@@ -9,12 +9,12 @@ const parseWorker = (params) => {
 	const parsable = filter(type.props, (typeProp) => typeProp.parse);
 
 	const props = map(parsable, (typeProp, propKey) => {
-		const { primitive, parse: propParser } = typeProp;
+		const { observing, parse: propParser } = typeProp;
 		const prop = parsing[propKey];
 		const propEvaluator = propParser({ config, context, parsing, name,
 			prop, parse });
 
-		if(!primitive)
+		if(!observing)
 			return propEvaluator;
 
 		const resolved = getResolver(
