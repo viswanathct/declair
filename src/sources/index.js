@@ -6,12 +6,16 @@ const providerConfig = {
 	types: providerTypes,
 };
 
-const init = ({ config, context }) =>
-	map(config.sources, (source, name) =>
-		context.types[source.type].setup({
-			config: source,
-			context: context.sources[name],
-		}));
+const init = ({ config, context }) => {
+	context.sources = map(config.sources, (source, name) => {
+		const handler = context.types[source.type]
+			.setup(context.sources[name].props);
+
+		source.data && !context.sources[source.data] && handler(source.data);
+
+		return handler;
+	});
+};
 
 export default {
 	config: providerConfig,

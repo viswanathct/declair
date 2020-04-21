@@ -16,17 +16,17 @@ const hasSourceWorker = (sources, prop) => {
 		: false;
 };
 
-const resolverBuilder = (context, prop) =>
-	(context.sources[prop]
-		? (data) => (data !== undefined
-			? context.sources[prop].data(data)
-			: context.state[prop])
+const resolverBuilder = ({ config, context, prop }) =>
+	(config.sources[prop]
+		? (data) => context.sources[prop](data)
 		: () => prop);
 
-const buildResolutionTree = (context, prop) =>
+const buildResolutionTree = ({ config, context, prop }) =>
 	(isObject(prop)
-		? traverse(prop, (value) => resolverBuilder(context, value))
-		: resolverBuilder(context, prop)
+		? traverse(prop, (value) => resolverBuilder({ config: config,
+			context: context,
+			prop: value }))
+		: resolverBuilder({ config, context, prop })
 	);
 
 const resolve = (resolutionTree, data) =>
@@ -44,7 +44,7 @@ const getResolver = (
 ) => {
 	const hasSource = hasSourceWorker(config.sources, prop);
 	const resolutionTree = hasSource
-		? buildResolutionTree(context, prop)
+		? buildResolutionTree({ config, context, prop })
 		: null;
 
 	const resolver = hasSource

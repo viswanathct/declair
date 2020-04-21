@@ -1,4 +1,4 @@
-import { filter, map, pick } from '@laufire/utils/collection';
+import { filter, map } from '@laufire/utils/collection';
 import getResolver from './resolve';
 
 /* Helpers */
@@ -46,8 +46,8 @@ const getParser = ({ config, context }) => {
 const parseConfig = ({ config, context }) => {
 	const parser = getParser({ config, context });
 
-	context.sources = pick(map(config.sources,
-		(source) => parser({ parsing: source })), 'props');
+	context.sources = map(config.sources,
+		(source) => parser({ parsing: source }));
 	context.structure = parser({ parsing: config.structure });
 };
 

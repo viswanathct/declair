@@ -1,8 +1,16 @@
 const type = {
-	setup: ({ config, context }) => {
-		typeof config.data !== undefined
-			&& context.data(config.data);
+	props: {
+		data: {
+			parse: ({ config, context, name, prop }) =>
+				(config.sources[prop]
+					? (data) => context.sources[prop](data)
+					: (data) => (data !== undefined
+						? context.publish({ [name]: data })
+						: context.state[name])),
+			primitive: false,
+		},
 	},
+	setup: ({ data }) => (value) => data(value),
 };
 
 export default type;
