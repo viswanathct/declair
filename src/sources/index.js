@@ -7,13 +7,12 @@ const providerConfig = {
 };
 
 const init = ({ config, context }) => {
-	context.sources = map(config.sources, (source, name) => {
-		const handler = context.types[source.type]
-			.setup(context.sources[name].props);
+	context.sources = map(config.sources, (source, name) =>
+		context.types[source.type].setup(context.sources[name].props));
 
-		source.data && !context.sources[source.data] && handler(source.data);
-
-		return handler;
+	map(config.sources, (source, name) => {
+		source.data !== undefined && !context.sources[source.data]
+			&& context.sources[name](source.data);
 	});
 };
 
