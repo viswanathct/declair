@@ -1,20 +1,23 @@
-import { filter, map } from '@laufire/utils/collection';
+import { map } from '@laufire/utils/collection';
 import getResolver from './resolve';
+import { doNothing } from '../utils';
+
+/* Data */
+const fakePropParser = () => doNothing;
 
 /* Helpers */
 const parseWorker = (params) => {
 	let hasSource = false;
 	const { config, context, parsing, parse, type } = params;
 	const { name } = parsing;
-	const parsable = filter(type.props, (typeProp) => typeProp.parse);
 
-	const props = map(parsable, (typeProp, propKey) => {
+	const props = map(type.props, (typeProp, propKey) => {
 		const { observing, parse: propParser } = typeProp;
 		const prop = parsing[propKey];
-		const propEvaluator = propParser({ config, context, parsing, name,
-			prop, parse });
+		const propEvaluator = (propParser || fakePropParser)({ config,
+			context, parsing, name, prop, parse });
 
-		if(!observing)
+		if(observing === false)
 			return propEvaluator;
 
 		const resolved = getResolver(
