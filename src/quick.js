@@ -6,9 +6,10 @@ import entry from './core/entry';
 import reactState from './reactState';
 import sources from './sources';
 import native from './native';
+import router from './router';
 
 /* Data */
-const providers = { native, sources, reactState };
+const providers = { native, sources, reactState, router };
 
 /* Exports */
 const quick = (props) =>

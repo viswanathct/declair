@@ -6,6 +6,7 @@ module.exports = (api) => {
 				{
 					regenerator: true,
 				}],
+			['@babel/plugin-proposal-class-properties'],
 		],
 		presets: [
 			'@babel/preset-env',

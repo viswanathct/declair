@@ -5,13 +5,15 @@
   "main": "./index.js",
   "scripts": {
     "start": "npm run build && npm run dev",
-    "copy": "cp ./package.json ./ReadMe.md ./LICENSE ./dist/",
-    "build": "babel --ignore '**/*.spec.js' -d ./dist ./src && npm run copy",
+    "copy": "cp ./package.json ./ReadMe.md ./LICENSE ./dist/ && cp -r ./node_modules/react-router-native ./dist/node_modules/react-router-native",
+    "compileSource": "npx babel --ignore '**/*.spec.js' -d ./dist ./src",
+    "compileModules": "npx babel node_modules/react-router-native --out-dir node_modules/react-router-native",
+    "build": "npm run compileSource && npm run copy",
     "dev": "node -e 'require(\"./dist/index.js\").main()'",
     "test": "jest --no-cache",
     "lint": "eslint .",
     "prepublishOnly": "echo \"Error: Don't run 'npm publish' in root. Use 'npm run dist' instead.\" && exit 1",
-    "prepareDist": "npm run lint && npm test && rm -rf ./dist && npm run build",
+    "prepareDist": "npm run lint && npm test && rm -rf ./dist && npm run compileModules && npm run build",
     "dist": "npm run prepareDist && cd dist && npm publish --ignore-scripts"
   },
   "engines": {
@@ -29,6 +31,7 @@
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.9.4",
@@ -75,7 +78,9 @@
   "dependencies": {
     "@laufire/utils": "^2.5.0",
     "mobx": "^5.15.4",
-    "mobx-react": "^6.2.2"
+    "mobx-react": "^6.2.2",
+    "react-router-dom": "^5.1.2",
+    "react-router-native": "^5.1.2"
   },
   "peerDependencies": {
     "react": "~16.9.0",

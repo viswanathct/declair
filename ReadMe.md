@@ -31,3 +31,4 @@ $ sh ./setup.sh
 ## ToDo
 
 * Decide on the state providers between MobX and ReactHooks.
+* Straighten the circumventions for importing reactive-router-native.
