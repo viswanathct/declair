@@ -12,10 +12,9 @@ const element = {
 		},
 		style: {
 			default: {
-				alignItems: 'center',
-				flex: 1,
-				flexDirection: 'column',
-				justifyContent: 'center',
+				flexDirection: 'row',
+				justifyContent: 'flex-start',
+				width: '100%',
 			},
 		},
 	},

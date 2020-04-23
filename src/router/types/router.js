@@ -44,22 +44,24 @@ const router = {
 	props: {
 		style: {
 			default: {
-				alignItems: 'center',
-				flex: 1,
-				flexDirection: 'column',
-				justifyContent: 'center',
+				alignItems: 'flex-end',
+				flexDirection: 'row',
+				height: '10%',
+				justifyContent: 'space-around',
 			},
 		},
 	},
-	setup: ({ items: passedItems }) => () => {
+	setup: ({ items: passedItems, style }) => () => {
 		const items = passedItems();
 
 		return <RouterWrapper>
-			<View>
-				<View>{ values(map(items, getLink)) }</View>
-				{
-					values(map(items, getItem))
-				}
+			<View {...{ style: { height: '100%' }}}>
+				<View {...{ style: style() }}>
+					{ values(map(items, getLink)) }
+				</View>
+				<View {...{ style: { flex: 1 }}}>
+					{ values(map(items, getItem)) }
+				</View>
 			</View>
 		</RouterWrapper>;
 	},
