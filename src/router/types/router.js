@@ -1,5 +1,4 @@
-// #TODO: Improve the flow for platform specific imports.
-// #LATER: Enable deep-linking. It seems to need some config changes to the consumer configuration.
+// #TODO: Enable deep-linking. It seems to need some config changes to the consumer configuration.
 
 import React from 'react';
 import { Platform, View, Text } from 'react-native';
@@ -8,7 +7,7 @@ import element from '../../core/config/types/element';
 
 /* Delegates */
 const { Route, Link, useRouteMatch } = Platform.os !== 'web'
-	? require('react-router-native')
+	? require('declair/bundle/react-router-native')
 	: require('react-router-dom');
 
 /* Helpers */

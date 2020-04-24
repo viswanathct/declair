@@ -10,7 +10,7 @@ const componentName = os !== 'web'
 
 // #NOTE: The package names should be literals, for the packager to understand.
 const { [componentName]: Router, BackButton } = os !== 'web'
-	? require('react-router-native')
+	? require('declair/bundle/react-router-native')
 	: require('react-router-dom');
 
 const RouterWrapper = os !== 'web'
