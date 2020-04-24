@@ -5,15 +5,15 @@
   "main": "./index.js",
   "scripts": {
     "start": "npm run build && npm run dev",
-    "copy": "cp ./package.json ./ReadMe.md ./LICENSE ./dist/ && cp -r ./node_modules/react-router-native ./dist/node_modules/react-router-native",
+    "copy": "cp ./package.json ./ReadMe.md ./LICENSE ./dist/",
     "compileSource": "npx babel --ignore '**/*.spec.js' -d ./dist ./src",
-    "compileModules": "npx babel node_modules/react-router-native --out-dir node_modules/react-router-native",
+    "compileDependencies": "sh ./scripts/compileDependencies.sh",
     "build": "npm run compileSource && npm run copy",
     "dev": "node -e 'require(\"./dist/index.js\").main()'",
     "test": "jest --no-cache",
     "lint": "eslint .",
     "prepublishOnly": "echo \"Error: Don't run 'npm publish' in root. Use 'npm run dist' instead.\" && exit 1",
-    "prepareDist": "npm run lint && npm test && rm -rf ./dist && npm run compileModules && npm run build",
+    "prepareDist": "npm run lint && npm test && rm -rf ./dist && npm run compileDependencies && npm run build",
     "dist": "npm run prepareDist && cd dist && npm publish --ignore-scripts"
   },
   "engines": {
