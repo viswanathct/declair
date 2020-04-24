@@ -29,6 +29,6 @@ $ sh ./setup.sh
 ```
 
 ## ToDo
-
+* Try to use classes, instead of object patching, to allow for future contributions.
 * Decide on the state providers between MobX and ReactHooks.
 * Straighten the circumventions for importing reactive-router-native.

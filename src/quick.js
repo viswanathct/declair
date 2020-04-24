@@ -9,7 +9,7 @@ import native from './native';
 import router from './router';
 
 /* Data */
-const providers = { native, sources, reactState, router };
+const providers = { native, router, reactState, sources };
 
 /* Exports */
 const quick = (props) =>

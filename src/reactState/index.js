@@ -4,7 +4,7 @@ import { merge } from '@laufire/utils/collection';
 
 /* Tasks */
 const init = (
-	context, store, setState
+	dummy, store, setState
 ) => {
 	if(!store.initialized) {
 		store.initialized = true;
@@ -24,8 +24,6 @@ const setup = ({ context }) => {
 	};
 
 	context.publish = (data) => store.publish(data);
-	context.next();
-
 	context.root = () => {
 		const [state, setState] = useState(store.state);
 
@@ -39,6 +37,8 @@ const setup = ({ context }) => {
 
 		return <store.Root />;
 	};
+
+	context.next();
 };
 
 export default { setup };

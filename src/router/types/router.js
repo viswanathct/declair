@@ -6,65 +6,60 @@ import { Platform, View, Text } from 'react-native';
 import { map, fill, values } from '@laufire/utils/collection';
 import element from '../../core/config/types/element';
 
-/* Data */
-const { OS: os } = Platform;
-const componentName = os !== 'web'
-	? 'NativeRouter'
-	: 'BrowserRouter';
-
 /* Delegates */
-// #NOTE: The package names should be literals, for the packager to understand.
-const { [componentName]: Router,
-	Route, Link, BackButton } = os !== 'web'
+const { Route, Link, useRouteMatch } = Platform.os !== 'web'
 	? require('react-router-native')
 	: require('react-router-dom');
 
-const RouterWrapper = os !== 'web'
-	? ({ children }) =>
-		<Router><BackButton>{ children }</BackButton></Router>
-	: Router;
-
 /* Helpers */
-const getLink = (dummy, key) =>
+const getLink = (path) => (dummy, key) =>
 	<Link {...{
 		key: key,
-		to: `/${ key }`,
+		to: `${ path }/${ key }`,
 	}}>
 		<Text>{ key }</Text>
 	</Link>;
 
-const getItem = (item, key) => <Route {...{
+const getItem = (path) => (item, key) => <Route {...{
 	key: key,
-	path: `/${ key }`,
+	path: `${ path }/${ key }`,
 }}>{ item() }</Route>;
+
+const styles = {
+	wrapper: {
+		flex: 1,
+	},
+	links: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
+};
+
+/* Workers */
+const Routed = ({ items: passedItems, style }) => {
+	const { path: pathname } = useRouteMatch();
+	const items = passedItems();
+	const path = pathname.replace(/\/$/, '');
+
+	return <View {...{ style: styles.wrapper }}>
+		<View {...{ style: style() }}>
+			{ values(map(items, getLink(path))) }
+		</View>
+		<View {...{ style: { flex: 1 }}}>
+			{ values(map(items, getItem(path))) }
+		</View>
+	</View>;
+};
 
 /* Exports */
 const router = {
 	data: {},
 	props: {
 		style: {
-			default: {
-				alignItems: 'flex-end',
-				flexDirection: 'row',
-				height: '10%',
-				justifyContent: 'space-around',
-			},
+			default: styles.links,
 		},
 	},
-	setup: ({ items: passedItems, style }) => () => {
-		const items = passedItems();
-
-		return <RouterWrapper>
-			<View {...{ style: { height: '100%' }}}>
-				<View {...{ style: style() }}>
-					{ values(map(items, getLink)) }
-				</View>
-				<View {...{ style: { flex: 1 }}}>
-					{ values(map(items, getItem)) }
-				</View>
-			</View>
-		</RouterWrapper>;
-	},
+	setup: (context) => () => <Routed {...context}/>,
 	type: 'uiComponent',
 };
 
