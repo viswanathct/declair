@@ -1,4 +1,4 @@
-import { merge, map, pick } from '@laufire/utils/collection';
+import { merge, map, pick, sanitize } from '@laufire/utils/collection';
 import defaults from '../defaults';
 
 /* Helpers */
@@ -39,9 +39,9 @@ const getNormalizer = (types) => {
 const normalizeConfig = ({ config, context }) => {
 	const normalize = getNormalizer(context.types);
 
-	config.structure = normalize(config.structure);
-	config.sources = map(config.sources,
-		(source, name) => normalize({ ...source, name }));
+	config.structure = sanitize(normalize(config.structure));
+	config.sources = sanitize(map(config.sources,
+		(source, name) => normalize({ ...source, name })));
 };
 
 export default normalizeConfig;
