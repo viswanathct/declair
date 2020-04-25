@@ -12,8 +12,8 @@ const text = {
 			default: 'text',
 		},
 	},
-	setup: (context) => () => <Text { ...{ style: context.style() } }>
-		{ context.data() }
+	setup: ({ data, style }) => () => <Text { ...{ style: style() } }>
+		{ data() }
 	</Text>,
 };
 
