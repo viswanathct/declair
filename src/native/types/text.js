@@ -8,9 +8,6 @@ const text = {
 				fontSize: 16,
 			},
 		},
-		type: {
-			default: 'text',
-		},
 	},
 	setup: ({ data, style }) => () => <Text { ...{ style: style() } }>
 		{ data() }

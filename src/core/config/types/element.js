@@ -16,9 +16,6 @@ export default {
 			default: {},
 			normalize: ({ prop, normalize }) => map(prop, normalize),
 		},
-		type: {
-			default: 'element',
-		},
 	},
 	parse: ({ context, parse, parsing, props, inherited }) => {
 		const { data, items } = parsing;

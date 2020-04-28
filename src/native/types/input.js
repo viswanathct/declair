@@ -3,9 +3,6 @@ import { TextInput } from 'react-native';
 
 const element = {
 	props: {
-		type: {
-			default: 'input',
-		},
 		style: {
 			default: {
 				borderWidth: 1,
