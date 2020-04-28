@@ -1,4 +1,4 @@
-// TODO: Nodes are re-rendered for every property access. Batch this.
+// TODO: Fix: Re-rendering of a component causes it children (esp: Inputs) to lose internal state. This isn't fixed even when all components are memoized.
 import React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
@@ -8,10 +8,7 @@ import { hook } from '../core/utils';
 import 'mobx-react/batchingForReactNative';
 
 /* Workers */
-const mountHook = (mounted, parsed) => {
-	if(!parsed.hasSource)
-		return mounted;
-
+const mountHook = (mounted) => {
 	const Memoized = observer(mounted);
 
 	return (params) => <Memoized { ...params }/>;

@@ -17,12 +17,11 @@ const parseWorker = (params) => {
 		return propEvaluator;
 	});
 
-	const parsed = { context, config, props, type };
+	const parsed = { context, config, props, parsing, type };
 
 	type.parse({ ...parsed,
 		inherited: inheritedProps,
-		parse: parse,
-		parsing: parsing });
+		parse: parse });
 
 	return parsed;
 };
