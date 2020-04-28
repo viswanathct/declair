@@ -1,44 +1,39 @@
 import { map } from '@laufire/utils/collection';
-import getResolver from './resolve';
-import { doNothing } from '../utils';
-
-/* Data */
-const fakePropParser = () => doNothing;
+import { resolver } from './resolve';
 
 /* Helpers */
 const parseWorker = (params) => {
-	let hasSource = false;
-	const { config, context, parsing, parse, type } = params;
+	const { config, context, inherited: inheritedProps,
+		parsing, parse, type } = params;
 	const { name } = parsing;
-
 	const props = map(type.props, (typeProp, propKey) => {
-		const { observing, parse: propParser } = typeProp;
+		const { parse: propParser } = typeProp;
 		const prop = parsing[propKey];
-		const propEvaluator = (propParser || fakePropParser)({ config,
-			context, parsing, name, prop, parse });
+		const inherited = inheritedProps[propKey];
+		const propEvaluator = (propParser || resolver)({ config,
+			context, inherited, name, prop, parse, parsing });
 
-		if(observing === false)
-			return propEvaluator;
-
-		const resolved = getResolver(
-			config, context, prop, propEvaluator
-		);
-
-		hasSource = hasSource || resolved.hasSource;
-		return resolved.resolver;
+		return propEvaluator;
 	});
 
-	return type.parse({ context, config, hasSource, props, type });
+	const parsed = { context, config, props, type };
+
+	type.parse({ ...parsed,
+		inherited: inheritedProps,
+		parse: parse,
+		parsing: parsing });
+
+	return parsed;
 };
 
 /* Exports */
 const getParser = ({ config, context }) => {
 	const { types } = context;
-	const parse = ({ parsing }) => {
+	const parse = ({ parsing, inherited = {}}) => {
 		const type = types[parsing.type];
 
 		return parseWorker({
-			context, config, parsing, parse, type,
+			context, config, inherited, parsing, parse, type,
 		});
 	};
 
