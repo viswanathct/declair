@@ -2,10 +2,13 @@ import { map } from '@laufire/utils/collection';
 import { resolver } from '../../context/resolve';
 
 const mountItems = (parsedItems, mount) => () => map(parsedItems, mount);
+
 const inheritedResolvers = ({ inherited, items }) =>
-	map(items, (dummy, prop) => (data) => inherited(data)[prop]);
-const observableResolvers = ({ context, data, items }) =>
-	map(items, (dummy, prop) => () => context.state[data][prop]);
+	map(items, (dummy, itemName) => (data) => inherited(data)[itemName]);
+
+const observableResolvers = ({ context, data: sourceName, items }) =>
+	map(items, (dummy, itemName) =>
+		(data) => context.sources[sourceName](data)[itemName]);
 
 export default {
 	props: {
