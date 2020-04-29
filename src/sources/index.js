@@ -1,12 +1,12 @@
 import providerTypes from './types';
-import { map } from '@laufire/utils/collection';
+import { map, pick } from '@laufire/utils/collection';
 
 /* Helpers */
 const getResolver = (
 	context, name, cb
 ) =>
-	(data) => (data !== undefined
-		? context.publish({ [name]: cb(data) })
+	(dataIn) => (dataIn !== undefined
+		? context.updateState({ [name]: cb(dataIn) })
 		: context.state[name]);
 
 /* Exports */
@@ -15,15 +15,17 @@ const providerConfig = {
 };
 
 const init = ({ config, context }) => {
+	context.publish = (updates) => map(updates, (data, name) =>
+		data !== undefined && !context.isObservable(data)
+			&& context.sources[name](data));
+
 	context.sources = map(config.sources, (source, name) =>
 		getResolver(
-			context, name, context.types[source.type].setup()
+			context, name, context.types[source.type]
+				.setup(context.sources[name].props)
 		));
 
-	map(config.sources, (source, name) => {
-		source.data !== undefined && !context.sources[source.data]
-			&& context.sources[name](source.data);
-	});
+	context.publish(pick(config.sources, 'data'));
 };
 
 export default {

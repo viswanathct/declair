@@ -18,7 +18,7 @@ const mountHook = (mounted) => {
 const setup = ({ context }) => {
 	context.state = observable({});
 	context.mount = hook(context.mount, mountHook);
-	context.publish = (data) => merge(context.state, data);
+	context.updateState = (data) => merge(context.state, data);
 
 	context.next();
 };

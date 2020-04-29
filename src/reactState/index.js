@@ -9,7 +9,7 @@ const init = (
 	if(!store.initialized) {
 		store.initialized = true;
 		store.Root = () => store.root();
-		store.publish = (data) => setState(merge(
+		store.updateState = (data) => setState(merge(
 			{}, store.state, data
 		));
 	}
@@ -18,12 +18,13 @@ const init = (
 /* Exports */
 const setup = ({ context }) => {
 	const store = {
-		publish: (data) => merge(store.state, data),
 		state: {},
 		root: context.root,
+		updateState: (data) => merge(store.state, data),
 	};
 
-	context.publish = (data) => store.publish(data);
+	context.updateState = (data) => store.updateState(data);
+
 	context.root = () => {
 		const [state, setState] = useState(store.state);
 
