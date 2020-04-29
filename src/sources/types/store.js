@@ -2,8 +2,6 @@
  * A simple store.
  */
 
-const store = {
-	type: 'store',
-};
+const store = {};
 
 export default store;
