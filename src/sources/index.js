@@ -1,5 +1,6 @@
 import providerTypes from './types';
-import { filter, map, pick, select, traverse } from '@laufire/utils/collection';
+import { combine, compose, filter, map,
+	pick, select, traverse, values } from '@laufire/utils/collection';
 import { unique } from '../core/utils';
 import getDependents from './dependencies';
 
@@ -11,18 +12,10 @@ const getResolver = (
 		? context.updateState({ [name]: cb(dataIn) })
 		: context.state[name] !== undefined
 			? context.state[name]
-			: cb(dataIn));
+			: (context.state[name] = cb(dataIn)));
 
-/* Exports */
-const providerConfig = {
-	types: providerTypes,
-};
-
-const init = ({ config, context }) => {
-	context.publish = (updates) => map(updates,
-		(data, name) => context.sources[name](data));
-
-	context.dependency = getDependents(map(config.sources, (source) => {
+const buildDependencyList = ({ config, context }) =>
+	getDependents(map(config.sources, (source) => {
 		const type = context.types[source.type];
 		const dependencies = [];
 
@@ -32,11 +25,31 @@ const init = ({ config, context }) => {
 		return unique(dependencies);
 	}));
 
-	context.sources = map(config.sources, (source, name) =>
+const buildResolvers = ({ config, context }) =>
+	map(config.sources, (source, name) =>
 		getResolver(
 			context, name, context.types[source.type]
 				.setup(context.sources[name].props)
 		));
+
+/* Exports */
+const providerConfig = {
+	types: providerTypes,
+};
+
+const init = ({ config, context }) => {
+	context.publish = (updates) => {
+		const dependents = combine([],
+			...values(compose(updates, context.dependency)));
+
+		map(dependents, (dependent) => (context.state[dependent] = undefined));
+
+		return map(updates,
+			(data, name) => context.sources[name](data));
+	};
+
+	context.dependency = buildDependencyList({ config, context });
+	context.sources = buildResolvers({ config, context });
 
 	context.publish(pick(filter(config.sources, (source) =>
 		source.data !== undefined

@@ -4,7 +4,6 @@
 
 const transformation = {
 	props: {
-		data: {},
 		transform: {
 			parse: ({ prop }) => prop,
 		},
