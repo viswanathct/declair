@@ -8,6 +8,10 @@ const hasSourceProcessors = {
 		(value) => hasSource(sources, value)), true), // eslint-disable-line no-use-before-define
 };
 
+const isUnique = (
+	value, index, array
+) => array.indexOf(value) === index;
+
 /* Exports */
 const doNothing = (x) => x;
 const sayNothing = () => {};
@@ -31,10 +35,13 @@ const hasSource = (sources, prop) => {
 		: false;
 };
 
+const unique = (array) => array.filter(isUnique);
+
 export {
 	doNothing,
 	sayNothing,
 	hasSource,
 	hook,
 	isObservable,
+	unique,
 };
