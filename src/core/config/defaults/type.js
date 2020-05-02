@@ -10,7 +10,8 @@ const type = {
 	props: {
 		platform: {
 			default: {},
-			normalize: ({ prop, config }) => merge(config, prop[platform]),
+			normalize: ({ prop, config }) =>
+				merge(config, prop[platform]) && undefined,
 		},
 	},
 	normalize: doNothing,
