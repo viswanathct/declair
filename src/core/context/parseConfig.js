@@ -6,12 +6,13 @@ import defaults from '../defaults';
 const parseWorker = (params) => {
 	const { config, context, inherited: inheritedProps,
 		parsing, parse, type } = params;
+
 	const props = map(type.props, (typeProp, propKey) => {
 		const { parse: propParser } = typeProp;
 		const prop = parsing[propKey];
 		const inherited = inheritedProps[propKey];
 		const propEvaluator = (propParser || resolver)({ config,
-			context, inherited, prop, parse, parsing });
+			context, inherited, prop, parse, parsing, resolver });
 
 		return propEvaluator;
 	});

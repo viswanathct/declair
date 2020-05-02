@@ -3,6 +3,7 @@ import { combine, compose, filter, map,
 	pick, select, traverse, values } from '@laufire/utils/collection';
 import { unique } from '../core/utils';
 import getDependents from './dependencies';
+import { isIterable } from '@laufire/utils/reflection';
 
 /* Helpers */
 const getResolver = (
@@ -53,7 +54,8 @@ const init = ({ config, context }) => {
 
 	context.publish(pick(filter(config.sources, (source) =>
 		source.data !== undefined
-		&& !context.isObservable(source.data)), 'data'));
+		&& !context.isObservable(source.data)
+		&& !isIterable(source.data)), 'data'));
 };
 
 export default {
