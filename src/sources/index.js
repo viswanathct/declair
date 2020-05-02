@@ -9,7 +9,9 @@ const getResolver = (
 ) =>
 	(dataIn) => (dataIn !== undefined
 		? context.updateState({ [name]: cb(dataIn) })
-		: context.state[name]);
+		: context.state[name] !== undefined
+			? context.state[name]
+			: cb(dataIn));
 
 /* Exports */
 const providerConfig = {
@@ -36,8 +38,9 @@ const init = ({ config, context }) => {
 				.setup(context.sources[name].props)
 		));
 
-	context.publish(pick(filter(config.sources, (data) =>
-		data !== undefined && !context.isObservable(data)), 'data'));
+	context.publish(pick(filter(config.sources, (source) =>
+		source.data !== undefined
+		&& !context.isObservable(source.data)), 'data'));
 };
 
 export default {

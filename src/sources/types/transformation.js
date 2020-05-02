@@ -4,11 +4,12 @@
 
 const transformation = {
 	props: {
+		data: {},
 		transform: {
 			parse: ({ prop }) => prop,
 		},
 	},
-	setup: ({ transform }) => transform,
+	setup: ({ data, transform }) => () => transform(data()),
 	type: 'transformation',
 };
 
