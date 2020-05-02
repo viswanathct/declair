@@ -1,11 +1,11 @@
 import { fill, map } from '@laufire/utils/collection';
 import typeDefaults from '../defaults/type';
 
-import store from './store';
+import value from './value';
 import transformation from './transformation';
 
 const types = {
-	store,
+	value,
 	transformation,
 };
 

@@ -1,11 +1,11 @@
 /**
- * A simple store.
+ * A simple value.
  */
 
 import { doNothing } from '../../core/utils';
 import { isIterable } from '@laufire/utils/reflection';
 
-const store = {
+const value = {
 	props: {
 		data: {
 			parse: (args) => {
@@ -20,4 +20,4 @@ const store = {
 	setup: ({ data }) => data,
 };
 
-export default store;
+export default value;
