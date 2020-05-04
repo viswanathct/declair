@@ -9,10 +9,10 @@ const element = {
 			default: container,
 		},
 	},
-	setup: (context) => () =>
-		<View { ...{ style: context.style() } }>
+	setup: ({ items, style }) => () =>
+		<View { ...{ style: style() } }>
 			{
-				values(map(context.items(), (item, key) =>
+				values(map(items(), (item, key) =>
 					<React.Fragment {...{ key }}>
 						{ item() }
 					</React.Fragment>))

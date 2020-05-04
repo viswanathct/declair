@@ -1,14 +1,9 @@
 import { map } from '@laufire/utils/collection';
-import { resolver } from '../../context/resolve';
 
 const mountItems = (parsedItems, mount) => () => map(parsedItems, mount);
 
 const inheritedResolvers = ({ inherited, items }) =>
 	map(items, (dummy, itemName) => (data) => inherited(data)[itemName]);
-
-const observableResolvers = ({ context, data: sourceName, items }) =>
-	map(items, (dummy, itemName) =>
-		(data) => context.sources[sourceName](data)[itemName]);
 
 export default {
 	props: {
@@ -20,15 +15,13 @@ export default {
 			normalize: ({ prop, normalize }) => map(prop, normalize),
 		},
 	},
-	parse: ({ context, parse, parsing, props, inherited }) => {
-		const { data, items } = parsing;
+	parse: (args) => {
+		const { context, parse, parsing, props, inherited, resolver } = args;
+		const { items } = parsing;
 
 		const resolverTree = inherited.data
 			? inheritedResolvers({ inherited: inherited.data, items: items })
-			: typeof data !== 'string'
-				? map(data, (value) =>
-					resolver({ context: context, prop: value }))
-				: observableResolvers({ context, data, items });
+			: resolver(args);
 
 		const parsedItems = map(items, (item, childKey) =>
 			parse({
