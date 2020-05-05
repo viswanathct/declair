@@ -22,7 +22,7 @@ const getLink = (path) => (dummy, key) =>
 const getItem = (path) => (item, key) => <Route {...{
 	key: key,
 	path: `${ path }/${ key }`,
-}}>{ item() }</Route>;
+}}>{ item }</Route>;
 
 const styles = {
 	wrapper: {
@@ -58,7 +58,7 @@ const router = {
 			default: styles.links,
 		},
 	},
-	setup: (context) => () => <Routed {...context}/>,
+	setup: () => (props) => <Routed { ...props }/>,
 	type: 'uiComponent',
 };
 

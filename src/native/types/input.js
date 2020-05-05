@@ -9,7 +9,7 @@ const element = {
 			},
 		},
 	},
-	setup: ({ data, style }) => () =>
+	setup: () => ({ data, style }) =>
 		<TextInput { ...{
 			style: style(),
 			onChangeText: data,

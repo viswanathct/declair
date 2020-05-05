@@ -2,13 +2,13 @@ import { map } from '@laufire/utils/collection';
 
 const itemToMount = (
 	data, item, mount
-) => () => mount({
+) => mount({
 	...item,
 	props: {
 		...item.props,
 		data: () => data,
 	},
-})();
+});
 
 export default {
 	props: {

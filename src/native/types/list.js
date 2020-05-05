@@ -9,12 +9,12 @@ const list = {
 			default: container,
 		},
 	},
-	setup: ({ items, style }) => () =>
+	setup: () => ({ items, style }) =>
 		<View { ...{ style: style() } }>
 			{
 				values(map(items(), (item, key) =>
 					<React.Fragment {...{ key }}>
-						{ item() }
+						{ item }
 					</React.Fragment>))
 			}
 		</View>,

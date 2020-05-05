@@ -38,7 +38,7 @@ const entry = (inConfig) => {
 			typeof value === 'string' && Boolean(config.sources[value]),
 		mount: mount,
 		publish: (data) => merge(context.state, data),
-		root: () => context.mount(context.structure)(),
+		root: () => context.mount(context.structure),
 		state: {},
 	};
 	const executeAction = (f) => f({ config, context });
