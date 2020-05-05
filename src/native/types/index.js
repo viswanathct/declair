@@ -2,12 +2,14 @@ import { fill, map } from '@laufire/utils/collection';
 import typeDefaults from '../defaults/type';
 
 import element from './element';
-import text from './text';
 import input from './input';
+import list from './list';
+import text from './text';
 
 const types = {
 	element,
 	input,
+	list,
 	text,
 };
 

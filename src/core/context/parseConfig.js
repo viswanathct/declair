@@ -6,7 +6,7 @@ import defaults from '../defaults';
 const parseWorker = (params) => {
 	const { config, context, inherited: inheritedProps,
 		parsing, parse, type } = params;
-	const parseArgs = { context, config, parsing, resolver, type };
+	const parseArgs = { context, config, parsing, parse, resolver, type };
 
 	const props = map(type.props, (typeProp, propKey) => {
 		const { parse: propParser } = typeProp;
