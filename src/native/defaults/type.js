@@ -1,7 +1,9 @@
 const type = {
 	props: {
 		data: {},
-		style: {},
+		style: {
+			default: {},
+		},
 	},
 	type: 'uiComponent',
 };
