@@ -19,9 +19,7 @@ const getLink = (path) => (dummy, key) =>
 		<Text>{ key }</Text>
 	</Link>;
 
-const getItem = (
-	path, item, key
-) => <Route {...{
+const getItem = ({ path, item, key }) => <Route {...{
 	key: key,
 	path: `${ path }/${ key }`,
 }}>
@@ -39,10 +37,9 @@ const styles = {
 };
 
 /* Workers */
-const Routed = ({ items: passedItems, data: passedData, style }) => {
+const Routed = ({ items: passedItems, style }) => {
 	const { path: pathname } = useRouteMatch();
 	const items = passedItems();
-	const data = passedData();
 	const path = pathname.replace(/\/$/, '');
 
 	return <View {...{ style: styles.wrapper }}>
@@ -51,11 +48,7 @@ const Routed = ({ items: passedItems, data: passedData, style }) => {
 		</View>
 		<View {...{ style: { flex: 1 }}}>
 			{
-				values(map(items, (item, key) => getItem(
-					path,
-					item({ data: () => data[key] }),
-					key,
-				)))
+				values(map(items, (item, key) => getItem({ path, item, key })))
 			}
 		</View>
 	</View>;
