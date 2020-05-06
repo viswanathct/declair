@@ -6,7 +6,10 @@ import { container } from '../defaults/style';
 const list = {
 	props: {
 		style: {
-			default: container,
+			default: {
+				...container,
+				flexDirection: 'column',
+			},
 		},
 	},
 	setup: () => ({ items, style }) =>

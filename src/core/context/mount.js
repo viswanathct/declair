@@ -1,4 +1,7 @@
 /* Exports */
-const mount = (parsed) => parsed.type.setup(parsed.props)(parsed.props);
+const mount = (parsed) => (renderProps) => parsed.type.setup(parsed.props)({
+	...renderProps,
+	...parsed.props,
+});
 
 export default mount;

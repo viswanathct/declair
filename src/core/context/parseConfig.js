@@ -1,4 +1,4 @@
-import { map } from '@laufire/utils/collection';
+import { map, clean } from '@laufire/utils/collection';
 import { resolver } from './resolve';
 import defaults from '../defaults';
 
@@ -18,7 +18,7 @@ const parseWorker = (params) => {
 		return propEvaluator;
 	});
 
-	const parsed = { ...parseArgs, props };
+	const parsed = { ...parseArgs, props: clean(props) };
 
 	type.parse({ ...parsed,
 		inherited: inheritedProps,

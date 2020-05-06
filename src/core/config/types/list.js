@@ -2,19 +2,11 @@ import { map } from '@laufire/utils/collection';
 
 const itemToMount = (
 	data, item, mount
-) => mount({
-	...item,
-	props: {
-		...item.props,
-		data: () => data,
-	},
-});
+) => mount(item)({ data: () => data });
 
 export default {
 	props: {
-		data: {
-			default: {},
-		},
+		data: {},
 		item: {
 			default: {},
 			normalize: ({ prop, normalize }) => normalize(prop),
