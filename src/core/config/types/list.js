@@ -16,9 +16,12 @@ export default {
 	parse: (args) => {
 		const { context, props } = args;
 		const { data, item } = props;
+		const getData = props.actions
+			? () => data().data
+			: data;
 
 		props.items = () =>
-			map(data(), (itemData) => itemToMount(
+			map(getData(), (itemData) => itemToMount(
 				itemData, item, context.mount
 			));
 	},
