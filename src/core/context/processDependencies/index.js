@@ -41,10 +41,11 @@ const orderDependencies = (dependencyMap) => {
 const processDependencies = ({ config, context }) => {
 	const dependencyMap = buildDependencyMap({ config, context });
 	const dependencyOrder = orderDependencies(dependencyMap);
+	const orderedDependencyMap = select(dependencyMap, dependencyOrder);
 	const orderedSources = select(config.sources, dependencyOrder);
 
 	config.sources = orderedSources;
-	context.dependencyMap = dependencyMap;
+	context.dependencyMap = orderedDependencyMap;
 };
 
 export default processDependencies;
