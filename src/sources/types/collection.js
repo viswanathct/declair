@@ -3,7 +3,7 @@
  *
  */
 
-import { merge, map } from '@laufire/utils/collection';
+import { clone, map, merge } from '@laufire/utils/collection';
 
 const actions = {
 	create: ({ cb, data, state }) => {
@@ -12,7 +12,7 @@ const actions = {
 			: data.id;
 
 		state.ids.push(id);
-		state.data.push(data);
+		state.data.push(clone(data));
 		cb();
 	},
 	delete: ({ cb, data, state }) => {
@@ -28,7 +28,7 @@ const actions = {
 	init: ({ data, state }) => {
 		merge(state, {
 			index: 0,
-			data: data,
+			data: clone(data),
 			// #TODO: Use hash maps for performance.
 			ids: map(data, (item) => item.id || state.index++),
 		});
