@@ -9,9 +9,7 @@ const init = (
 	if(!store.initialized) {
 		store.initialized = true;
 		store.Root = () => store.root();
-		store.updateState = (data) => setState(merge(
-			{}, store.state, data
-		));
+		store.updateState = (data) => setState({ ...store.state, ...data });
 	}
 };
 
@@ -32,8 +30,7 @@ const setup = ({ context }) => {
 			context, store, setState
 		);
 
-		merge(store.state, state);
-
+		store.state = state;
 		context.state = state;
 
 		return <store.Root />;

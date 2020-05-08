@@ -3,6 +3,7 @@ import { doNothing } from '../../core/utils';
 /* Exports */
 const type = {
 	props: {
+		actions: {},
 		data: {},
 	},
 	setup: () => doNothing,

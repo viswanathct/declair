@@ -6,11 +6,21 @@ import getDependents from './dependencies';
 import { isIterable } from '@laufire/utils/reflection';
 
 /* Helpers */
+const delegateToSource = (
+	context, cb, data, name
+) => {
+	const returned = cb(data);
+
+	if(returned !== undefined)
+		context.updateState({ [name]: returned });
+};
 const getResolver = (
 	context, name, cb
 ) =>
 	(dataIn) => (dataIn !== undefined
-		? context.updateState({ [name]: cb(dataIn) })
+		? delegateToSource(
+			context, cb, dataIn, name,
+		)
 		: context.state[name] !== undefined
 			? context.state[name]
 			: (context.state[name] = cb(dataIn)));

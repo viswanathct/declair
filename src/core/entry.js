@@ -40,6 +40,7 @@ const entry = (inConfig) => {
 		publish: (data) => merge(context.state, data),
 		root: () => context.mount(context.structure)(),
 		state: {},
+		sources: {},
 	};
 	const executeAction = (f) => f({ config, context });
 

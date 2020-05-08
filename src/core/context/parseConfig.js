@@ -5,8 +5,8 @@ import defaults from '../defaults';
 /* Helpers */
 const parseWorker = (params) => {
 	const { config, context, inherited: inheritedProps,
-		parsing, parse, type } = params;
-	const parseArgs = { context, config, parsing, parse, resolver, type };
+		name, parsing, parse, type } = params;
+	const parseArgs = { context, config, name, parsing, parse, resolver, type };
 
 	const props = map(type.props, (typeProp, propKey) => {
 		const { parse: propParser } = typeProp;
@@ -30,11 +30,11 @@ const parseWorker = (params) => {
 /* Exports */
 const getParser = ({ config, context }) => {
 	const { types } = context;
-	const parse = ({ parsing, inherited = {}}) => {
+	const parse = ({ parsing, inherited = {}, name }) => {
 		const type = types[parsing.type || defaults.type];
 
 		return parseWorker({
-			context, config, inherited, parsing, parse, type,
+			context, config, inherited, name, parsing, parse, type,
 		});
 	};
 
@@ -46,7 +46,7 @@ const parseConfig = ({ config, context }) => {
 	const parser = getParser({ config, context });
 
 	context.sources = map(config.sources,
-		(source) => parser({ parsing: source }));
+		(source, name) => parser({ parsing: source, name: name }));
 	context.structure = parser({ parsing: config.structure });
 };
 

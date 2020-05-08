@@ -1,12 +1,14 @@
 import { fill, map } from '@laufire/utils/collection';
 import typeDefaults from '../defaults/type';
 
-import value from './value';
+import collection from './collection';
 import transformation from './transformation';
+import value from './value';
 
 const types = {
-	value,
+	collection,
 	transformation,
+	value,
 };
 
 const augmented = map(types, (type) => fill(type, typeDefaults));

@@ -5,20 +5,20 @@ import { merge } from '@laufire/utils/collection';
 /* Data */
 const { OS: platform } = Platform;
 
-const getSourceActions = ({ context, parsing }) =>
+const getSourceActions = ({ context, parsing }) => // eslint-disable-line complexity
 	(context.isObservable(parsing.data)
-	&& context.sources[parsing.data].actions
-		&& (() => context.sources[parsing.data].actions))
+	&& context.sources[parsing.data]?.props.actions
+		&& (() => context.sources[parsing.data].props.actions))
 	|| undefined;
 
 /* Exports */
 const type = {
 	props: {
 		actions: {
-			parse: ({ config, parsing, prop }) =>
+			parse: ({ context, parsing, prop }) =>
 				(prop
 					? () => prop
-					: getSourceActions({ config, parsing })),
+					: getSourceActions({ context, parsing })),
 		},
 		platform: {
 			default: {},
