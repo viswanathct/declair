@@ -3,6 +3,7 @@ import {
 	sanitize, values,
 } from '@laufire/utils/collection';
 import normalizeTypes from './context/normalizeTypes';
+import processDependencies from './context/processDependencies';
 import normalizeConfig from './context/normalizeConfig';
 import parseConfig from './context/parseConfig';
 import mount from './context/mount';
@@ -45,7 +46,7 @@ const entry = (inConfig) => {
 	const executeAction = (f) => f({ config, context });
 
 	map({
-		normalizeTypes, normalizeConfig,
+		normalizeTypes, processDependencies, normalizeConfig,
 		setupProviders, parseConfig, initProviders,
 	}, executeAction);
 

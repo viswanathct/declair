@@ -47,8 +47,8 @@ const collection = {
 		},
 		data: {
 			parse: (args) => {
-				const { context, name } = args;
-				const resolvedData = args.resolver(args)();
+				const { context, name, resolver } = args;
+				const resolvedData = resolver(args)();
 				const state = {
 					index: 0,
 					data: resolvedData,

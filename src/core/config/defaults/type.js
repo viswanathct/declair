@@ -7,7 +7,7 @@ const { OS: platform } = Platform;
 
 const getSourceActions = ({ context, parsing }) => // eslint-disable-line complexity
 	(context.isObservable(parsing.data)
-	&& context.sources[parsing.data]?.props.actions
+	&& context.sources[parsing.data].props.actions
 		&& (() => context.sources[parsing.data].props.actions))
 	|| undefined;
 

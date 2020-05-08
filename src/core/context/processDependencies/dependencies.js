@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 
 import { combine, map, values } from '@laufire/utils/collection';
-import { unique } from '../core/utils';
+import { unique } from '../../utils';
 
 /* Helpers */
 const parse = (

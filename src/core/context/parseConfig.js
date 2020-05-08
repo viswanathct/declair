@@ -30,12 +30,16 @@ const parseWorker = (params) => {
 /* Exports */
 const getParser = ({ config, context }) => {
 	const { types } = context;
-	const parse = ({ parsing, inherited = {}, name }) => {
+	const parse = ({ parsing, inherited = {}, name, root }) => {
 		const type = types[parsing.type || defaults.type];
 
-		return parseWorker({
+		const parsed = parseWorker({
 			context, config, inherited, name, parsing, parse, type,
 		});
+
+		root && (root[name] = parsed);
+
+		return parsed;
 	};
 
 	return parse;
@@ -45,8 +49,12 @@ const getParser = ({ config, context }) => {
 const parseConfig = ({ config, context }) => {
 	const parser = getParser({ config, context });
 
-	context.sources = map(config.sources,
-		(source, name) => parser({ parsing: source, name: name }));
+	map(config.sources,
+		(source, name) => parser({
+			parsing: source,
+			name: name,
+			root: context.sources,
+		}));
 	context.structure = parser({ parsing: config.structure });
 };
 
