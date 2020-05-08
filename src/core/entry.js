@@ -50,6 +50,8 @@ const entry = (inConfig) => {
 		setupProviders, parseConfig, initProviders,
 	}, executeAction);
 
+	// #LATER: setup to init could be done serially on items, to avoid the need for run-time need for finding evaluators.
+
 	const { publish, sources, root } = context;
 
 	return { publish, sources, root };

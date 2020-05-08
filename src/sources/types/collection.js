@@ -25,6 +25,14 @@ const actions = {
 		state.data.splice(found, 1);
 		cb();
 	},
+	init: ({ data, state }) => {
+		merge(state, {
+			index: 0,
+			data: data,
+			// #TODO: Use hash maps for performance.
+			ids: map(data, (item) => item.id || state.index++),
+		});
+	},
 	update: ({ cb, data, state }) => {
 		const found = state.ids.findIndex((id) => id === data.id);
 
@@ -47,19 +55,11 @@ const collection = {
 		},
 		data: {
 			parse: (args) => {
-				const { context, name, resolver } = args;
-				const resolvedData = resolver(args)();
-				const state = {
-					index: 0,
-					data: resolvedData,
-				};
+				const { context, name } = args;
+				const state = {};
 				const cb = () => context.updateState({
 					[name]: { data: state.data },
 				});
-
-				// #TODO: Use hash maps for performance.
-				state.ids = map(resolvedData,
-					(item) => item.id || state.index++);
 
 				return (message) => (message
 					? actions[message.action]({

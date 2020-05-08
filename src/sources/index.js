@@ -1,7 +1,6 @@
 import providerTypes from './types';
-import { combine, compose, filter, map,
-	pick, values } from '@laufire/utils/collection';
-import { isIterable } from '@laufire/utils/reflection';
+import { combine, compose, filter,
+	map, values } from '@laufire/utils/collection';
 
 /* Helpers */
 const delegateToSource = (
@@ -11,6 +10,8 @@ const delegateToSource = (
 
 	if(returned !== undefined)
 		context.updateState({ [name]: returned });
+
+	return returned;
 };
 const getResolver = (
 	context, name, cb
@@ -36,22 +37,29 @@ const providerConfig = {
 };
 
 const init = ({ config, context }) => {
-	context.publish = (updates) => {
+	const { updateState } = context;
+
+	context.updateState = (updates) => {
 		const dependents = combine([],
 			...values(compose(updates, context.dependencyMap)));
 
 		map(dependents, (dependent) => (context.state[dependent] = undefined));
 
-		return map(updates,
-			(data, name) => context.sources[name](data));
+		updateState(updates);
 	};
+
+	context.publish = (updates) => map(updates,
+		(data, name) => context.sources[name](data));
 
 	buildResolvers({ config, context });
 
-	context.publish(pick(filter(config.sources, (source) =>
+	const sourcesToInit = filter(config.sources, (source) =>
 		source.data !== undefined
-		&& !context.isObservable(source.data)
-		&& !isIterable(source.data)), 'data'));
+		&& !context.isObservable(source.data));
+
+	context.publish(map(sourcesToInit, (source) => (source.actions
+		? { action: 'init', data: source.data }
+		: source.data)));
 };
 
 export default {
