@@ -2,7 +2,6 @@
  * A simple value.
  */
 
-import { doNothing } from '../../core/utils';
 import { isIterable } from '@laufire/utils/reflection';
 
 const value = {
@@ -11,9 +10,16 @@ const value = {
 			parse: (args) => {
 				const { context, prop, resolver } = args;
 
-				return isIterable(prop) || context.isObservable(prop)
-					? resolver(args)
-					: doNothing;
+				if(context.isObservable(prop) || isIterable(prop))
+					return resolver(args);
+
+				const state = {
+					store: prop,
+				};
+
+				return (data) => (data !== undefined
+					? (state.store = data)
+					: state.store);
 			},
 		},
 	},

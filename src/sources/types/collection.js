@@ -69,13 +69,17 @@ const collection = {
 					[name]: { data: state.data },
 				});
 
-				return (message) => (message
+				const data = (message) => (message
 					? actions[message.action]({
 						cb: cb,
 						data: message.data,
 						state: state,
 					})
 					: { data: state.data });
+
+				data({ action: 'init', data: prop });
+
+				return data;
 			},
 		},
 	},

@@ -1,6 +1,5 @@
 import providerTypes from './types';
-import { combine, compose, filter,
-	map, values } from '@laufire/utils/collection';
+import { combine, compose, map, values } from '@laufire/utils/collection';
 
 /* Helpers */
 const delegateToSource = (
@@ -52,14 +51,6 @@ const init = ({ config, context }) => {
 		(data, name) => context.sources[name](data));
 
 	buildResolvers({ config, context });
-
-	const sourcesToInit = filter(config.sources, (source) =>
-		source.data !== undefined
-		&& !context.isObservable(source.data));
-
-	context.publish(map(sourcesToInit, (source) => (source.actions
-		? { action: 'init', data: source.data }
-		: source.data)));
 };
 
 export default {
