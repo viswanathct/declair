@@ -2,13 +2,13 @@ import React from 'react';
 import { Button } from 'react-native';
 
 const button = {
-	setup: () => ({ action, available, data, style }) =>
+	setup: () => ({ action, available, data, label, style }) =>
 		<Button { ...{
-			accessibilityLabel: data(),
+			accessibilityLabel: label(),
 			disabled: !available(),
-			onPress: action(),
+			onPress: action(data),
 			style: style(),
-			title: data(),
+			title: label(),
 		} }/>,
 };
 

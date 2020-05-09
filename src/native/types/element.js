@@ -9,15 +9,18 @@ const element = {
 			default: container,
 		},
 	},
-	setup: () => ({ items, data, style }) =>
-		<View { ...{ style: style() } }>
+	setup: () => (renderProps) => {
+		const { items, style } = renderProps;
+
+		return <View { ...{ style: style() } }>
 			{
-				values(map(items(data), (item, key) =>
+				values(map(items(renderProps), (item, key) =>
 					<React.Fragment {...{ key }}>
 						{ item }
 					</React.Fragment>))
 			}
-		</View>,
+		</View>;
+	},
 };
 
 export default element;
