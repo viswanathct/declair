@@ -1,8 +1,15 @@
 import { map } from '@laufire/utils/collection';
 
-const itemToMount = (
-	data, item, mount
-) => mount(item)({ data: () => data });
+const itemRenderProps = ({ action, data }) => ({
+	action: (message) => () => action({
+		...message(),
+		data: {
+			id: data.id,
+			...message().data,
+		},
+	}),
+	data: () => data,
+});
 
 export default {
 	props: {
@@ -19,10 +26,12 @@ export default {
 		const getData = props.actions
 			? () => data().data
 			: data;
+		const actionProps = { ...props.actions ? { action: data } : {}};
 
 		props.items = () =>
-			map(getData(), (itemData) => itemToMount(
-				itemData, item, context.mount
-			));
+			map(getData(), (itemData) => context.mount(item)(itemRenderProps({
+				...actionProps,
+				data: itemData,
+			})));
 	},
 };

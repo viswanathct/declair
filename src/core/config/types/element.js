@@ -1,8 +1,9 @@
 import { map } from '@laufire/utils/collection';
 
-const itemToMount = (
-	data, key, item, mount
-) => mount(item)({ data: () => data()[key] });
+const itemToMount = (renderProps, key) => ({
+	...renderProps,
+	data: () => renderProps.data()[key],
+});
 
 export default {
 	props: {
@@ -19,9 +20,8 @@ export default {
 		const parsedItems = map(items, (item) =>
 			parse({ parsing: item }));
 
-		props.items = (data) =>
-			map(parsedItems, (item, key) => itemToMount(
-				data, key, item, context.mount
-			));
+		props.items = (renderProps) =>
+			map(parsedItems, (item, key) =>
+				context.mount(item)(itemToMount(renderProps, key)));
 	},
 };
