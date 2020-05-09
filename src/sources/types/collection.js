@@ -3,7 +3,7 @@
  *
  */
 
-import { clone, map, merge } from '@laufire/utils/collection';
+import { clone, pick, map, merge } from '@laufire/utils/collection';
 
 const actions = {
 	create: ({ cb, data, state }) => {
@@ -26,11 +26,13 @@ const actions = {
 		cb();
 	},
 	init: ({ data, state }) => {
+		map(data, (item) =>
+			(item.id !== undefined || (item.id = state.index++)));
+
 		merge(state, {
-			index: 0,
 			data: clone(data),
 			// #TODO: Use hash maps for performance.
-			ids: map(data, (item) => item.id || state.index++),
+			ids: pick(data, 'id'),
 		});
 	},
 	update: ({ cb, data, state }) => {
@@ -55,8 +57,14 @@ const collection = {
 		},
 		data: {
 			parse: (args) => {
-				const { context, name } = args;
-				const state = {};
+				const { context, name, prop } = args;
+
+				if(context.isObservable(prop))
+					return (data) => context.sources[prop](data);
+
+				const state = {
+					index: 0,
+				};
 				const cb = () => context.updateState({
 					[name]: { data: state.data },
 				});

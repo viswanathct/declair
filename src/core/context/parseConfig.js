@@ -12,9 +12,9 @@ const parseWorker = (params) => {
 		const { parse: propParser } = typeProp;
 		const prop = parsing[propKey];
 		const inherited = inheritedProps[propKey];
-		const propEvaluator = context.isObservable(prop)
-			? (data) => context.sources[prop](data)
-			: (propParser || resolver)({ ...parseArgs, inherited, prop });
+		const propEvaluator = (propParser || resolver)({
+			...parseArgs, inherited, prop,
+		});
 
 		return propEvaluator;
 	});
