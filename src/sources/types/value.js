@@ -2,15 +2,16 @@
  * A simple value.
  */
 
-import { isIterable } from '@laufire/utils/reflection';
+import { hasSource } from '../../core/utils';
 
 const value = {
 	props: {
 		data: {
 			parse: (args) => {
-				const { context, prop, resolver } = args;
+				const { config, context, prop, resolver } = args;
 
-				if(context.isObservable(prop) || isIterable(prop))
+				if(context.isObservable(prop)
+					|| hasSource(config.sources, prop))
 					return resolver(args);
 
 				const state = {
