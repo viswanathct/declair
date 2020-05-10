@@ -11,10 +11,12 @@ export default {
 			parse: ({ prop }) => () => prop,
 		},
 	},
-	parse: ({ context, props }) => {
+	parse: ({ context, props, inherited }) => {
 		if(props.target()) {
 			props.action = (data) =>
 				() => context.publish({ [props.target()]: data() });
 		}
+		else if(inherited.action)
+			props.action = inherited.action;
 	},
 };
