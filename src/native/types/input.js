@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput } from 'react-native';
 
 const element = {
@@ -9,13 +9,19 @@ const element = {
 			},
 		},
 	},
-	setup: () => ({ data, style }) =>
-		<TextInput { ...{
+	setup: () => ({ data, style }) => {
+		const [state, setState] = useState(data);
+
+		return <TextInput { ...{
 			style: style(),
-			onChangeText: data,
-			value: data(),
+			onChangeText: (value) => {
+				data(value);
+				setState(value);
+			},
+			value: state,
 		}}
-		/>,
+		/>;
+	},
 };
 
 export default element;
