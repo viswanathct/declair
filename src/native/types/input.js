@@ -10,7 +10,7 @@ const element = {
 		},
 	},
 	setup: () => ({ data, style }) => {
-		const [state, setState] = useState(data);
+		const [dummy, setState] = useState();
 
 		return <TextInput { ...{
 			style: style(),
@@ -18,7 +18,7 @@ const element = {
 				data(value);
 				setState(value);
 			},
-			value: state,
+			value: data(),
 		}}
 		/>;
 	},
