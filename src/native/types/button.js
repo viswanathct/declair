@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'react-native';
 
 const button = {
-	setup: () => ({ action, available, data, label, style }) =>
+	setup: ({ action, available, data, label, style }) =>
 		<Button { ...{
 			accessibilityLabel: label(),
 			disabled: !available(),

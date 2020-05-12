@@ -34,9 +34,10 @@ export default {
 		props.items = () => map(parsedItems, (item, key) => {
 			init();
 
-			return context.mount(item)(itemToMount({
-				formData, key,
-			}));
+			return context.mount({ ...item, props: {
+				...itemToMount({ formData, key }),
+				...item.props,
+			}});
 		});
 	},
 };

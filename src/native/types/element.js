@@ -9,7 +9,7 @@ const element = {
 			default: container,
 		},
 	},
-	setup: () => (renderProps) => {
+	setup: (renderProps) => {
 		const { items, style } = renderProps;
 
 		return <View { ...{ style: style() } }>

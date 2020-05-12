@@ -12,7 +12,7 @@ const element = {
 			},
 		},
 	},
-	setup: () => ({ items, style }) => <View { ...{ style: style() } }>
+	setup: ({ items, style }) => <View { ...{ style: style() } }>
 		{
 			values(map(items(), (item, key) =>
 				<React.Fragment {...{ key }}>

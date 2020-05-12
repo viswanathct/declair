@@ -1,6 +1,7 @@
 import { map } from '@laufire/utils/collection';
+import { doNothing } from '../../utils';
 
-const itemRenderProps = ({ action, data }) => ({
+const itemProps = (action) => (data) => ({
 	action: (message) => () => action({
 		...message(),
 		data: {
@@ -26,12 +27,16 @@ export default {
 		const getData = props.actions
 			? () => data().data
 			: data;
-		const actionProps = { ...props.actions ? { action: data } : {}};
+		const action = props.actions ? data : doNothing;
+		const itemRenderProps = itemProps(action);
 
 		props.items = () =>
-			map(getData(), (itemData) => context.mount(item)(itemRenderProps({
-				...actionProps,
-				data: itemData,
-			})));
+			map(getData(), (itemData) => context.mount({
+				...item,
+				props: {
+					...itemRenderProps(itemData),
+					...item.props,
+				},
+			}));
 	},
 };

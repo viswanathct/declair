@@ -9,7 +9,7 @@ const element = {
 			},
 		},
 	},
-	setup: () => ({ data, style }) => {
+	setup: ({ data, style }) => {
 		const [dummy, setState] = useState();
 
 		return <TextInput { ...{

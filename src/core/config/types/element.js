@@ -22,6 +22,12 @@ export default {
 
 		props.items = (renderProps) =>
 			map(parsedItems, (item, key) =>
-				context.mount(item)(itemToMount(renderProps, key)));
+				context.mount({
+					...item,
+					props: {
+						...itemToMount(renderProps, key),
+						...item.props,
+					},
+				}));
 	},
 };

@@ -62,7 +62,7 @@ const router = {
 			default: styles.links,
 		},
 	},
-	setup: () => (props) => <Routed { ...props }/>,
+	setup: (props) => <Routed { ...props }/>,
 	type: 'uiComponent',
 };
 

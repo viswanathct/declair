@@ -6,7 +6,7 @@ const type = {
 		actions: {},
 		data: {},
 	},
-	setup: () => doNothing,
+	setup: doNothing,
 	type: 'source',
 };
 
