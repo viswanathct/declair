@@ -1,19 +1,26 @@
-// #TODO: Form data shouldn't reflect changes at the source, during editing to provide a good UX.
-
 import { map, merge } from '@laufire/utils/collection';
+import { interactive } from '../classes';
 
-const itemToMount = ({ formData, key }) => ({
-	data: (dataIn) => (dataIn !== undefined
+/* Helpers */
+const itemToMount = ({ formData, key, action }) => {
+	const data = (dataIn) => (dataIn !== undefined
 		? (formData[key] = dataIn)
-		: formData[key]),
-});
+		: formData[key]);
+
+	return {
+		action: () => () =>
+			actions[key](action(() => formData)), // eslint-disable-line no-use-before-define
+		data: data,
+	};
+};
 
 const actions = {
-	submit: (data, cb) => cb(data),
+	submit: (cb) => cb(),
 };
 
 export default {
 	props: {
+		...interactive,
 		items: {
 			default: {},
 			normalize: ({ prop, normalize }) => map(prop, normalize),
@@ -21,21 +28,22 @@ export default {
 	},
 	parse: (args) => {
 		const { context, parse, parsing, props } = args;
+		const { data, action } = props;
 		const { items } = parsing;
-		const state = {};
 		const formData = {};
+
+		const state = {};
 		const init = () => !state.init
-			&& merge(formData, props.data()) && (state.init = true);
-		const action = (data) => () =>
-			actions[data().action](formData, props.data);
+			&& merge(formData, data()) && (state.init = true);
+
 		const parsedItems = map(items, (item) =>
-			parse({ parsing: item, inherited: { action }}));
+			parse({ parsing: item }));
 
 		props.items = () => map(parsedItems, (item, key) => {
 			init();
 
 			return context.mount(item)(itemToMount({
-				formData, key,
+				formData, key, action,
 			}));
 		});
 	},

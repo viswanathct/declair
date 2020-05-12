@@ -37,9 +37,10 @@ const styles = {
 };
 
 /* Workers */
-const Routed = ({ items: passedItems, style }) => {
+const Routed = (renderProps) => {
+	const { items: passedItems, style } = renderProps;
 	const { path: pathname } = useRouteMatch();
-	const items = passedItems();
+	const items = passedItems(renderProps);
 	const path = pathname.replace(/\/$/, '');
 
 	return <View {...{ style: styles.wrapper }}>

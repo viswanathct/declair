@@ -1,3 +1,5 @@
+Strayed in altering the contract for actions across components and stuck at getting the buttons work with lists.
+
 # decalir
 
 	A tool to help in building simple, declarative, cross-platform UIs.

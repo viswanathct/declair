@@ -1,31 +1,27 @@
-import { map, clean } from '@laufire/utils/collection';
+import { assign, clean, map } from '@laufire/utils/collection';
 import { resolver } from './resolve';
 import defaults from '../defaults';
 
 /* Helpers */
 const parseWorker = (params) => {
-	const { config, context, inherited: inheritedProps,
-		name, parsing, parse, type } = params;
-	const parseArgs = { context, config, name, parsing, parse, resolver, type };
+	const { inherited, parsing, type } = params;
+	const props = {};
+	const parseArgs = { ...params, props, resolver };
 
-	const props = map(type.props, (typeProp, propKey) => {
+	assign(props, clean(map(type.props, (typeProp, propKey) => {
 		const { parse: propParser } = typeProp;
 		const prop = parsing[propKey];
-		const inherited = inheritedProps[propKey];
+		const inheritedProp = inherited[propKey];
 		const propEvaluator = (propParser || resolver)({
-			...parseArgs, inherited, prop,
+			...parseArgs, inherited: inheritedProp, prop: prop,
 		});
 
 		return propEvaluator;
-	});
+	})));
 
-	const parsed = { ...parseArgs, props: clean(props) };
+	type.parse({ ...parseArgs });
 
-	type.parse({ ...parsed,
-		inherited: inheritedProps,
-		parse: parse });
-
-	return parsed;
+	return parseArgs;
 };
 
 /* Exports */
