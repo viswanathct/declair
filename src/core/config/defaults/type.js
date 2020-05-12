@@ -1,6 +1,6 @@
 import { doNothing } from '../../utils';
 import { Platform } from 'react-native';
-import { merge } from '@laufire/utils/collection';
+import { fill, merge } from '@laufire/utils/collection';
 
 /* Data */
 const { OS: platform } = Platform;
@@ -27,7 +27,9 @@ const type = {
 		},
 	},
 	normalize: doNothing,
-	parse: doNothing,
+	parse: ({ props, inherited }) => {
+		fill(props, inherited);
+	},
 	setup: doNothing,
 };
 
