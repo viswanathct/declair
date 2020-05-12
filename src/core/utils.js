@@ -1,4 +1,4 @@
-import { has, walk } from '@laufire/utils/collection';
+import { assign, has, walk } from '@laufire/utils/collection';
 import { inferType } from '@laufire/utils/reflection';
 
 /* Helpers */
@@ -37,13 +37,16 @@ const hasSource = (sources, prop) => {
 
 const unique = (array) => array.filter(isUnique);
 
-const interceptArgs = (base, prop) => {
+const getRenderProps = (parserArgs) => {
 	const ret = {};
-	const hooked = base[prop];
+	const origSetup = parserArgs.type.setup;
 
-	base[prop] = (args) => {
-		ret[prop] = args;
-		return hooked(args);
+	parserArgs.type = {
+		...parserArgs.type,
+		setup: (props) => {
+			assign(ret, props);
+			return origSetup(props);
+		},
 	};
 
 	return ret;
@@ -54,7 +57,7 @@ export {
 	sayNothing,
 	hasSource,
 	hook,
-	interceptArgs,
+	getRenderProps,
 	isObservable,
 	unique,
 };

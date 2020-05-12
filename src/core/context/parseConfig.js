@@ -18,9 +18,7 @@ const parseWorker = (params) => {
 		return propEvaluator;
 	})));
 
-	type.parse({ ...parseArgs });
-
-	return parseArgs;
+	return type.parse({ ...parseArgs }) || parseArgs;
 };
 
 /* Exports */
