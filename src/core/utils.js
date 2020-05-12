@@ -37,11 +37,24 @@ const hasSource = (sources, prop) => {
 
 const unique = (array) => array.filter(isUnique);
 
+const interceptArgs = (base, prop) => {
+	const ret = {};
+	const hooked = base[prop];
+
+	base[prop] = (args) => {
+		ret[prop] = args;
+		return hooked(args);
+	};
+
+	return ret;
+};
+
 export {
 	doNothing,
 	sayNothing,
 	hasSource,
 	hook,
+	interceptArgs,
 	isObservable,
 	unique,
 };

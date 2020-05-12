@@ -9,18 +9,14 @@ const element = {
 			default: container,
 		},
 	},
-	setup: (props) => {
-		const { items, style } = props;
-
-		return <View { ...{ style: style() } }>
-			{
-				values(map(items(props), (item, key) =>
-					<React.Fragment {...{ key }}>
-						{ item }
-					</React.Fragment>))
-			}
-		</View>;
-	},
+	setup: ({ items, style }) => <View { ...{ style: style() } }>
+		{
+			values(map(items(), (item, key) =>
+				<React.Fragment {...{ key }}>
+					{ item }
+				</React.Fragment>))
+		}
+	</View>,
 };
 
 export default element;
