@@ -9,7 +9,8 @@ const normalizeTypes = ({ config, context }) => {
 		merge({}, ...values(config.providers)).config.types
 	);
 
-	map(providerTypes, (type) => fill(type, typeDefaults));
+	map(providerTypes, (type, name) =>
+		merge(fill(type, typeDefaults), { type: name }));
 
 	map(pick(providerTypes, 'props'), (type, typeName) =>
 		merge(pick(type, 'default'), config.types[typeName]));

@@ -37,9 +37,10 @@ const styles = {
 };
 
 /* Workers */
-const Routed = ({ items: passedItems, style }) => {
+const Routed = (props) => {
+	const { items: passedItems, style } = props;
 	const { path: pathname } = useRouteMatch();
-	const items = passedItems();
+	const items = passedItems(props);
 	const path = pathname.replace(/\/$/, '');
 
 	return <View {...{ style: styles.wrapper }}>
@@ -63,7 +64,7 @@ const router = {
 		},
 	},
 	setup: (props) => <Routed { ...props }/>,
-	type: 'uiComponent',
+	type: 'router',
 };
 
 export default fill(router, element);

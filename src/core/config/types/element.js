@@ -1,9 +1,18 @@
 import { map } from '@laufire/utils/collection';
 
-const itemToMount = (renderProps, key) => ({
-	...renderProps,
-	data: () => renderProps.data()[key],
-});
+const parseItems = ({ context, items, parsed }) =>
+	map(items, (item, key) => {
+		const parsedProps = parsed[key].props;
+		const type = context.types[item.type];
+
+		return type.interactive && !parsedProps.target()
+			? type.editable
+				? (parentData) => (dataIn) => (dataIn !== undefined
+					? parentData(parsedProps.data())
+					: parsedProps.data())
+				: (parentData) => () => parentData(parsedProps.data())
+			: undefined;
+	});
 
 export default {
 	props: {
@@ -16,17 +25,17 @@ export default {
 	parse: (args) => {
 		const { context, parse, parsing, props } = args;
 		const { items } = parsing;
+		const parsed = map(items, (item) => parse({ parsing: item }));
+		const dataHooks = parseItems({ context, items, parsed });
 
-		const parsedItems = map(items, (item) =>
-			parse({ parsing: item }));
-
-		props.items = (renderProps) =>
-			map(parsedItems, (item, key) =>
+		props.items = ({ data }) =>
+			map(parsed, (item, key) =>
 				context.mount({
-					...item,
-					props: {
-						...itemToMount(renderProps, key),
+					...item, props: {
 						...item.props,
+						data: dataHooks[key]
+							? dataHooks[key](data)
+							: item.props.data || (() => data()[key]),
 					},
 				}));
 	},

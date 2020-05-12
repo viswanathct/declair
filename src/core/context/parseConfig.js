@@ -1,6 +1,5 @@
 import { assign, clean, map } from '@laufire/utils/collection';
 import { resolver } from './resolve';
-import defaults from '../defaults';
 
 /* Helpers */
 const parseWorker = (params) => {
@@ -28,7 +27,7 @@ const parseWorker = (params) => {
 const getParser = ({ config, context }) => {
 	const { types } = context;
 	const parse = ({ parsing, inherited = {}, name, root }) => {
-		const type = types[parsing.type || defaults.type];
+		const type = types[parsing.type];
 
 		const parsed = parseWorker({
 			context, config, inherited, name, parsing, parse, type,

@@ -3,6 +3,7 @@ import defaults from '../defaults';
 
 /* Helpers */
 const normalizeWorker = ({ config, context, normalize, type }) => {
+	config.type = type.type;
 	const { props, normalize: typeNormalizer } = type;
 	const propNormalizers = pick(props, 'normalize');
 	const normalizedProps = map(propNormalizers, (propNormalizer, prop) =>

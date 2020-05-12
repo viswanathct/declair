@@ -1,16 +1,13 @@
-import { map } from '@laufire/utils/collection';
-import { doNothing } from '../../utils';
+import { map, merge } from '@laufire/utils/collection';
 
-const itemProps = (action) => (data) => ({
-	action: (message) => () => action({
-		...message(),
-		data: {
-			id: data.id,
-			...message().data,
-		},
-	}),
-	data: () => data,
-});
+const decorate = ({ item, itemData, props }) => {
+	const data = (dataIn) =>
+		(dataIn !== undefined
+			? props.data(merge(dataIn, { data: itemData }))
+			: itemData);
+
+	return { ...item, props: { ...item.props, data }};
+};
 
 export default {
 	props: {
@@ -27,16 +24,9 @@ export default {
 		const getData = props.actions
 			? () => data().data
 			: data;
-		const action = props.actions ? data : doNothing;
-		const itemRenderProps = itemProps(action);
 
 		props.items = () =>
-			map(getData(), (itemData) => context.mount({
-				...item,
-				props: {
-					...itemRenderProps(itemData),
-					...item.props,
-				},
-			}));
+			map(getData(), (itemData) =>
+				context.mount(decorate({ context, item, itemData, props })));
 	},
 };

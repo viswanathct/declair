@@ -9,12 +9,12 @@ const element = {
 			default: container,
 		},
 	},
-	setup: (renderProps) => {
-		const { items, style } = renderProps;
+	setup: (props) => {
+		const { items, style } = props;
 
 		return <View { ...{ style: style() } }>
 			{
-				values(map(items(renderProps), (item, key) =>
+				values(map(items(props), (item, key) =>
 					<React.Fragment {...{ key }}>
 						{ item }
 					</React.Fragment>))

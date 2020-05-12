@@ -4,6 +4,16 @@ export default {
 			default: true,
 			parse: ({ prop }) => () => Boolean(prop),
 		},
+		data: {
+			parse: (args) => {
+				const { context, parsing, props, resolver } = args;
+				const data = resolver(args);
+
+				return parsing.target
+					? () => context.publish({ [props.target()]: data() })
+					: data;
+			},
+		},
 		label: {
 			default: 'Button',
 		},
@@ -11,12 +21,5 @@ export default {
 			parse: ({ prop }) => () => prop,
 		},
 	},
-	parse: ({ context, props, inherited }) => {
-		if(props.target()) {
-			props.action = (data) =>
-				() => context.publish({ [props.target()]: data() });
-		}
-		else if(inherited.action)
-			props.action = inherited.action;
-	},
+	interactive: true,
 };

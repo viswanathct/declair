@@ -1,16 +1,26 @@
-// #TODO: Form data shouldn't reflect changes at the source, during editing to provide a good UX.
+// #NOTE: Form data doesn't reflect changes to their dependencies, during editing to provide a good UX.
 
 import { map, merge } from '@laufire/utils/collection';
-
-const itemToMount = ({ formData, key }) => ({
-	data: (dataIn) => (dataIn !== undefined
-		? (formData[key] = dataIn)
-		: formData[key]),
-});
 
 const actions = {
 	submit: (data, cb) => cb(data),
 };
+
+const parseItems = ({ context, formData, items, parse, props }) =>
+	map(items, (item, key) => {
+		const parsed = parse({ parsing: item });
+		const { data } = parsed.props;
+
+		parsed.props.data = context.types[item.type].interactive
+			? (dataIn) => (dataIn !== undefined
+				? actions[data().action](formData, props.data)
+				: data())
+			: data || ((dataIn) => (dataIn !== undefined
+				? (formData[key] = dataIn)
+				: formData[key]));
+
+		return parsed;
+	});
 
 export default {
 	props: {
@@ -26,18 +36,15 @@ export default {
 		const formData = {};
 		const init = () => !state.init
 			&& merge(formData, props.data()) && (state.init = true);
-		const action = (data) => () =>
-			actions[data().action](formData, props.data);
-		const parsedItems = map(items, (item) =>
-			parse({ parsing: item, inherited: { action }}));
-
-		props.items = () => map(parsedItems, (item, key) => {
-			init();
-
-			return context.mount({ ...item, props: {
-				...itemToMount({ formData, key }),
-				...item.props,
-			}});
+		const parsedItems = parseItems({
+			items, context, formData, parse, props,
 		});
+
+		props.items = () => {
+			init();
+			return map(parsedItems, (item) => context.mount(item));
+		};
 	},
+	interactive: true,
+	editable: true,
 };
