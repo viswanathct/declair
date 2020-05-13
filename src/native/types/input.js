@@ -18,7 +18,7 @@ const element = {
 				data(value);
 				setState(value);
 			},
-			value: data(),
+			value: data() || '',
 		}}
 		/>;
 	},
