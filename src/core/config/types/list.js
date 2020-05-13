@@ -10,14 +10,6 @@ const decorate = ({ item, itemData, props }) => {
 };
 
 export default {
-	props: {
-		data: {},
-		item: {
-			default: {},
-			normalize: ({ prop, normalize }) => normalize(prop),
-			parse: ({ parse, prop }) => parse({ parsing: prop }),
-		},
-	},
 	parse: (args) => {
 		const { context, props } = args;
 		const { data, item } = props;

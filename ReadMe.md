@@ -14,7 +14,7 @@ $ npm install declair
 
 ## Keys
 
-* *None, yet.*
+* Most properties are common across uiComponents, even when unused, so to reduce complexity.
 
 ## Notes
 

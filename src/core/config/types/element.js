@@ -16,12 +16,6 @@ const parseItems = ({ context, items, parsed }) =>
 	});
 
 export default {
-	props: {
-		items: {
-			default: {},
-			normalize: ({ prop, normalize }) => map(prop, normalize),
-		},
-	},
 	parse: (parserArgs) => {
 		const { context, parse, parsing, props } = parserArgs;
 		const { items } = parsing;
