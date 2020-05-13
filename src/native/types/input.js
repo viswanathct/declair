@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput } from 'react-native';
+import { withDefault } from '../../core/utils';
 
 const element = {
 	props: {
@@ -18,7 +19,7 @@ const element = {
 				data(value);
 				setState(value);
 			},
-			value: data() || '',
+			value: withDefault(data(), ''),
 		}}
 		/>;
 	},

@@ -58,6 +58,9 @@ const once = (cb) => {
 	return () => !state.called && (state.called = true && cb());
 };
 
+const withDefault = (value, filler = '') =>
+	(value !== undefined ? value : filler);
+
 export {
 	doNothing,
 	sayNothing,
@@ -67,4 +70,5 @@ export {
 	once,
 	setupHook,
 	unique,
+	withDefault,
 };
