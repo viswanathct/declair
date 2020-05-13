@@ -14,9 +14,9 @@ const element = {
 	},
 	setup: ({ items, style }) => <View { ...{ style: style() } }>
 		{
-			values(map(items(), (item, key) =>
+			values(map(items(), (Item, key) =>
 				<React.Fragment {...{ key }}>
-					{ item }
+					<Item/>
 				</React.Fragment>))
 		}
 	</View>,

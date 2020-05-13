@@ -18,11 +18,11 @@ const getLink = (path) => ({ key, label }) => <Link {...{
 	<Text>{ label || key }</Text>
 </Link>;
 
-const getItem = ({ path, item, key }) => <Route {...{
+const getItem = ({ path, item: Item, key }) => <Route {...{
 	key: key,
 	path: `${ path }/${ key }`,
 }}>
-	{ item }
+	<Item/>
 </Route>;
 
 const styles = {
