@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Platform, View, Text } from 'react-native';
-import { map, fill, values } from '@laufire/utils/collection';
+import { map, fill, values, pick } from '@laufire/utils/collection';
 import element from '../../core/config/types/element';
 
 /* Delegates */
@@ -11,13 +11,12 @@ const { Route, Link, useRouteMatch } = Platform.os !== 'web'
 	: require('react-router-dom');
 
 /* Helpers */
-const getLink = (path) => (dummy, key) =>
-	<Link {...{
-		key: key,
-		to: `${ path }/${ key }`,
-	}}>
-		<Text>{ key }</Text>
-	</Link>;
+const getLink = (path) => ({ key, label }) => <Link {...{
+	key: key,
+	to: `${ path }/${ key }`,
+}}>
+	<Text>{ label || key }</Text>
+</Link>;
 
 const getItem = ({ path, item, key }) => <Route {...{
 	key: key,
@@ -38,14 +37,18 @@ const styles = {
 
 /* Workers */
 const Routed = (props) => {
-	const { items: passedItems, style } = props;
+	const { style } = props;
 	const { path: pathname } = useRouteMatch();
-	const items = passedItems(props);
+	const labels = props.labels();
+	const items = props.items();
 	const path = pathname.replace(/\/$/, '');
 
 	return <View {...{ style: styles.wrapper }}>
 		<View {...{ style: style() }}>
-			{ values(map(items, getLink(path))) }
+			{ values(map(items, (dummy, key) => getLink(path)({
+				key: key,
+				label: labels[key],
+			}))) }
 		</View>
 		<View {...{ style: { flex: 1 }}}>
 			{
@@ -62,6 +65,11 @@ const router = {
 		style: {
 			default: styles.links,
 		},
+	},
+	parse: (parserArgs) => {
+		parserArgs.props.labels = () => pick(parserArgs.parsing.items, 'label');
+
+		return element.parse(parserArgs);
 	},
 	setup: (props) => <Routed { ...props }/>,
 	type: 'router',
