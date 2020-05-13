@@ -45,7 +45,6 @@ const setupHook = (parserArgs, cb = doNothing) => {
 		...parserArgs.type,
 		setup: (props) => {
 			assign(ret, cb(props));
-			parserArgs.type.setup = origSetup;
 			return origSetup(props);
 		},
 	};
@@ -53,12 +52,19 @@ const setupHook = (parserArgs, cb = doNothing) => {
 	return ret;
 };
 
+const once = (cb) => {
+	const state = {};
+
+	return () => !state.called && (state.called = true && cb());
+};
+
 export {
 	doNothing,
 	sayNothing,
 	hasSource,
 	hook,
-	setupHook,
 	isObservable,
+	once,
+	setupHook,
 	unique,
 };

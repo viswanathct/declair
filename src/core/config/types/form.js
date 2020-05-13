@@ -2,7 +2,7 @@
 // #NOTE: Form data doesn't reflect changes to their dependencies, during editing to provide a good UX.
 
 import { map, merge } from '@laufire/utils/collection';
-import { setupHook } from '../../utils';
+import { once, setupHook } from '../../utils';
 
 const parseItems = ({ context, items, parsed }) =>
 	map(items, (item, key) => {
@@ -42,8 +42,9 @@ export default {
 		const { items } = parsing;
 		const parsed = map(items, (item) => parse({ parsing: item }));
 		const formData = {};
+		const init = once(() => merge(formData, props.data()));
 		const renderProps = setupHook(parserArgs, (hookedProps) => {
-			merge(formData, props.data());
+			init();
 			return hookedProps;
 		});
 		const dataHooks = parseItems({ context, items, parsed });
