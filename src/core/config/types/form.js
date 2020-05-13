@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 // #NOTE: Form data doesn't reflect changes to their dependencies, during editing to provide a good UX.
 
 import { map, merge } from '@laufire/utils/collection';
@@ -22,11 +21,26 @@ const actions = {
 	submit: (data, formData) => data(formData),
 };
 
+const getTargetActions = ({ config, props }) =>
+	config.sources[props.target()].actions;
+
 export default {
 	props: {
 		items: {
 			default: {},
 			normalize: ({ prop, normalize }) => map(prop, normalize),
+		},
+		data: {
+			parse: (args) => {
+				const { context, parsing, props, resolver } = args;
+				const data = resolver(args);
+
+				return parsing.target
+					? (dataIn) => (dataIn !== undefined
+						? context.publish({ [props.target()]: dataIn })
+						: data())
+					: data;
+			},
 		},
 		target: {
 			normalize: ({ config, context, prop }) => (prop
@@ -37,19 +51,26 @@ export default {
 			parse: ({ prop }) => () => prop,
 		},
 	},
-	parse: (parserArgs) => {
+	parse: (parserArgs) => { // eslint-disable-line max-lines-per-function, max-statements
 		const { context, parse, parsing, props } = parserArgs;
 		const { items } = parsing;
 		const parsed = map(items, (item) => parse({ parsing: item }));
+		const targetActions = getTargetActions(parserArgs);
 		const formData = {};
-		const init = once(() => merge(formData, props.data()));
+		const init = once(() => merge(formData,
+			targetActions ? props.data().data : props.data()));
 		const renderProps = setupHook(parserArgs, (hookedProps) => {
 			init();
 			return hookedProps;
 		});
 		const dataHooks = parseItems({ context, items, parsed });
-		const action = (dataIn) =>
-			actions[dataIn.action](renderProps.data, formData);
+		const action = targetActions
+			? (dataIn) =>
+				actions[dataIn.action](renderProps.data, merge(
+					{}, props.data(), { data: formData }
+				))
+			: (dataIn) =>
+				actions[dataIn.action](renderProps.data, formData);
 
 		props.items = () => map(parsed, (item, key) =>
 			context.mount({
