@@ -1,26 +1,26 @@
+/* eslint-disable max-lines-per-function */
 // #NOTE: Form data doesn't reflect changes to their dependencies, during editing to provide a good UX.
 
 import { map, merge } from '@laufire/utils/collection';
+import { setupHook } from '../../utils';
+
+const parseItems = ({ context, items, parsed }) =>
+	map(items, (item, key) => {
+		const parsedProps = parsed[key].props;
+		const type = context.types[item.type];
+
+		return type.interactive && !parsedProps.target()
+			? type.editable
+				? (parentData) => (dataIn) => (dataIn !== undefined
+					? parentData(parsedProps.data())
+					: parsedProps.data())
+				: (parentData) => () => parentData(parsedProps.data())
+			: undefined;
+	});
 
 const actions = {
-	submit: (data, cb) => cb(data),
+	submit: (data, formData) => data(formData),
 };
-
-const parseItems = ({ context, formData, items, parse, props }) =>
-	map(items, (item, key) => {
-		const parsed = parse({ parsing: item });
-		const { data } = parsed.props;
-
-		parsed.props.data = context.types[item.type].interactive
-			? (dataIn) => (dataIn !== undefined
-				? actions[data().action](formData, props.data)
-				: data())
-			: data || ((dataIn) => (dataIn !== undefined
-				? (formData[key] = dataIn)
-				: formData[key]));
-
-		return parsed;
-	});
 
 export default {
 	props: {
@@ -28,22 +28,42 @@ export default {
 			default: {},
 			normalize: ({ prop, normalize }) => map(prop, normalize),
 		},
+		target: {
+			normalize: ({ config, context, prop }) => (prop
+				? prop
+				: context.isObservable(config.data)
+					? config.data
+					: undefined),
+			parse: ({ prop }) => () => prop,
+		},
 	},
-	parse: (args) => {
-		const { context, parse, parsing, props } = args;
+	parse: (parserArgs) => {
+		const { context, parse, parsing, props } = parserArgs;
 		const { items } = parsing;
-		const state = {};
+		const parsed = map(items, (item) => parse({ parsing: item }));
 		const formData = {};
-		const init = () => !state.init
-			&& merge(formData, props.data()) && (state.init = true);
-		const parsedItems = parseItems({
-			items, context, formData, parse, props,
+		const renderProps = setupHook(parserArgs, (hookedProps) => {
+			merge(formData, props.data());
+			return hookedProps;
 		});
+		const dataHooks = parseItems({ context, items, parsed });
+		const action = (dataIn) =>
+			actions[dataIn.action](renderProps.data, formData);
 
-		props.items = () => {
-			init();
-			return map(parsedItems, (item) => context.mount(item));
-		};
+		props.items = () => map(parsed, (item, key) =>
+			context.mount({
+				...item, props: {
+					...item.props,
+					data: dataHooks[key]
+						? dataHooks[key](action)
+						: item.props.data || ((dataIn) =>
+							(dataIn !== undefined
+								? merge(formData, { [key]: dataIn })
+								: formData[key])),
+				},
+			}));
+
+		return parserArgs;
 	},
 	interactive: true,
 	editable: true,
