@@ -1,5 +1,5 @@
 import { map } from '@laufire/utils/collection';
-import { getRenderProps } from '../../utils';
+import { setupHook } from '../../utils';
 
 const parseItems = ({ context, items, parsed }) =>
 	map(items, (item, key) => {
@@ -27,7 +27,7 @@ export default {
 		const { items } = parsing;
 		const parsed = map(items, (item) => parse({ parsing: item }));
 		const dataHooks = parseItems({ context, items, parsed });
-		const renderProps = getRenderProps(parserArgs);
+		const renderProps = setupHook(parserArgs);
 
 		props.items = () => map(parsed, (item, key) =>
 			context.mount({

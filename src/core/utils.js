@@ -37,14 +37,15 @@ const hasSource = (sources, prop) => {
 
 const unique = (array) => array.filter(isUnique);
 
-const getRenderProps = (parserArgs) => {
+const setupHook = (parserArgs, cb = doNothing) => {
 	const ret = {};
 	const origSetup = parserArgs.type.setup;
 
 	parserArgs.type = {
 		...parserArgs.type,
 		setup: (props) => {
-			assign(ret, props);
+			assign(ret, cb(props));
+			parserArgs.type.setup = origSetup;
 			return origSetup(props);
 		},
 	};
@@ -57,7 +58,7 @@ export {
 	sayNothing,
 	hasSource,
 	hook,
-	getRenderProps,
+	setupHook,
 	isObservable,
 	unique,
 };
