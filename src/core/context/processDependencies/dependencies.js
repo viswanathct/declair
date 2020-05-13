@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 import { combine, map, values } from '@laufire/utils/collection';
 import { unique } from '../../utils';
 

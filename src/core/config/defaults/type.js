@@ -5,7 +5,7 @@ import { fill, map, merge } from '@laufire/utils/collection';
 /* Data */
 const { OS: platform } = Platform;
 
-const getSourceActions = ({ context, parsing }) => // eslint-disable-line complexity
+const getSourceActions = ({ context, parsing }) =>
 	(context.isObservable(parsing.data)
 	&& context.sources[parsing.data].props.actions
 		&& (() => context.sources[parsing.data].props.actions))
