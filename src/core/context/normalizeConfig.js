@@ -20,11 +20,12 @@ const normalizeWorker = ({ config, context, normalize, parsing, type }) => {
 
 const getNormalizer = ({ config, context }) => {
 	const { types } = context;
-	const normalize = (extensions) => {
-		const typeName = extensions.type || defaults.type;
+	const normalize = (...extensions) => {
+		const merged = merge(...extensions);
+		const typeName = merged.type || defaults.type;
 		const type = types[typeName];
 		const parsing = merge(
-			{}, pick(type.props, 'default'), extensions
+			{}, pick(type.props, 'default'), merged
 		);
 
 		normalizeWorker({
@@ -41,7 +42,7 @@ const getNormalizer = ({ config, context }) => {
 const normalizeConfig = ({ config, context }) => {
 	const normalize = getNormalizer({ config, context });
 
-	config.structure = sanitize(normalize(config.structure));
+	config.structure = sanitize(normalize({ name: 'app' }, config.structure));
 	config.sources = sanitize(map(config.sources,
 		(source, name) => normalize({ ...source, name })));
 };

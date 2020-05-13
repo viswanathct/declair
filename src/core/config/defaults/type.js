@@ -46,8 +46,13 @@ const type = {
 				(prop ? parse({ parsing: prop }) : undefined),
 		},
 		items: {
-			default: {},
-			normalize: ({ prop, normalize }) => map(prop, normalize),
+			normalize: ({ prop, normalize }) =>
+				(prop
+					? map(prop, (item, name) => normalize({ name }, item))
+					: undefined),
+		},
+		label: {
+			normalize: ({ prop, parsing }) => prop || parsing.name,
 		},
 		platform: {
 			default: {},
