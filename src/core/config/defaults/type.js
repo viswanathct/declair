@@ -51,16 +51,16 @@ const type = {
 		},
 		platform: {
 			default: {},
-			normalize: ({ prop, config }) =>
-				merge(config, prop[platform]) && undefined,
+			normalize: ({ prop, parsing }) =>
+				merge(parsing, prop[platform]) && undefined,
 		},
 		target: {
-			normalize: ({ config, context, prop }) =>
-				(context.types[config.type].interactive
+			normalize: ({ context, parsing, prop }) =>
+				(context.types[parsing.type].interactive
 					? prop
 						? prop
-						: context.isObservable(config.data)
-							? config.data
+						: context.isObservable(parsing.data)
+							? parsing.data
 							: undefined
 					: undefined),
 			parse: ({ prop }) => () => prop,

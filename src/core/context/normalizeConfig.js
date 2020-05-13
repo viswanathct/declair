@@ -2,37 +2,36 @@ import { merge, map, pick, sanitize } from '@laufire/utils/collection';
 import defaults from '../defaults';
 
 /* Helpers */
-const normalizeWorker = ({ config, context, normalize, type }) => {
-	config.type = type.type;
+const normalizeWorker = ({ config, context, normalize, parsing, type }) => {
+	parsing.type = type.type;
 	const { props, normalize: typeNormalizer } = type;
 	const propNormalizers = pick(props, 'normalize');
+	const parseProps = { config, parsing, context, normalize };
 	const normalizedProps = map(propNormalizers, (propNormalizer, prop) =>
 		propNormalizer({
-			prop: config[prop],
-			config: config,
-			context: context,
-			normalize: normalize,
+			...parseProps,
+			prop: parsing[prop],
 		}));
 
-	merge(config, normalizedProps);
+	merge(parsing, normalizedProps);
 
-	typeNormalizer({ config, normalize });
+	typeNormalizer({ parsing, normalize });
 };
 
-const getNormalizer = (context) => {
+const getNormalizer = ({ config, context }) => {
 	const { types } = context;
 	const normalize = (extensions) => {
 		const typeName = extensions.type || defaults.type;
 		const type = types[typeName];
-		const config = merge(
+		const parsing = merge(
 			{}, pick(type.props, 'default'), extensions
 		);
 
 		normalizeWorker({
-			config, context, normalize, type,
+			config, context, normalize, parsing, type,
 		});
 
-		return config;
+		return parsing;
 	};
 
 	return normalize;
@@ -40,7 +39,7 @@ const getNormalizer = (context) => {
 
 /* Exports */
 const normalizeConfig = ({ config, context }) => {
-	const normalize = getNormalizer(context);
+	const normalize = getNormalizer({ config, context });
 
 	config.structure = sanitize(normalize(config.structure));
 	config.sources = sanitize(map(config.sources,
