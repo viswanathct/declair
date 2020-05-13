@@ -3,7 +3,7 @@
  *
  */
 
-import { clone, pick, map, merge } from '@laufire/utils/collection';
+import { assign, clone, pick, map, merge } from '@laufire/utils/collection';
 
 const actions = {
 	create: ({ cb, data, state }) => {
@@ -12,7 +12,7 @@ const actions = {
 			: data.id;
 
 		state.ids.push(id);
-		state.data.push(clone(data));
+		state.data.push(assign(clone(data), { id }));
 		cb();
 	},
 	delete: ({ cb, data, state }) => {
