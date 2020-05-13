@@ -10,9 +10,14 @@ const value = {
 			parse: (args) => {
 				const { config, context, prop, resolver } = args;
 
-				if(context.isObservable(prop)
-					|| hasSource(config.sources, prop))
+				if(context.isObservable(prop))
 					return resolver(args);
+
+				if(hasSource(config.sources, prop)) {
+					const resolve = resolver(args);
+
+					return () => resolve();
+				}
 
 				const state = {
 					store: prop,
