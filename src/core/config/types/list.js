@@ -3,7 +3,9 @@ import { map, merge } from '@laufire/utils/collection';
 const decorate = ({ item, itemData, props }) => {
 	const data = (dataIn) =>
 		(dataIn !== undefined
-			? props.data(merge(dataIn, { data: itemData }))
+			? props.data(merge(
+				{}, { data: itemData }, dataIn
+			))
 			: itemData);
 
 	return { ...item, props: { ...item.props, data }};
