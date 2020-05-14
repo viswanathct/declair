@@ -22,7 +22,8 @@ const actions = {
 };
 
 const getTargetActions = ({ config, props }) =>
-	props.target() && config.sources[props.target()]?.actions?.length;
+	Boolean(props.target())
+	&& config.sources[props.target()]?.actions?.length > 0;
 
 const getAction = ({ data, formData, renderProps, targetHasActions }) =>
 	(targetHasActions
@@ -36,6 +37,14 @@ const getPropsAccessor = (formData, key) => (dataIn) =>
 		? merge(formData, { [key]: dataIn })
 		: formData[key]);
 
+const usesEmbeddedData = ({ renderProps, props }) =>
+	renderProps.data !== props.data;
+
+const getInitialData = ({ renderProps, props, targetHasActions }) =>
+	(usesEmbeddedData({ renderProps, props }) || !targetHasActions
+		? renderProps.data()
+		: props.data().data);
+
 const getItemsCall = (args) => {
 	const { context, parse, parsing, props, renderProps } = args;
 	const { items } = parsing;
@@ -46,7 +55,7 @@ const getItemsCall = (args) => {
 
 	return () => {
 		const formData = merge({},
-			targetHasActions ? renderProps.data().data : renderProps.data());
+			getInitialData({ renderProps, props, targetHasActions }));
 		const action = getAction({ data, formData,
 			renderProps, targetHasActions });
 
