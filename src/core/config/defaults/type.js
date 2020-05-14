@@ -5,11 +5,20 @@ import { fill, map, merge } from '@laufire/utils/collection';
 /* Data */
 const { OS: platform } = Platform;
 
+/* Helpers */
 const getSourceActions = ({ context, parsing }) =>
 	(context.isObservable(parsing.data)
 	&& context.sources[parsing.data].props.actions
 		&& (() => context.sources[parsing.data].props.actions))
 	|| undefined;
+
+const inferTarget = ({ context, parsing }) =>
+	(context.isObservable(parsing.data)
+		? parsing.data
+		: parsing.inherited
+			? context.isObservable(parsing.inherited.data)
+				&& parsing.inherited.data
+			: undefined);
 
 /* Exports */
 const type = {
@@ -40,8 +49,8 @@ const type = {
 			},
 		},
 		item: {
-			normalize: ({ prop, normalize }) =>
-				(prop ? normalize(prop) : undefined),
+			normalize: ({ normalize, prop, parsing }) =>
+				(prop ? normalize(prop, { inherited: parsing }) : undefined),
 			parse: ({ parse, prop }) =>
 				(prop ? parse({ parsing: prop }) : undefined),
 		},
@@ -62,11 +71,7 @@ const type = {
 		target: {
 			normalize: ({ context, parsing, prop }) =>
 				(context.types[parsing.type].interactive
-					? prop
-						? prop
-						: context.isObservable(parsing.data)
-							? parsing.data
-							: undefined
+					? prop || inferTarget({ context, parsing })
 					: undefined),
 			parse: ({ prop }) => () => prop,
 		},

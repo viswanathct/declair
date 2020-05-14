@@ -1,4 +1,4 @@
-import { merge, map, pick, sanitize } from '@laufire/utils/collection';
+import { assign, merge, map, pick, sanitize } from '@laufire/utils/collection';
 import defaults from '../defaults';
 
 /* Helpers */
@@ -13,7 +13,7 @@ const normalizeWorker = ({ config, context, normalize, parsing, type }) => {
 			prop: parsing[prop],
 		}));
 
-	merge(parsing, normalizedProps);
+	assign(parsing, normalizedProps);
 
 	typeNormalizer({ parsing, normalize });
 };
