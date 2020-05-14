@@ -19,7 +19,7 @@ const element = {
 				data(value);
 				setState(value);
 			},
-			value: withDefault(data(), ''),
+			value: withDefault(data(), '').toString(),
 		}}
 		/>;
 	},
