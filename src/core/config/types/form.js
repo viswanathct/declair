@@ -22,10 +22,10 @@ const actions = {
 };
 
 const getTargetActions = ({ config, props }) =>
-	config.sources[props.target()].actions;
+	props.target() && config.sources[props.target()]?.actions?.length;
 
-const getAction = ({ data, formData, renderProps, targetActions }) =>
-	(targetActions
+const getAction = ({ data, formData, renderProps, targetHasActions }) =>
+	(targetHasActions
 		? (dataIn) => actions[dataIn.action](renderProps.data, merge(
 			{}, data(), { data: formData }
 		))
@@ -42,13 +42,13 @@ const getItemsCall = (args) => {
 	const { data } = props;
 	const parsed = map(items, (item) => parse({ parsing: item }));
 	const itemsToHook = getActionable({ context, items, parsed });
-	const targetActions = getTargetActions(args);
+	const targetHasActions = getTargetActions(args);
 
 	return () => {
 		const formData = merge({},
-			targetActions ? renderProps.data().data : renderProps.data());
+			targetHasActions ? renderProps.data().data : renderProps.data());
 		const action = getAction({ data, formData,
-			renderProps, targetActions });
+			renderProps, targetHasActions });
 
 		return map(parsed, (item, key) => context.mount({
 			...item, props: { ...item.props,
