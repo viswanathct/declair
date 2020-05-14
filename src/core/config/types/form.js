@@ -45,7 +45,8 @@ const getItemsCall = (args) => {
 	const targetActions = getTargetActions(args);
 
 	return () => {
-		const formData = merge({}, renderProps.data());
+		const formData = merge({},
+			targetActions ? renderProps.data().data : renderProps.data());
 		const action = getAction({ data, formData,
 			renderProps, targetActions });
 
