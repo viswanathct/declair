@@ -14,8 +14,8 @@ const { [componentName]: Router, BackButton } = os !== 'web'
 	: require('react-router-dom');
 
 const RouterWrapper = os !== 'web'
-	? ({ children: Children }) =>
-		<Router><BackButton><Children/></BackButton></Router>
+	? ({ children }) =>
+		<Router><BackButton>{ children }</BackButton></Router>
 	: Router;
 
 /* Exports */
@@ -26,11 +26,7 @@ const config = {
 const setup = ({ context }) => {
 	const { root } = context;
 
-	context.root = () => {
-		const Root = root();
-
-		return <RouterWrapper><Root/></RouterWrapper>;
-	};
+	context.root = () => <RouterWrapper>{ root() }</RouterWrapper>;
 	context.next();
 };
 
