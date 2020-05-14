@@ -1,4 +1,4 @@
-export default {
+const button = {
 	props: {
 		label: {
 			default: 'Button',
@@ -6,3 +6,5 @@ export default {
 	},
 	interactive: true,
 };
+
+export default button;

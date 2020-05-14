@@ -37,11 +37,11 @@ const getPropsAccessor = (formData, key) => (dataIn) =>
 		? merge(formData, { [key]: dataIn })
 		: formData[key]);
 
-const usesEmbeddedData = ({ renderProps, props }) =>
+const usesExternalData = ({ renderProps, props }) =>
 	renderProps.data !== props.data;
 
 const getInitialData = ({ renderProps, props, targetHasActions }) =>
-	(usesEmbeddedData({ renderProps, props }) || !targetHasActions
+	(usesExternalData({ renderProps, props }) || !targetHasActions
 		? renderProps.data()
 		: props.data().data);
 
@@ -68,16 +68,18 @@ const getItemsCall = (args) => {
 	};
 };
 
-export default {
+/* Exports */
+const form = {
 	parse: (parserArgs) => {
 		const renderProps = setupHook(parserArgs, (hookedProps) => hookedProps);
 
 		parserArgs.props.items = getItemsCall({
 			renderProps, ...parserArgs,
 		});
-
 		return parserArgs;
 	},
 	interactive: true,
 	editable: true,
 };
+
+export default form;

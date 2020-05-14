@@ -11,7 +11,8 @@ const decorate = ({ item, itemData, props }) => {
 	return { ...item, props: { ...item.props, data }};
 };
 
-export default {
+/* Exports */
+const list = {
 	parse: (args) => {
 		const { context, props } = args;
 		const { data, item } = props;
@@ -19,8 +20,9 @@ export default {
 			? () => data().data
 			: data;
 
-		props.items = () =>
-			map(getData(), (itemData) =>
-				context.mount(decorate({ context, item, itemData, props })));
+		props.items = () => map(getData(), (itemData) =>
+			context.mount(decorate({ context, item, itemData, props })));
 	},
 };
+
+export default list;

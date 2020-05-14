@@ -15,7 +15,8 @@ const parseItems = ({ context, items, parsed }) =>
 			: undefined;
 	});
 
-export default {
+/* Exports */
+const element = {
 	parse: (parserArgs) => {
 		const { context, parse, parsing, props } = parserArgs;
 		const { items } = parsing;
@@ -23,17 +24,17 @@ export default {
 		const dataHooks = parseItems({ context, items, parsed });
 		const renderProps = setupHook(parserArgs);
 
-		props.items = () => map(parsed, (item, key) =>
-			context.mount({
-				...item, props: {
-					...item.props,
-					data: dataHooks[key]
-						? dataHooks[key](renderProps.data)
-						: item.props.data
-							|| (() => renderProps.data()[key]),
-				},
-			}));
-
+		props.items = () => map(parsed, (item, key) => context.mount({
+			...item, props: {
+				...item.props,
+				data: dataHooks[key]
+					? dataHooks[key](renderProps.data)
+					: item.props.data
+					|| (() => renderProps.data()[key]),
+			},
+		}));
 		return parserArgs;
 	},
 };
+
+export default element;

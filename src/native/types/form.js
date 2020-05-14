@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { map, values } from '@laufire/utils/collection';
 import { container } from '../defaults/style';
 
-const element = {
+const form = {
 	props: {
 		style: {
 			default: {
@@ -22,4 +22,4 @@ const element = {
 	</View>,
 };
 
-export default element;
+export default form;

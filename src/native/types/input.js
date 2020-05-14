@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextInput } from 'react-native';
 import { defined } from '../../core/utils';
 
-const element = {
+const input = {
 	props: {
 		style: {
 			default: {
@@ -27,4 +27,4 @@ const element = {
 	},
 };
 
-export default element;
+export default input;
