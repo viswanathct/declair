@@ -58,8 +58,8 @@ const once = (cb) => {
 	return () => !state.called && (state.called = true && cb());
 };
 
-const withDefault = (value, filler = '') =>
-	(value !== undefined ? value : filler);
+const defined = (...values) =>
+	values[values.findIndex((value) => value !== undefined)];
 
 export {
 	doNothing,
@@ -70,5 +70,5 @@ export {
 	once,
 	setupHook,
 	unique,
-	withDefault,
+	defined,
 };

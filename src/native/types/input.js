@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput } from 'react-native';
-import { withDefault } from '../../core/utils';
+import { defined } from '../../core/utils';
 
 const element = {
 	props: {
@@ -11,15 +11,17 @@ const element = {
 		},
 	},
 	setup: ({ data, style }) => {
-		const [dummy, setState] = useState();
+		const [state, setState] = useState();
 
 		return <TextInput { ...{
 			style: style(),
 			onChangeText: (value) => {
-				data(value);
 				setState(value);
+				data(value);
 			},
-			value: withDefault(data(), '').toString(),
+			value: defined(
+				data(), state, ''
+			).toString(),
 		}}
 		/>;
 	},
