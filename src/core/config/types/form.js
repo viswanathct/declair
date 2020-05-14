@@ -1,7 +1,7 @@
 // #NOTE: Form data doesn't reflect changes to their dependencies, during editing to provide a good UX.
 
 import { map, merge } from '@laufire/utils/collection';
-import { once, setupHook } from '../../utils';
+import { setupHook } from '../../utils';
 
 const getActionable = ({ context, items, parsed }) =>
 	map(items, (item, key) => {
@@ -24,52 +24,46 @@ const actions = {
 const getTargetActions = ({ config, props }) =>
 	config.sources[props.target()].actions;
 
-const getAction = ({ formData, props, parserArgs }) => {
-	const targetActions = getTargetActions(parserArgs);
-	const init = once(() => merge(formData,
-		targetActions ? props.data().data : props.data()));
-	const renderProps = setupHook(parserArgs, (hookedProps) => {
-		init();
-		return hookedProps;
-	});
-
-	return targetActions
+const getAction = ({ data, formData, renderProps, targetActions }) =>
+	(targetActions
 		? (dataIn) => actions[dataIn.action](renderProps.data, merge(
-			{}, props.data(), { data: formData }
+			{}, data(), { data: formData }
 		))
-		: (dataIn) => actions[dataIn.action](renderProps.data, formData);
-};
+		: (dataIn) => actions[dataIn.action](renderProps.data, formData));
 
-const getItemsCall = ({ action, context, items, formData, parse }) => {
+const getPropsAccessor = (formData, key) => (dataIn) =>
+	(dataIn !== undefined
+		? merge(formData, { [key]: dataIn })
+		: formData[key]);
+
+const getItemsCall = (args) => {
+	const { context, parse, parsing, props, renderProps } = args;
+	const { items } = parsing;
+	const { data } = props;
 	const parsed = map(items, (item) => parse({ parsing: item }));
 	const itemsToHook = getActionable({ context, items, parsed });
+	const targetActions = getTargetActions(args);
 
-	return () => map(parsed, (item, key) =>
-		context.mount({
-			...item, props: {
-				...item.props,
+	return () => {
+		const formData = merge({}, renderProps.data());
+		const action = getAction({ data, formData,
+			renderProps, targetActions });
+
+		return map(parsed, (item, key) => context.mount({
+			...item, props: { ...item.props,
 				data: itemsToHook[key]
 					? itemsToHook[key](action)
-					: item.props.data || ((dataIn) =>
-						(dataIn !== undefined
-							? merge(formData, { [key]: dataIn })
-							: formData[key])),
-			},
+					: item.props.data || getPropsAccessor(formData, key) },
 		}));
+	};
 };
 
 export default {
 	parse: (parserArgs) => {
-		const { context, parse, parsing, props } = parserArgs;
-		const { items } = parsing;
-		const formData = {};
+		const renderProps = setupHook(parserArgs, (hookedProps) => hookedProps);
 
-		const action = getAction({
-			formData, props, parserArgs,
-		});
-
-		props.items = getItemsCall({
-			action, context, items, formData, parse,
+		parserArgs.props.items = getItemsCall({
+			renderProps, ...parserArgs,
 		});
 
 		return parserArgs;
