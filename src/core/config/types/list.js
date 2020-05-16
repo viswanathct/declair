@@ -1,27 +1,25 @@
-import { map, merge } from '@laufire/utils/collection';
+import { merge } from '@laufire/utils/collection';
 
-const decorate = ({ item, itemData, props }) => {
-	const data = (dataIn) =>
-		(dataIn !== undefined
-			? props.data(merge(
+const getDataCall = ({ props }) => {
+	const { data } = props;
+
+	return props.actions
+		? (dataIn, itemData) => data(dataIn !== undefined
+			? merge(
 				{}, { data: itemData }, dataIn
-			))
-			: itemData);
-
-	return { ...item, props: { ...item.props, data }};
+			)
+			: undefined)?.data || {}
+		: (dataIn, itemData) => data(dataIn !== undefined
+			? merge(
+				{}, itemData, dataIn
+			)
+			: undefined) || {};
 };
 
 /* Exports */
 const list = {
-	parse: (args) => {
-		const { context, props } = args;
-		const { data, item } = props;
-		const getData = props.actions
-			? () => data().data
-			: data;
-
-		props.items = () => map(getData(), (itemData) =>
-			context.mount(decorate({ context, item, itemData, props })));
+	parse: ({ props }) => {
+		props.data = getDataCall({ props });
 	},
 };
 

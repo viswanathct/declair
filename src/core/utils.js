@@ -1,4 +1,4 @@
-import { assign, has, walk } from '@laufire/utils/collection';
+import { has, walk } from '@laufire/utils/collection';
 import { inferType } from '@laufire/utils/reflection';
 
 /* Helpers */
@@ -37,25 +37,21 @@ const hasSource = (sources, prop) => {
 
 const unique = (array) => array.filter(isUnique);
 
-const setupHook = (parserArgs, cb = doNothing) => {
-	const ret = {};
+const setupHook = (parserArgs, cb) => {
 	const origSetup = parserArgs.type.setup;
 
 	parserArgs.type = {
 		...parserArgs.type,
-		setup: (props) => {
-			assign(ret, cb(props));
-			return origSetup(props);
-		},
+		setup: (props) => cb(origSetup, props),
 	};
-
-	return ret;
 };
 
 const once = (cb) => {
 	const state = {};
 
-	return () => !state.called && (state.called = true && cb());
+	return () => (state.returned
+		? state.returned
+		: (state.returned = cb()));
 };
 
 const defined = (...values) =>

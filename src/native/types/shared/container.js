@@ -1,10 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import { map, values } from '@laufire/utils/collection';
-import { container as containerStyle } from '../defaults/style';
+import { container as containerStyle } from '../../defaults/style';
 
-/* Exports */
-const element = {
+const container = {
 	props: {
 		data: {
 			default: {},
@@ -20,4 +19,4 @@ const element = {
 	</View>,
 };
 
-export default element;
+export default container;

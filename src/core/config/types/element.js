@@ -1,7 +1,7 @@
-import { map } from '@laufire/utils/collection';
+import { map, assign } from '@laufire/utils/collection';
 import { setupHook } from '../../utils';
 
-const parseItems = ({ context, items, parsed }) =>
+const getDataHooks = ({ context, items, parsed }) =>
 	map(items, (item, key) => {
 		const parsedProps = parsed[key].props;
 		const type = context.types[item.type];
@@ -15,24 +15,47 @@ const parseItems = ({ context, items, parsed }) =>
 			: undefined;
 	});
 
+const getItemRenderers = ({ context, dataHooks,
+	parentProps, parsed }) => {
+	const itemTemplates = map(parsed, context.mount);
+
+	return map(itemTemplates, (item, key) => {
+		const Item = (renderProps) => item({
+			...renderProps,
+			data: dataHooks[key]
+				? dataHooks[key](parentProps.data)
+				: parsed[key].props.data
+					|| (() => parentProps.data()[key]),
+		});
+
+		return Item;
+	});
+};
+
 /* Exports */
 const element = {
 	parse: (parserArgs) => {
-		const { context, parse, parsing, props } = parserArgs;
+		const { context, parse, parsing } = parserArgs;
 		const { items } = parsing;
 		const parsed = map(items, (item) => parse({ parsing: item }));
-		const dataHooks = parseItems({ context, items, parsed });
-		const renderProps = setupHook(parserArgs);
+		const dataHooks = getDataHooks({ context, items, parsed });
 
-		props.items = () => map(parsed, (item, key) => context.mount({
-			...item, props: {
-				...item.props,
-				data: dataHooks[key]
-					? dataHooks[key](renderProps.data)
-					: item.props.data
-					|| (() => renderProps.data()[key]),
-			},
-		}));
+		setupHook(parserArgs, (setup, setupProps) => {
+			const origRenderer = setup(setupProps);
+			const parentProps = {};
+			const itemRenderers = getItemRenderers({ context, dataHooks,
+				parentProps, parsed });
+
+			return (renderProps) => {
+				assign(parentProps, renderProps);
+
+				return origRenderer({
+					...renderProps,
+					items: () => itemRenderers,
+				});
+			};
+		});
+
 		return parserArgs;
 	},
 };

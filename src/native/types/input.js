@@ -10,7 +10,7 @@ const input = {
 			},
 		},
 	},
-	setup: ({ data, style }) => {
+	setup: () => ({ data, style }) => {
 		const [state, setState] = useState();
 
 		return <TextInput { ...{

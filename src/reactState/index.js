@@ -8,7 +8,6 @@ const init = (
 ) => {
 	if(!store.initialized) {
 		store.initialized = true;
-		store.Root = () => store.root();
 		store.updateState = (data) => setState({ ...store.state, ...data });
 	}
 };
@@ -32,8 +31,9 @@ const setup = ({ context }) => {
 
 		store.state = state;
 		context.state = state;
+		const Root = store.root();
 
-		return <store.Root />;
+		return <Root />;
 	};
 
 	context.next();

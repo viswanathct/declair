@@ -23,14 +23,15 @@ const config = {
 	types,
 };
 
-const setup = ({ context }) => {
+const init = ({ context }) => {
 	const { root } = context;
+	const Root = root;
 
-	context.root = () => <RouterWrapper>{ root() }</RouterWrapper>;
+	context.root = () => <RouterWrapper><Root/></RouterWrapper>;
 	context.next();
 };
 
 export default {
 	config,
-	setup,
+	init,
 };

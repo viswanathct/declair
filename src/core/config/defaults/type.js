@@ -51,8 +51,8 @@ const type = {
 		item: {
 			normalize: ({ normalize, prop, parsing }) =>
 				(prop ? normalize(prop, { inherited: parsing }) : undefined),
-			parse: ({ parse, prop }) =>
-				(prop ? parse({ parsing: prop }) : undefined),
+			parse: ({ context, parse, prop }) =>
+				(prop ? context.mount(parse({ parsing: prop })) : undefined),
 		},
 		items: {
 			normalize: ({ prop, normalize }) =>

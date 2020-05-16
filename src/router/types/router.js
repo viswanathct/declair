@@ -18,11 +18,11 @@ const getLink = (path) => ({ key, label }) => <Link {...{
 	<Text>{ label || key }</Text>
 </Link>;
 
-const getItem = ({ path, item, key }) => <Route {...{
+const getItem = ({ path, item: Item, key }) => <Route {...{
 	key: key,
 	path: `${ path }/${ key }`,
 }}>
-	{ item }
+	<Item {...{ key }}/>
 </Route>;
 
 const styles = {
@@ -65,13 +65,25 @@ const router = {
 		style: {
 			default: styles.links,
 		},
+		items: {
+			normalize: ({ prop, normalize }) =>
+				(prop
+					? map(prop, (item, name) => normalize({ name }, item))
+					: undefined),
+			parse: ({ context, parse, prop }) => {
+				const items = map(prop, (parsing) =>
+					context.mount(parse({ parsing })));
+
+				return () => items;
+			},
+		},
 	},
 	parse: (parserArgs) => {
 		parserArgs.props.labels = () => pick(parserArgs.parsing.items, 'label');
 
 		return element.parse(parserArgs);
 	},
-	setup: (props) => <Routed { ...props }/>,
+	setup: (props) => () => <Routed { ...props }/>,
 	type: 'router',
 };
 
