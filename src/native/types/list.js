@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
-import { map, merge, values } from '@laufire/utils/collection';
-import { container } from '../styles';
+import { map, values } from '@laufire/utils/collection';
+import { container } from '../defaults/style';
 
-const list = merge({
+const list = {
 	props: {
 		data: {
 			default: [],
@@ -24,6 +24,6 @@ const list = merge({
 				}}/>))
 		}
 	</View>,
-});
+};
 
 export default list;
