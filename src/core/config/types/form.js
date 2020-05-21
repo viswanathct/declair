@@ -72,16 +72,15 @@ const getItemRenderers = (parserArgs) => {
 /* Exports */
 const form = {
 	setup: (parserArgs) => {
-		const { props } = parserArgs;
 		const action = getAction(parserArgs);
 		const dataExtractor = getDataExtractor(parserArgs);
 		const items = getItemRenderers(parserArgs);
 		const { render } = parserArgs.type;
 
-		return ({ data }) => render({
+		return (props) => render({
 			...props,
 			action: action,
-			data: dataExtractor(data),
+			data: dataExtractor(props.data),
 			items: items,
 		});
 	},

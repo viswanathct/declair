@@ -35,13 +35,13 @@ const getItemRenderers = ({ context, dataHooks,
 /* Exports */
 const element = {
 	parse: (parserArgs) => {
-		const { context, parse, parsing } = parserArgs;
+		const { context, parse, parsing, type } = parserArgs;
 		const { items } = parsing;
 		const parsed = map(items, (item) => parse({ parsing: item }));
 		const dataHooks = getDataHooks({ context, items, parsed });
 
-		setupHook(parserArgs, (setup, setupProps) => {
-			const origRenderer = setup(setupProps);
+		setupHook(parserArgs, () => {
+			const { render } = type;
 			const parentProps = {};
 			const itemRenderers = getItemRenderers({ context, dataHooks,
 				parentProps, parsed });
@@ -49,7 +49,7 @@ const element = {
 			return (renderProps) => {
 				assign(parentProps, renderProps);
 
-				return origRenderer({
+				return render({
 					...renderProps,
 					items: () => itemRenderers,
 				});

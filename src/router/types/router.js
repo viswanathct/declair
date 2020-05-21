@@ -83,7 +83,7 @@ const router = {
 
 		return element.parse(parserArgs);
 	},
-	setup: (props) => () => <Routed { ...props }/>,
+	render: (props) => <Routed { ...props }/>,
 	type: 'router',
 };
 

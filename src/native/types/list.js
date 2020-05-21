@@ -15,7 +15,7 @@ const list = {
 			},
 		},
 	},
-	setup: () => ({ data, item: Item, style }) =>
+	render: ({ data, item: Item, style }) =>
 		<View { ...{ style: style() } }>
 			{
 				values(map(data(), (itemData, key) =>

@@ -88,7 +88,7 @@ const type = {
 	parse: ({ props, inherited }) => {
 		fill(props, inherited);
 	},
-	setup: doNothing,
+	setup: (setupArgs) => setupArgs.type.render,
 };
 
 export default type;

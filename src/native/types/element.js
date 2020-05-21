@@ -13,7 +13,7 @@ const element = {
 			default: containerStyle,
 		},
 	},
-	setup: () => ({ items, style }) => <View { ...{ style: style() } }>
+	render: ({ items, style }) => <View { ...{ style: style() } }>
 		{
 			values(map(items(), (Item, key) => <Item {...{ key }}/>))
 		}

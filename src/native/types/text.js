@@ -9,7 +9,7 @@ const text = {
 			},
 		},
 	},
-	setup: () => ({ data, style }) => <Text { ...{ style: style() } }>
+	render: ({ data, style }) => <Text { ...{ style: style() } }>
 		{ data() }
 	</Text>,
 };
