@@ -2,9 +2,9 @@
 
 import { assign, clone, map, merge } from '@laufire/utils/collection';
 
-const getDataHooks = ({ context, parsing, parsed }) =>
+const getDataHooks = ({ context, parsing, parsedItems }) =>
 	map(parsing.items, (item, key) => {
-		const parsedProps = parsed[key].props;
+		const parsedProps = parsedItems[key].props;
 		const type = context.types[item.type];
 
 		return type.interactive && !parsedProps.target()
@@ -47,10 +47,10 @@ const getPropsAccessor = (state, key) => (dataIn) =>
 		: state[key]);
 
 const getItemRenderers = (parserArgs) => {
-	const { context, parsing, parse } = parserArgs;
-	const parsed = map(parsing.items, (item) => parse({ parsing: item }));
-	const dataHooks = getDataHooks({ ...parserArgs, parsed });
-	const itemTemplates = map(parsed, context.mount);
+	const { context, props } = parserArgs;
+	const parsedItems = props.items();
+	const dataHooks = getDataHooks({ ...parserArgs, parsedItems });
+	const itemTemplates = map(parsedItems, context.mount);
 
 	return map(itemTemplates, (item, key) => {
 		const Item = (itemRenderProps) => {
@@ -60,7 +60,7 @@ const getItemRenderers = (parserArgs) => {
 				...itemRenderProps,
 				data: dataHooks[key]
 					? dataHooks[key](action, state)
-					: parsed[key].props.data
+					: parsedItems[key].props.data
 						|| getPropsAccessor(state, key),
 			});
 		};

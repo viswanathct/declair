@@ -59,6 +59,14 @@ const type = {
 				(prop
 					? map(prop, (item, name) => normalize({ name }, item))
 					: undefined),
+			parse: ({ prop, parse }) => {
+				if(!prop)
+					return undefined;
+
+				const items = map(prop, (item) => parse({ parsing: item }));
+
+				return () => items;
+			},
 		},
 		label: {
 			normalize: ({ prop, parsing }) => prop || parsing.name,

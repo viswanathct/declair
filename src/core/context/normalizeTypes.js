@@ -9,6 +9,7 @@ const normalizeTypes = ({ config, context }) => {
 		merge({}, ...values(config.providers)).config.types
 	);
 
+	// #TODO: Skip adding uiComponent defaults to sources.
 	map(providerTypes, (type, name) =>
 		merge(fill(type, typeDefaults), { type: name }));
 
