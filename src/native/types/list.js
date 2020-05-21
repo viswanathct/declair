@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { map, values } from '@laufire/utils/collection';
 import { container } from '../defaults/style';
+import { defined } from '../../core/utils';
 
 const list = {
 	props: {
@@ -20,7 +21,7 @@ const list = {
 			{
 				values(map(data(), (itemData, key) =>
 					<Item {...{
-						key: key,
+						key: defined(itemData.id, key),
 						data: (dataIn) => data(dataIn, itemData)[key],
 					}}/>))
 			}
