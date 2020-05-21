@@ -1,20 +1,18 @@
-// #TODO: Bring in React to handle the flow, as the implementation is clumsy.
-// #NOTE: Form data doesn't reflect changes to their dependencies, during editing to provide a good UX.
+// #NOTE: Form doesn't reflect changes to its dependencies, during editing to provide a good UX.
 
-import { assign, map, merge, clone } from '@laufire/utils/collection';
-import { setupHook } from '../../utils';
+import { assign, clone, map, merge } from '@laufire/utils/collection';
 
-const getDataHooks = ({ context, items, parsed }) =>
-	map(items, (item, key) => {
+const getDataHooks = ({ context, parsing, parsed }) =>
+	map(parsing.items, (item, key) => {
 		const parsedProps = parsed[key].props;
 		const type = context.types[item.type];
 
 		return type.interactive && !parsedProps.target()
 			? type.editable
-				? (parentData) => (dataIn) => (dataIn !== undefined
-					? parentData(parsedProps.data())
+				? (action, state) => (dataIn) => (dataIn !== undefined
+					? action(parsedProps.data(), state)
 					: parsedProps.data())
-				: (parentData) => () => parentData(parsedProps.data())
+				: (action, state) => () => action(parsedProps.data(), state)
 			: undefined;
 	});
 
@@ -26,40 +24,44 @@ const getTargetActions = ({ config, props }) =>
 	Boolean(props.target())
 	&& config.sources[props.target()]?.actions?.length > 0;
 
-const getAction = ({ data, renderProps, state, targetHasActions }) =>
-	(targetHasActions
-		? (dataIn) => actions[dataIn.action](renderProps.data, merge(
-			{}, data(), { data: state() }
+const getAction = (parserArgs) => {
+	const { data } = parserArgs.props;
+	const targetHasActions = getTargetActions(parserArgs);
+
+	return targetHasActions
+		? (dataIn, state) => actions[dataIn.action](data, merge(
+			{}, data(), { data: state }
 		))
-		: (dataIn) => actions[dataIn.action](renderProps.data, state()));
+		: (dataIn, state) => actions[dataIn.action](data, state);
+};
+
+const usesExternalData = ({ parserArgs, data }) =>
+	parserArgs.props.data !== data;
+
+const getDataExtractor = (parserArgs) => (data) => () =>
+	clone(usesExternalData({ parserArgs, data }) ? data() : data().data) || {};
 
 const getPropsAccessor = (state, key) => (dataIn) =>
 	(dataIn !== undefined
-		? assign(state(), { [key]: dataIn })
-		: state()[key]);
+		? assign(state, { [key]: dataIn })
+		: state[key]);
 
-const usesExternalData = ({ renderProps, props }) =>
-	renderProps.data !== props.data;
-
-const getInitialData = ({ renderProps, props, targetHasActions }) =>
-	clone(usesExternalData({ renderProps, props }) || !targetHasActions
-		? renderProps.data()
-		: props.data().data) || {};
-
-const getItemRenderers = (args) => {
-	const { context, dataHooks, parsed } = args;
+const getItemRenderers = (parserArgs) => {
+	const { context, parsing, parse } = parserArgs;
+	const parsed = map(parsing.items, (item) => parse({ parsing: item }));
+	const dataHooks = getDataHooks({ ...parserArgs, parsed });
 	const itemTemplates = map(parsed, context.mount);
 
 	return map(itemTemplates, (item, key) => {
 		const Item = (itemRenderProps) => {
-			const { action, state } = itemRenderProps.state;
+			const { action, state } = itemRenderProps;
 
 			return item({
 				...itemRenderProps,
 				data: dataHooks[key]
-					? dataHooks[key](action)
+					? dataHooks[key](action, state)
 					: parsed[key].props.data
-							|| getPropsAccessor(state, key),
+						|| getPropsAccessor(state, key),
 			});
 		};
 
@@ -67,47 +69,21 @@ const getItemRenderers = (args) => {
 	});
 };
 
-const rendererHook = ({ data, itemRenderers, origRenderer,
-	parserArgs, props }) => (renderProps) => {
-	const targetHasActions = getTargetActions(parserArgs);
-
-	return origRenderer({ ...renderProps,
-		items: () => itemRenderers,
-		init: ({ state: providedState }) => {
-			const state = () => providedState.data;
-
-			!providedState.data
-				&& assign(providedState, {
-					data: getInitialData({ renderProps, props,
-						targetHasActions }),
-					state: state,
-					action: getAction({ data, renderProps,
-						state, targetHasActions }),
-				});
-		} });
-};
-
 /* Exports */
 const form = {
-	parse: (parserArgs) => {
-		const { config, context, parse, parsing,
-			props: parsedProps } = parserArgs;
-		const { items } = parsing;
-		const { data } = parsedProps;
-		const parsed = map(items, (item) => parse({ parsing: item }));
-		const dataHooks = getDataHooks({ context, items, parsed });
+	setup: (parserArgs) => {
+		const { props } = parserArgs;
+		const action = getAction(parserArgs);
+		const dataExtractor = getDataExtractor(parserArgs);
+		const items = getItemRenderers(parserArgs);
+		const { render } = parserArgs.type;
 
-		setupHook(parserArgs, (setup, props) => {
-			const origRenderer = setup(props);
-			const propBuffer = [];
-			const itemRenderers = getItemRenderers({ config, context, dataHooks,
-				propBuffer, parsed, props });
-
-			return rendererHook({ data, itemRenderers,
-				origRenderer, props, parserArgs });
+		return ({ data }) => render({
+			...props,
+			action: action,
+			data: dataExtractor(data),
+			items: items,
 		});
-
-		return parserArgs;
 	},
 	interactive: true,
 	editable: true,

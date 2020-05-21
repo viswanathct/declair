@@ -42,7 +42,7 @@ const setupHook = (parserArgs, cb) => {
 
 	parserArgs.type = {
 		...parserArgs.type,
-		setup: (props) => cb(origSetup, props),
+		setup: ({ props }) => cb(origSetup, props),
 	};
 };
 

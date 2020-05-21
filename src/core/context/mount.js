@@ -1,6 +1,6 @@
 /* Exports */
 const mount = (parsed) => {
-	const component = parsed.type.setup(parsed.props);
+	const component = parsed.type.setup(parsed);
 
 	return (renderProps) => component({ ...parsed.props, ...renderProps });
 };

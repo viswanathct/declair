@@ -16,14 +16,14 @@ const form = {
 			},
 		},
 	},
-	setup: () => ({ init, items, key: parentKey, style }) => {
-		const [state] = useState({});
+	render: ({ action, data, items, style }) => {
+		const [state] = useState(data());
 
-		init({ state });
-
-		return <View { ...{ key: parentKey, style: style() } }>
+		return <View { ...{ style: style() } }>
 			{
-				values(map(items(), (Item, key) => <Item {...{ key, state }}/>))
+				values(map(items, (Item, key) => <Item {...{
+					action, key, state,
+				}}/>))
 			}
 		</View>;
 	},

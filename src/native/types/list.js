@@ -15,15 +15,16 @@ const list = {
 			},
 		},
 	},
-	setup: ({ item: Item }) => (props) => <View { ...{ style: props.style() } }>
-		{
-			values(map(props.data(), (itemData, key) =>
-				<Item {...{
-					key: key,
-					data: (dataIn) => props.data(dataIn, itemData)[key],
-				}}/>))
-		}
-	</View>,
+	setup: () => ({ data, item: Item, style }) =>
+		<View { ...{ style: style() } }>
+			{
+				values(map(data(), (itemData, key) =>
+					<Item {...{
+						key: key,
+						data: (dataIn) => data(dataIn, itemData)[key],
+					}}/>))
+			}
+		</View>,
 };
 
 export default list;
