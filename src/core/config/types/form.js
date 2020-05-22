@@ -20,7 +20,7 @@ const dataCallGetter = (parserArgs) => (state) => {
 			))
 			: state())
 		: (dataIn) => (dataIn !== undefined
-			? actions[dataIn.action](data, state)
+			? actions[dataIn.action](data, state())
 			: state());
 };
 
