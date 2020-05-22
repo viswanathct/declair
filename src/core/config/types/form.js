@@ -1,5 +1,4 @@
 // #NOTE: Form doesn't reflect changes to its dependencies, during editing to provide a good UX.
-
 import { assign, clone, map, merge } from '@laufire/utils/collection';
 
 const getDataHooks = ({ context, parsing, parsedItems }) =>
@@ -72,17 +71,22 @@ const getItemRenderers = (parserArgs) => {
 /* Exports */
 const form = {
 	setup: (parserArgs) => {
+		const { getState } = parserArgs.context;
+		const { render } = parserArgs.type;
 		const action = getAction(parserArgs);
 		const dataExtractor = getDataExtractor(parserArgs);
 		const items = getItemRenderers(parserArgs);
-		const { render } = parserArgs.type;
 
-		return (props) => render({
-			...props,
-			action: action,
-			data: dataExtractor(props.data),
-			items: items,
-		});
+		return (props) => {
+			const state = getState(dataExtractor(props.data)());
+
+			return render({
+				...props,
+				action: action,
+				state: state(),
+				items: items,
+			});
+		};
 	},
 	interactive: true,
 	editable: true,

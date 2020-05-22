@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { map, values } from '@laufire/utils/collection';
 import { container as containerStyle } from '../defaults/style';
@@ -16,17 +16,14 @@ const form = {
 			},
 		},
 	},
-	render: ({ action, data, items, style }) => {
-		const [state] = useState(data());
-
-		return <View { ...{ style: style() } }>
+	render: ({ action, state, items, style }) =>
+		<View { ...{ style: style() } }>
 			{
 				values(map(items, (Item, key) => <Item {...{
 					action, key, state,
 				}}/>))
 			}
-		</View>;
-	},
+		</View>,
 };
 
 export default form;

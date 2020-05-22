@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextInput } from 'react-native';
 import { defined } from '../../core/utils';
 
@@ -10,21 +10,20 @@ const input = {
 			},
 		},
 	},
-	render: ({ data, style }) => {
-		const [state, setState] = useState();
+	setup: (setupArgs) => (props) => {
+		const state = setupArgs.context.getState();
 
-		return <TextInput { ...{
-			style: style(),
-			onChangeText: (value) => {
-				setState(value);
-				data(value);
-			},
-			value: defined(
-				data(), state, ''
-			).toString(),
-		}}
-		/>;
+		return setupArgs.type.render({ ...props, state });
 	},
+	render: ({ data, style, state }) => <TextInput { ...{
+		style: style(),
+		onChangeText: (value) => {
+			state(value);
+			data(value);
+		},
+		value: defined(data(), '').toString(),
+	}}
+	/>,
 };
 
 export default input;

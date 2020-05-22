@@ -1,6 +1,6 @@
 // TODO: Implement proper state-management. It's crude, due to a lack of knowledge.
 import React, { useState } from 'react';
-import { merge } from '@laufire/utils/collection';
+import { assign, merge } from '@laufire/utils/collection';
 
 /* Tasks */
 const init = (
@@ -12,17 +12,16 @@ const init = (
 	}
 };
 
-/* Exports */
-const setup = ({ context }) => {
-	const store = {
-		state: {},
-		root: context.root,
-		updateState: (data) => merge(store.state, data),
-	};
+const enrichContext = (context, store) => assign(context, {
+	getState: (value) => {
+		const [state, setState] = useState(value);
 
-	context.updateState = (data) => store.updateState(data);
-
-	context.root = () => {
+		return (newValue) => (newValue !== undefined
+			? setState(newValue)
+			: state);
+	},
+	updateState: (data) => store.updateState(data),
+	root: () => {
 		const [state, setState] = useState(store.state);
 
 		init(
@@ -34,7 +33,18 @@ const setup = ({ context }) => {
 		const Root = store.root();
 
 		return <Root />;
+	},
+});
+
+/* Exports */
+const setup = ({ context }) => {
+	const store = {
+		state: {},
+		root: context.root,
+		updateState: (data) => merge(store.state, data),
 	};
+
+	enrichContext(context, store);
 
 	context.next();
 };
