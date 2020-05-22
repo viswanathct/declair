@@ -65,23 +65,13 @@ const router = {
 		style: {
 			default: styles.links,
 		},
-		items: {
-			normalize: ({ prop, normalize }) =>
-				(prop
-					? map(prop, (item, name) => normalize({ name }, item))
-					: undefined),
-			parse: ({ context, parse, prop }) => {
-				const items = map(prop, (parsing) =>
-					context.mount(parse({ parsing })));
+		labels: {
+			parse: (parserArgs) => {
+				const labels = pick(parserArgs.parsing.items, 'label');
 
-				return () => items;
+				return () => labels;
 			},
 		},
-	},
-	parse: (parserArgs) => {
-		parserArgs.props.labels = () => pick(parserArgs.parsing.items, 'label');
-
-		return element.parse(parserArgs);
 	},
 	render: (props) => <Routed { ...props }/>,
 	type: 'router',

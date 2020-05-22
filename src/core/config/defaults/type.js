@@ -1,6 +1,7 @@
-import { doNothing } from '../../utils';
 import { Platform } from 'react-native';
 import { fill, map, merge } from '@laufire/utils/collection';
+import { doNothing } from '../../utils';
+import parseItems from '../parsers/items';
 
 /* Data */
 const { OS: platform } = Platform;
@@ -59,11 +60,11 @@ const type = {
 				(prop
 					? map(prop, (item, name) => normalize({ name }, item))
 					: undefined),
-			parse: ({ prop, parse }) => {
-				if(!prop)
+			parse: (parserArgs) => {
+				if(!parserArgs.prop)
 					return undefined;
 
-				const items = map(prop, (item) => parse({ parsing: item }));
+				const items = parseItems(parserArgs);
 
 				return () => items;
 			},

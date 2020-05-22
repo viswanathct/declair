@@ -1,6 +1,5 @@
 // #NOTE: Form doesn't reflect changes to its dependencies, during editing to provide a good UX.
 import { clone, merge } from '@laufire/utils/collection';
-import getItemRenderers from '../parsers/items';
 
 const actions = {
 	submit: (data, state) => data(state),
@@ -39,7 +38,6 @@ const form = {
 	setup: (parserArgs) => {
 		const { getState } = parserArgs.context;
 		const { render } = parserArgs.type;
-		const items = getItemRenderers(parserArgs);
 		const dataCall = dataCallGetter(parserArgs);
 		const extract = getDataExtractor(parserArgs);
 
@@ -47,7 +45,7 @@ const form = {
 			const state = getState(extract(props.data)());
 			const data = dataCall(state);
 
-			return render({ ...props, data, items });
+			return render({ ...props, data });
 		};
 	},
 	interactive: true,

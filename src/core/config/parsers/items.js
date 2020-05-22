@@ -20,13 +20,13 @@ const getPropsAccessor = (state, key) => (dataIn) =>
 		? assign(state, { [key]: dataIn })
 		: state[key]);
 
-const getItemRenderers = (parserArgs) => {
-	const { context, props } = parserArgs;
-	const parsedItems = props.items();
+const parseItems = (parserArgs) => {
+	const { context, prop, parse } = parserArgs;
+	const parsedItems = map(prop, (item) => parse({ parsing: item }));
 	const dataHooks = getDataHooks({ ...parserArgs, parsedItems });
 	const itemTemplates = map(parsedItems, context.mount);
 
-	const items = map(itemTemplates, (item, key) => {
+	return map(itemTemplates, (item, key) => {
 		const Item = (itemRenderProps) => {
 			const { data } = itemRenderProps;
 
@@ -41,8 +41,6 @@ const getItemRenderers = (parserArgs) => {
 
 		return Item;
 	});
-
-	return () => items;
 };
 
-export default getItemRenderers;
+export default parseItems;
