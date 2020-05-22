@@ -19,15 +19,14 @@ const actions = {
 	submit: (data, state) => data(state),
 };
 
-const getTargetActions = ({ config, props }) =>
+const targetHasActions = ({ config, props }) =>
 	Boolean(props.target())
 	&& config.sources[props.target()]?.actions?.length > 0;
 
 const getAction = (parserArgs) => {
 	const { data } = parserArgs.props;
-	const targetHasActions = getTargetActions(parserArgs);
 
-	return targetHasActions
+	return targetHasActions(parserArgs)
 		? (dataIn, state) => actions[dataIn.action](data, merge(
 			{}, data(), { data: state }
 		))
@@ -38,7 +37,10 @@ const usesExternalData = ({ parserArgs, data }) =>
 	parserArgs.props.data !== data;
 
 const getDataExtractor = (parserArgs) => (data) => () =>
-	clone(usesExternalData({ parserArgs, data }) ? data() : data().data) || {};
+	clone(usesExternalData({ parserArgs, data })
+		|| !targetHasActions(parserArgs)
+		? data()
+		: data().data) || {};
 
 const getPropsAccessor = (state, key) => (dataIn) =>
 	(dataIn !== undefined
