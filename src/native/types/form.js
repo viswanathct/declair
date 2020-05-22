@@ -1,26 +1,7 @@
-import React from 'react';
-import { View } from 'react-native';
-import { map, values } from '@laufire/utils/collection';
-import { container as containerStyle } from '../defaults/style';
+import { merge } from '@laufire/utils/collection';
+import container from './shared/container';
 
 /* Exports */
-const form = {
-	props: {
-		style: {
-			default: {
-				...containerStyle,
-				flexDirection: 'column',
-			},
-		},
-	},
-	render: ({ data, items, style }) =>
-		<View { ...{ style: style() } }>
-			{
-				values(map(items(), (Item, key) => <Item {...{
-					data, key,
-				}}/>))
-			}
-		</View>,
-};
+const form = merge({}, container);
 
 export default form;

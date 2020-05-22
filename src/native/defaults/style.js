@@ -1,8 +1,8 @@
 const container = {
-	flexDirection: 'row',
+	flexDirection: 'column',
+	flexWrap: 'wrap',
 	justifyContent: 'flex-start',
 	width: '100%',
-	flexWrap: 'wrap',
 };
 
 export {

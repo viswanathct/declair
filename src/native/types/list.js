@@ -10,10 +10,7 @@ const list = {
 			default: [],
 		},
 		style: {
-			default: {
-				...container,
-				flexDirection: 'column',
-			},
+			default: container,
 		},
 	},
 	render: ({ data, item: Item, style }) =>
