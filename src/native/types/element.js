@@ -13,9 +13,9 @@ const element = {
 			default: containerStyle,
 		},
 	},
-	render: ({ items, style }) => <View { ...{ style: style() } }>
+	render: ({ items, data, style }) => <View { ...{ style: style() } }>
 		{
-			values(map(items(), (Item, key) => <Item {...{ key }}/>))
+			values(map(items(), (Item, key) => <Item {...{ data, key }}/>))
 		}
 	</View>,
 };

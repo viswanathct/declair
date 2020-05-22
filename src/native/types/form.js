@@ -19,7 +19,7 @@ const form = {
 	render: ({ data, items, style }) =>
 		<View { ...{ style: style() } }>
 			{
-				values(map(items, (Item, key) => <Item {...{
+				values(map(items(), (Item, key) => <Item {...{
 					data, key,
 				}}/>))
 			}
