@@ -16,11 +16,11 @@ const form = {
 			},
 		},
 	},
-	render: ({ action, state, items, style }) =>
+	render: ({ data, items, style }) =>
 		<View { ...{ style: style() } }>
 			{
 				values(map(items, (Item, key) => <Item {...{
-					action, key, state,
+					data, key,
 				}}/>))
 			}
 		</View>,

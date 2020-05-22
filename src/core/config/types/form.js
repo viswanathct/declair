@@ -1,36 +1,42 @@
 // #NOTE: Form doesn't reflect changes to its dependencies, during editing to provide a good UX.
 import { assign, clone, map, merge } from '@laufire/utils/collection';
 
-const getDataHooks = ({ context, parsing, parsedItems }) =>
-	map(parsing.items, (item, key) => {
-		const parsedProps = parsedItems[key].props;
-		const type = context.types[item.type];
-
-		return type.interactive && !parsedProps.target()
-			? type.editable
-				? (action, state) => (dataIn) => (dataIn !== undefined
-					? action(parsedProps.data(), state)
-					: parsedProps.data())
-				: (action, state) => () => action(parsedProps.data(), state)
-			: undefined;
-	});
-
 const actions = {
 	submit: (data, state) => data(state),
 };
+
+/* Helpers*/
+const getDataHooks = ({ context, parsing, parsedItems }) =>
+	map(parsing.items, (item, key) => {
+		const itemProps = parsedItems[key].props;
+		const { data: itemData } = itemProps;
+		const type = context.types[item.type];
+
+		return type.interactive && !itemProps.target()
+			? type.editable
+				? (data) => (dataIn) => (dataIn !== undefined
+					? data(itemData())
+					: itemData())
+				: (data) => () => data(itemData())
+			: undefined;
+	});
 
 const targetHasActions = ({ config, props }) =>
 	Boolean(props.target())
 	&& config.sources[props.target()]?.actions?.length > 0;
 
-const getAction = (parserArgs) => {
+const dataCallGetter = (parserArgs) => (state) => {
 	const { data } = parserArgs.props;
 
 	return targetHasActions(parserArgs)
-		? (dataIn, state) => actions[dataIn.action](data, merge(
-			{}, data(), { data: state }
-		))
-		: (dataIn, state) => actions[dataIn.action](data, state);
+		? (dataIn) => (dataIn !== undefined
+			? actions[dataIn.action](data, merge(
+				{}, data(), { data: state() }
+			))
+			: state())
+		: (dataIn) => (dataIn !== undefined
+			? actions[dataIn.action](data, state)
+			: state());
 };
 
 const usesExternalData = ({ parserArgs, data }) =>
@@ -55,14 +61,14 @@ const getItemRenderers = (parserArgs) => {
 
 	return map(itemTemplates, (item, key) => {
 		const Item = (itemRenderProps) => {
-			const { action, state } = itemRenderProps;
+			const { data } = itemRenderProps;
 
 			return item({
 				...itemRenderProps,
 				data: dataHooks[key]
-					? dataHooks[key](action, state)
+					? dataHooks[key](data)
 					: parsedItems[key].props.data
-						|| getPropsAccessor(state, key),
+						|| getPropsAccessor(data(), key),
 			});
 		};
 
@@ -75,18 +81,16 @@ const form = {
 	setup: (parserArgs) => {
 		const { getState } = parserArgs.context;
 		const { render } = parserArgs.type;
-		const action = getAction(parserArgs);
-		const dataExtractor = getDataExtractor(parserArgs);
+		const dataCall = dataCallGetter(parserArgs);
+		const extract = getDataExtractor(parserArgs);
 		const items = getItemRenderers(parserArgs);
 
 		return (props) => {
-			const state = getState(dataExtractor(props.data)());
+			const state = getState(extract(props.data)());
+			const data = dataCall(state);
 
 			return render({
-				...props,
-				action: action,
-				state: state(),
-				items: items,
+				...props, data, items,
 			});
 		};
 	},
