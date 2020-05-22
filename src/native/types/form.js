@@ -6,9 +6,6 @@ import { container as containerStyle } from '../defaults/style';
 /* Exports */
 const form = {
 	props: {
-		data: {
-			default: {},
-		},
 		style: {
 			default: {
 				...containerStyle,

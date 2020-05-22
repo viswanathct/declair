@@ -40,13 +40,16 @@ const type = {
 				const data = resolver(args);
 				const parsingType = context.types[parsing.type];
 
-				return parsing.target
-					? parsingType.editable
-						?	(dataIn) => (dataIn !== undefined
-							? context.publish({ [props.target()]: dataIn })
-							: data())
-						: () => context.publish({ [props.target()]: data() })
-					: data;
+				return data
+					? parsing.target
+						? parsingType.editable
+							?	(dataIn) => (dataIn !== undefined
+								? context.publish({ [props.target()]: dataIn })
+								: data())
+							: () =>
+								context.publish({ [props.target()]: data() })
+						: data
+					: undefined;
 			},
 		},
 		item: {

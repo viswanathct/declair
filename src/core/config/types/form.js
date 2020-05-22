@@ -10,8 +10,8 @@ const targetHasActions = ({ config, props }) =>
 	Boolean(props.target())
 	&& config.sources[props.target()]?.actions?.length > 0;
 
-const dataCallGetter = (parserArgs) => (state) => {
-	const { data } = parserArgs.props;
+const dataCallGetter = (parserArgs) => (state, renderData) => {
+	const { data = renderData } = parserArgs.props;
 
 	return targetHasActions(parserArgs)
 		? (dataIn) => (dataIn !== undefined
@@ -43,7 +43,7 @@ const form = {
 
 		return (props) => {
 			const state = getState(extract(props.data)());
-			const data = dataCall(state);
+			const data = dataCall(state, props.data);
 
 			return render({ ...props, data });
 		};

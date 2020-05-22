@@ -15,10 +15,10 @@ const getDataHooks = ({ context, parsing, parsedItems }) =>
 			: undefined;
 	});
 
-const getPropsAccessor = (state, key) => (dataIn) =>
+const getPropsAccessor = (data, key) => (dataIn) =>
 	(dataIn !== undefined
-		? assign(state, { [key]: dataIn })
-		: state[key]);
+		? assign(data(), { [key]: dataIn })
+		: data()[key]);
 
 const parseItems = (parserArgs) => {
 	const { context, prop, parse } = parserArgs;
@@ -35,7 +35,7 @@ const parseItems = (parserArgs) => {
 				data: dataHooks[key]
 					? dataHooks[key](data)
 					: parsedItems[key].props.data
-						|| getPropsAccessor(data(), key),
+						|| getPropsAccessor(data, key),
 			});
 		};
 
