@@ -24,10 +24,10 @@ const config = {
 };
 
 const init = ({ context }) => {
-	const { root } = context;
-	const Root = root;
+	const { Root } = context;
+	const RouterRoot = () => <RouterWrapper><Root/></RouterWrapper>;
 
-	context.root = () => <RouterWrapper><Root/></RouterWrapper>;
+	context.Root = RouterRoot;
 	context.next();
 };
 

@@ -17,7 +17,7 @@ const buildContext = (config) => {
 			typeof value === 'string' && Boolean(config.sources[value]),
 		mount: mount,
 		publish: (data) => merge(context.state, data),
-		root: () => context.structure,
+		Root: () => context.structure,
 		state: {},
 		sources: {},
 	});
@@ -62,9 +62,9 @@ const entry = (inConfig) => {
 
 	// #LATER: setup to init could be done serially on items, to avoid the need for run-time need for finding evaluators.
 
-	const { publish, sources, root } = context;
+	const { publish, sources, Root } = context;
 
-	return { publish, sources, root };
+	return { publish, sources, Root };
 };
 
 export default entry;

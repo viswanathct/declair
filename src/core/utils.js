@@ -12,6 +12,16 @@ const isUnique = (
 	value, index, array
 ) => array.indexOf(value) === index;
 
+const capitalize = (string) => string[0].toUpperCase() + string.slice(1);
+
+const assignName = (fn, name) => {
+	Object.defineProperty(
+		fn, 'name', { value: name }
+	);
+
+	return fn;
+};
+
 /* Exports */
 const doNothing = (x) => x;
 const sayNothing = () => {};
@@ -57,6 +67,9 @@ const once = (cb) => {
 const defined = (...values) =>
 	values[values.findIndex((value) => value !== undefined)];
 
+const namedWrapper = (wrapper, config) =>
+	assignName(wrapper, capitalize(config.type.type));
+
 export {
 	doNothing,
 	sayNothing,
@@ -67,4 +80,5 @@ export {
 	setupHook,
 	unique,
 	defined,
+	namedWrapper,
 };

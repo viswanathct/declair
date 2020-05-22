@@ -21,7 +21,7 @@ const enrichContext = (context, store) => assign(context, {
 			: state);
 	},
 	updateState: (data) => store.updateState(data),
-	root: () => {
+	Root: () => {
 		const [state, setState] = useState(store.state);
 
 		init(
@@ -30,7 +30,7 @@ const enrichContext = (context, store) => assign(context, {
 
 		store.state = state;
 		context.state = state;
-		const Root = store.root();
+		const Root = store.Root();
 
 		return <Root />;
 	},
@@ -40,7 +40,7 @@ const enrichContext = (context, store) => assign(context, {
 const setup = ({ context }) => {
 	const store = {
 		state: {},
-		root: context.root,
+		Root: context.Root,
 		updateState: (data) => merge(store.state, data),
 	};
 

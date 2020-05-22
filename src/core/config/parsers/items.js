@@ -1,4 +1,5 @@
 import { assign, map } from '@laufire/utils/collection';
+import { namedWrapper } from '../../utils';
 
 const getDataHooks = ({ context, parsing, parsedItems }) =>
 	map(parsing.items, (item, key) => {
@@ -24,22 +25,21 @@ const parseItems = (parserArgs) => {
 	const { context, prop, parse } = parserArgs;
 	const parsedItems = map(prop, (item) => parse({ parsing: item }));
 	const dataHooks = getDataHooks({ ...parserArgs, parsedItems });
-	const itemTemplates = map(parsedItems, context.mount);
 
-	return map(itemTemplates, (item, key) => {
-		const Item = (itemRenderProps) => {
+	return map(parsedItems, (item, key) => {
+		const component = context.mount(item);
+
+		return namedWrapper((itemRenderProps) => {
 			const { data } = itemRenderProps;
 
-			return item({
+			return component({
 				...itemRenderProps,
 				data: dataHooks[key]
 					? dataHooks[key](data)
 					: parsedItems[key].props.data
 						|| getPropsAccessor(data, key),
 			});
-		};
-
-		return Item;
+		}, item);
 	});
 };
 
