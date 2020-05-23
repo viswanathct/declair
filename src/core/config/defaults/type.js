@@ -36,20 +36,9 @@ const type = {
 		},
 		data: {
 			parse: (args) => {
-				const { context, parsing, props, resolver } = args;
-				const data = resolver(args);
-				const parsingType = context.types[parsing.type];
+				const { prop, resolver } = args;
 
-				return data
-					? parsing.target
-						? parsingType.editable
-							?	(dataIn) => (dataIn !== undefined
-								? context.publish({ [props.target()]: dataIn })
-								: data())
-							: () =>
-								context.publish({ [props.target()]: data() })
-						: data
-					: undefined;
+				return prop !== undefined ? resolver(args) : undefined;
 			},
 		},
 		item: {
@@ -82,10 +71,15 @@ const type = {
 		},
 		target: {
 			normalize: ({ context, parsing, prop }) =>
-				(context.types[parsing.type].interactive
-					? prop || inferTarget({ context, parsing })
-					: undefined),
-			parse: ({ prop }) => () => prop,
+				prop || inferTarget({ context, parsing }),
+			// #TODO: Inferring target disallows empty targets. Figure, whether it's a valid use-case.
+			parse: (args) => {
+				const { context, prop } = args;
+
+				return prop
+					? (dataIn) => context.publish({ [prop]: dataIn })
+					: undefined;
+			},
 		},
 	},
 	normalize: doNothing,

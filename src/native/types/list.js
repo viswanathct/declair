@@ -13,13 +13,14 @@ const list = {
 			default: container,
 		},
 	},
-	render: ({ data, item: Item, style }) =>
+	render: ({ data, item: Item, style, target }) =>
 		<View { ...{ style: style() } }>
 			{
 				values(map(data(), (itemData, key) =>
 					<Item {...{
 						key: defined(itemData.id, key),
-						data: (dataIn) => data(dataIn, itemData)[key],
+						data: () => data()[key],
+						target: (dataIn) => target(dataIn, itemData)[key],
 					}}/>))
 			}
 		</View>,

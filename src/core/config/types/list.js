@@ -1,25 +1,32 @@
-import { merge } from '@laufire/utils/collection';
+import { merge, assign } from '@laufire/utils/collection';
 
-const getDataCall = ({ props }) => {
+const getData = ({ props }) => {
 	const { data } = props;
 
 	return props.actions
-		? (dataIn, itemData) => data(dataIn !== undefined
-			? merge(
-				{}, { data: itemData }, dataIn
-			)
-			: undefined)?.data || {}
-		: (dataIn, itemData) => data(dataIn !== undefined
-			? merge(
-				{}, itemData, dataIn
-			)
-			: undefined) || {};
+		? () => data()?.data
+		: () => data();
+};
+
+const getTarget = ({ props }) => {
+	const { target } = props;
+
+	return props.actions
+		? (dataIn, itemData) => target(merge(
+			{}, { data: itemData }, dataIn
+		))
+		: (dataIn, itemData) => target(merge(
+			{}, itemData, dataIn
+		));
 };
 
 /* Exports */
 const list = {
 	parse: ({ props }) => {
-		props.data = getDataCall({ props });
+		assign(props, {
+			data: getData({ props }),
+			target: getTarget({ props }),
+		});
 	},
 };
 

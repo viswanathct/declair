@@ -3,6 +3,7 @@ import { TextInput } from 'react-native';
 import { defined } from '../../core/utils';
 
 const input = {
+	editable: true,
 	props: {
 		style: {
 			default: {
@@ -15,11 +16,11 @@ const input = {
 
 		return setupArgs.type.render({ ...props, state });
 	},
-	render: ({ data, style, state }) => <TextInput { ...{
+	render: ({ data, style, target, state }) => <TextInput { ...{
 		style: style(),
 		onChangeText: (value) => {
 			state(value);
-			data(value);
+			target(value);
 		},
 		value: defined(data(), '').toString(),
 	}}

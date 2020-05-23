@@ -10,11 +10,11 @@ const container = {
 			default: containerStyle,
 		},
 	},
-	render: ({ data, items, style }) =>
+	render: ({ data, items, style, target }) =>
 		<View { ...{ style: style() } }>
 			{
 				values(map(items(), (Item, key) => <Item {...{
-					data, key,
+					data, key, target,
 				}}/>))
 			}
 		</View>,

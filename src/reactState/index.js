@@ -1,6 +1,6 @@
 // TODO: Implement proper state-management. It's crude, due to a lack of knowledge.
 import React, { useState } from 'react';
-import { assign, merge } from '@laufire/utils/collection';
+import { assign, clone, merge } from '@laufire/utils/collection';
 
 /* Tasks */
 const init = (
@@ -14,7 +14,7 @@ const init = (
 
 const enrichContext = (context, store) => assign(context, {
 	getState: (value) => {
-		const [state, setState] = useState(value);
+		const [state, setState] = useState(clone(value));
 
 		return (newValue) => (newValue !== undefined
 			? setState(newValue)
