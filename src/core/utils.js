@@ -34,27 +34,7 @@ const hook = (
 	return exHook ? exHook(returned, ...args) : returned;
 };
 
-const isObservable = (config, value) =>
-	typeof value === 'string' && Boolean(config.sources[value]);
-
-const hasSource = (sources, prop) => {
-	const processor = hasSourceProcessors[inferType(prop)];
-
-	return processor
-		? processor(sources, prop)
-		: false;
-};
-
 const unique = (array) => array.filter(isUnique);
-
-const setupHook = (parserArgs, cb) => {
-	const origSetup = parserArgs.type.setup;
-
-	parserArgs.type = {
-		...parserArgs.type,
-		setup: ({ props }) => cb(origSetup, props),
-	};
-};
 
 const once = (cb) => {
 	const state = {};
@@ -67,18 +47,63 @@ const once = (cb) => {
 const defined = (...values) =>
 	values[values.findIndex((value) => value !== undefined)];
 
+const isObservable = (config, value) =>
+	typeof value === 'string' && Boolean(config.sources[value]);
+
+const hasSource = (sources, prop) => {
+	const processor = hasSourceProcessors[inferType(prop)];
+
+	return processor
+		? processor(sources, prop)
+		: false;
+};
+
+const hasActions = (config, source) =>
+	typeof source === 'string' && config.sources[source]?.actions?.length > 0;
+
+const usesExternalData = ({ parserArgs, data }) =>
+	parserArgs.props.data !== data;
+
+const dataExtractor = (parserArgs) => {
+	const { context, config, parsing } = parserArgs;
+
+	const source = context.isObservable(parsing.data)
+		? parsing.data
+		: parsing.target;
+
+	const sourceHasActions = hasActions(config, source);
+
+	return 	(data) => (data
+		? usesExternalData({ parserArgs, data }) || !sourceHasActions
+			? defined(data(), {})
+			: defined(data().data, {})
+		: {});
+};
+
 const namedWrapper = (wrapper, config) =>
 	assignName(wrapper, capitalize(config.type.type));
+
+/* Superseded */
+const setupHook = (parserArgs, cb) => {
+	const origSetup = parserArgs.type.setup;
+
+	parserArgs.type = {
+		...parserArgs.type,
+		setup: ({ props }) => cb(origSetup, props),
+	};
+};
 
 export {
 	doNothing,
 	sayNothing,
-	hasSource,
-	hook,
-	isObservable,
 	once,
-	setupHook,
 	unique,
 	defined,
+	hook,
+	dataExtractor,
+	hasSource,
+	hasActions,
+	isObservable,
 	namedWrapper,
+	setupHook,
 };
