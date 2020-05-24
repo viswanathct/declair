@@ -17,8 +17,8 @@ const inferTarget = ({ context, parsing }) =>
 	(context.isObservable(parsing.data)
 		? parsing.data
 		: parsing.inherited
-			? context.isObservable(parsing.inherited.data)
-				&& parsing.inherited.data
+			? context.isObservable(parsing.inherited.target)
+				&& parsing.inherited.target
 			: undefined);
 
 /* Exports */
@@ -42,8 +42,13 @@ const type = {
 			},
 		},
 		item: {
-			normalize: ({ normalize, prop, parsing }) =>
-				(prop ? normalize(prop, { inherited: parsing }) : undefined),
+			normalize: ({ normalize, prop, parsing }) => {
+				if(prop !== undefined) {
+					const { target = parsing.data } = parsing;
+
+					return normalize(prop, { inherited: { target }});
+				}
+			},
 			parse: ({ context, parse, prop }) =>
 				(prop ? context.mount(parse({ parsing: prop })) : undefined),
 		},
