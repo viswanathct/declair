@@ -1,22 +1,21 @@
 // #NOTE: Form doesn't reflect changes to its dependencies, during editing to provide a good UX.
 
 import { merge } from '@laufire/utils/collection';
-import { dataExtractor, hasActions } from '../../utils';
 
 const actions = {
-	submit: (target, state) => target(state),
+	submit: (target, data) => target(data),
 };
 
 /* Helpers*/
-const getTargetCall = (parserArgs) => (state, renderProps) => {
-	const { config, parsing, props } = parserArgs;
-	const { data, target } = { ...renderProps, ...props };
+const targetCall = (parserArgs) => (data, renderProps) => {
+	const { props } = parserArgs;
+	const { action } = props;
+	const { target } = { ...renderProps, ...props };
 
-	return hasActions(config, parsing.target)
-		? (dataIn) => actions[dataIn.action](target, merge(
-			{}, data(), { data: state() }
-		))
-		: (dataIn) => actions[dataIn.action](target, state());
+	return action
+		? (dataIn) => actions[dataIn.action](target,
+			merge({ action: action() }, { data: data() }))
+		: (dataIn) => actions[dataIn.action](target, data());
 };
 
 /* Exports */
@@ -24,12 +23,11 @@ const form = {
 	setup: (parserArgs) => {
 		const { getState } = parserArgs.context;
 		const { render } = parserArgs.type;
-		const targetCall = getTargetCall(parserArgs);
-		const extract = dataExtractor(parserArgs);
+		const getTarget = targetCall(parserArgs);
 
 		return (props) => {
-			const data = getState(extract(props.data));
-			const target = targetCall(data, props);
+			const data = getState(props.data);
+			const target = getTarget(data, props);
 
 			return render({ ...props, data, target });
 		};

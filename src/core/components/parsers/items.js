@@ -1,14 +1,15 @@
 import { assign, map, clean } from '@laufire/utils/collection';
 import { namedWrapper } from '../../utils';
 
-const getTargetHooks = ({ context, parsing, parsedItems }) =>
-	map(parsing.items, (item, key) => {
-		const itemProps = parsedItems[key].props;
-		const { data: itemData } = itemProps;
-		const type = context.types[item.type];
+const getTargetHooks = ({ items }) =>
+	map(items, (item) => {
+		const { action, data } = item.props;
 
-		return !itemProps.target && type.interactive
-			? (parentTarget) => () => parentTarget(itemData())
+		return action
+			? data
+				? (parentTarget) => () =>
+					parentTarget({ action: action(), data: data() })
+				: (parentTarget) => () => parentTarget({ action: action() })
 			: undefined;
 	});
 
@@ -22,19 +23,19 @@ const getPropSetter = (data, key) => (data
 
 const parseItems = (parserArgs) => {
 	const { context, prop, parse } = parserArgs;
-	const parsedItems = map(prop, (item) => parse({ parsing: item }));
-	const targetHooks = getTargetHooks({ ...parserArgs, parsedItems });
+	const items = map(prop, (item) => parse({ parsing: item }));
+	const targetHooks = getTargetHooks({ items });
 
-	return map(parsedItems, (item, key) => {
+	return map(items, (item, key) => {
 		const component = context.mount(item);
 
 		return namedWrapper((itemRenderProps) => {
 			const { data: itemData, target: itemTarget } = itemRenderProps;
-			const parsedProps = parsedItems[key].props;
+			const parsedProps = items[key].props;
 			const data = parsedProps.data || getPropGetter(itemData, key);
-			const target = targetHooks[key]
+			const target = parsedProps.target || (targetHooks[key]
 				? targetHooks[key](itemTarget)
-				: parsedProps.target || getPropSetter(itemData, key);
+				: getPropSetter(itemData, key));
 
 			return component({
 				...itemRenderProps,

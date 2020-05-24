@@ -58,32 +58,13 @@ const hasSource = (sources, prop) => {
 		: false;
 };
 
-const hasActions = (config, source) =>
-	typeof source === 'string' && config.sources[source]?.actions?.length > 0;
-
-const usesExternalData = ({ parserArgs, data }) =>
-	parserArgs.props.data !== data;
-
-const dataExtractor = (parserArgs) => {
-	const { context, config, parsing } = parserArgs;
-
-	const source = context.isObservable(parsing.data)
-		? parsing.data
-		: parsing.target;
-
-	const sourceHasActions = hasActions(config, source);
-
-	return 	(data) => (data
-		? usesExternalData({ parserArgs, data }) || !sourceHasActions
-			? defined(data(), {})
-			: defined(data().data, {})
-		: {});
-};
-
 const namedWrapper = (wrapper, config) =>
 	assignName(wrapper, capitalize(config.type.type));
 
 /* Superseded */
+const hasActions = (config, source) =>
+	typeof source === 'string' && config.sources[source]?.actions?.length > 0;
+
 const setupHook = (parserArgs, cb) => {
 	const origSetup = parserArgs.type.setup;
 
@@ -100,7 +81,6 @@ export {
 	unique,
 	defined,
 	hook,
-	dataExtractor,
 	hasSource,
 	hasActions,
 	isObservable,

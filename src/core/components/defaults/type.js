@@ -24,6 +24,7 @@ const inferTarget = ({ context, parsing }) =>
 /* Exports */
 const type = {
 	props: {
+		action: {},
 		actions: {
 			parse: ({ context, parsing, prop }) =>
 				(prop
