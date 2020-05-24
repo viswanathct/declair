@@ -21,6 +21,10 @@ const inferTarget = ({ context, parsing }) =>
 				&& parsing.inherited.target
 			: undefined);
 
+const whenProp = (cb) => (args) => (args.prop !== undefined
+	? cb(args)
+	: undefined);
+
 /* Exports */
 const type = {
 	props: {
@@ -36,29 +40,22 @@ const type = {
 			parse: ({ prop }) => () => Boolean(prop),
 		},
 		item: {
-			normalize: ({ normalize, prop, parsing }) => {
-				if(prop !== undefined) {
-					const { target = parsing.data } = parsing;
+			normalize: whenProp(({ normalize, prop, parsing }) => {
+				const { target = parsing.data } = parsing;
 
-					return normalize(prop, { inherited: { target }});
-				}
-			},
-			parse: ({ context, parse, prop }) =>
-				(prop ? context.mount(parse({ parsing: prop })) : undefined),
+				return normalize(prop, { inherited: { target }});
+			}),
+			parse: whenProp(({ context, parse, prop }) =>
+				context.mount(parse({ parsing: prop }))),
 		},
 		items: {
-			normalize: ({ prop, normalize }) =>
-				(prop
-					? map(prop, (item, name) => normalize({ name }, item))
-					: undefined),
-			parse: (parserArgs) => {
-				if(!parserArgs.prop)
-					return undefined;
-
+			normalize: whenProp(({ prop, normalize }) =>
+				map(prop, (item, name) => normalize({ name }, item))),
+			parse: whenProp((parserArgs) => {
 				const items = parseItems(parserArgs);
 
 				return () => items;
-			},
+			}),
 		},
 		label: {
 			normalize: ({ prop, parsing }) => prop || parsing.name,
@@ -72,13 +69,11 @@ const type = {
 			normalize: ({ context, parsing, prop }) =>
 				prop || inferTarget({ context, parsing }),
 			// #TODO: Inferring target disallows empty targets. Figure, whether it's a valid use-case.
-			parse: (args) => {
+			parse: whenProp((args) => {
 				const { context, prop } = args;
 
-				return prop
-					? (dataIn) => context.publish({ [prop]: dataIn })
-					: undefined;
-			},
+				return (dataIn) => context.publish({ [prop]: dataIn });
+			}),
 		},
 	},
 	normalize: doNothing,
