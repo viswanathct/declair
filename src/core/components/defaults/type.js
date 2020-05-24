@@ -34,13 +34,6 @@ const type = {
 			default: true,
 			parse: ({ prop }) => () => Boolean(prop),
 		},
-		data: {
-			parse: (args) => {
-				const { prop, resolver } = args;
-
-				return prop !== undefined ? resolver(args) : undefined;
-			},
-		},
 		item: {
 			normalize: ({ normalize, prop, parsing }) => {
 				if(prop !== undefined) {

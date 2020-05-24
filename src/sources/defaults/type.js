@@ -4,8 +4,9 @@ import { doNothing } from '../../core/utils';
 const type = {
 	props: {
 		actions: {},
-		data: {},
 	},
+	normalize: doNothing,
+	parse: doNothing,
 	setup: doNothing,
 	type: 'source',
 };

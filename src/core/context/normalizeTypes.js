@@ -1,15 +1,14 @@
 import { fill, map, merge, pick, values } from '@laufire/utils/collection';
-import coreTypes from '../config/types';
-import typeDefaults from '../config/defaults/type';
+import components from '../components/types';
+import { type as typeDefaults } from '../defaults';
 
 /* Exports */
 const normalizeTypes = ({ config, context }) => {
 	const providerTypes = merge(
-		{}, coreTypes,
+		{}, components,
 		merge({}, ...values(config.providers)).config.types
 	);
 
-	// #TODO: Skip adding uiComponent defaults to sources.
 	map(providerTypes, (type, name) =>
 		merge(fill(type, typeDefaults), { type: name }));
 

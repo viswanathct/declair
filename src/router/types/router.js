@@ -3,7 +3,7 @@
 import React from 'react';
 import { Platform, View, Text } from 'react-native';
 import { map, fill, values, pick } from '@laufire/utils/collection';
-import element from '../../core/config/types/element';
+import element from '../../core/components/types/element';
 
 /* Delegates */
 const { Route, Link, useRouteMatch } = Platform.os !== 'web'

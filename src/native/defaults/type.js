@@ -5,7 +5,7 @@ const type = {
 			default: {},
 		},
 	},
-	type: 'uiComponent',
+	type: 'component',
 };
 
 export default type;

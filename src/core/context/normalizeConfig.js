@@ -1,5 +1,5 @@
 import { assign, merge, map, pick, sanitize } from '@laufire/utils/collection';
-import defaults from '../defaults';
+import { props as defaultProps } from '../defaults';
 
 /* Helpers */
 const normalizeWorker = ({ config, context, normalize, parsing, type }) => {
@@ -22,7 +22,7 @@ const getNormalizer = ({ config, context }) => {
 	const { types } = context;
 	const normalize = (...extensions) => {
 		const merged = merge(...extensions);
-		const typeName = merged.type || defaults.type;
+		const typeName = merged.type || defaultProps.type;
 		const type = types[typeName];
 		const parsing = merge(
 			{}, pick(type.props, 'default'), merged
