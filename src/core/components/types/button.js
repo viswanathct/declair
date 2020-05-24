@@ -4,8 +4,8 @@ const button = {
 			default: 'Button',
 		},
 	},
-	setup: (parserArgs) => {
-		const { render } = parserArgs.type;
+	setup: (setupArgs) => {
+		const { render } = setupArgs.type;
 
 		return (props) => {
 			const { data, target } = props;

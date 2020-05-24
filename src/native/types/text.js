@@ -10,10 +10,10 @@ const text = {
 			},
 		},
 	},
-	setup: (parserArgs) => (props) => {
+	setup: (setupArgs) => (props) => {
 		const { data } = props;
 
-		return parserArgs.type.render({
+		return setupArgs.type.render({
 			...props,
 			data: () => defined(data(), '').toString(),
 		});

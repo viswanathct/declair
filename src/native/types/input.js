@@ -11,9 +11,14 @@ const input = {
 		},
 	},
 	setup: (setupArgs) => (props) => {
+		const { data } = props;
 		const state = setupArgs.context.getState();
 
-		return setupArgs.type.render({ ...props, state });
+		return setupArgs.type.render({
+			...props,
+			data: () => defined(data(), '').toString(),
+			state: state,
+		});
 	},
 	render: ({ data, style, target, state }) => <TextInput { ...{
 		style: style(),
@@ -21,7 +26,7 @@ const input = {
 			state(value);
 			target(value);
 		},
-		value: defined(data(), '').toString(),
+		value: data(),
 	}}
 	/>,
 };
