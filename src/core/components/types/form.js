@@ -32,7 +32,6 @@ const form = {
 			return render({ ...props, data, target });
 		};
 	},
-	editable: true,
 };
 
 export default form;

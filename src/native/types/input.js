@@ -3,7 +3,6 @@ import { TextInput } from 'react-native';
 import { defined } from '../../core/utils';
 
 const input = {
-	editable: true,
 	props: {
 		style: {
 			default: {

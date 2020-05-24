@@ -4,7 +4,6 @@ const button = {
 			default: 'Button',
 		},
 	},
-	interactive: true,
 };
 
 export default button;
