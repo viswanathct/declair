@@ -1,6 +1,5 @@
 import React from 'react';
 import { TextInput } from 'react-native';
-import { defined } from '../../core/utils';
 
 const input = {
 	props: {
@@ -10,25 +9,12 @@ const input = {
 			},
 		},
 	},
-	setup: (setupArgs) => (props) => {
-		const { data } = props;
-		const state = setupArgs.context.getState();
-
-		return setupArgs.type.render({
-			...props,
-			data: () => defined(data(), '').toString(),
-			state: state,
-		});
-	},
-	render: ({ data, style, target, state }) => <TextInput { ...{
-		style: style(),
-		onChangeText: (value) => {
-			state(value);
-			target(value);
-		},
-		value: data(),
-	}}
-	/>,
+	render: ({ data, style, target }) =>
+		<TextInput { ...{
+			style: style(),
+			onChangeText: target,
+			value: data(),
+		}}/>,
 };
 
 export default input;

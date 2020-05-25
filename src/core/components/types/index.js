@@ -4,10 +4,9 @@ import typeDefaults from '../defaults/type';
 import button from './button';
 import element from './element';
 import form from './form';
+import input from './input';
 import list from './list';
-
-const input = {};
-const text = {};
+import text from './text';
 
 const components = {
 	button, element, input,

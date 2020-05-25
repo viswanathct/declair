@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { defined } from '../../core/utils';
 
 const text = {
 	props: {
@@ -10,17 +9,10 @@ const text = {
 			},
 		},
 	},
-	setup: (setupArgs) => (props) => {
-		const { data } = props;
-
-		return setupArgs.type.render({
-			...props,
-			data: () => defined(data(), '').toString(),
-		});
-	},
-	render: ({ data, style }) => <Text { ...{ style: style() } }>
-		{ data() }
-	</Text>,
+	render: ({ data, style }) =>
+		<Text { ...{ style: style() } }>
+			{ data() }
+		</Text>,
 };
 
 export default text;
