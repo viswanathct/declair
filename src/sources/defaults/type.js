@@ -7,6 +7,7 @@ const type = {
 	},
 	normalize: doNothing,
 	parse: doNothing,
+	simple: false,
 	setup: doNothing,
 	type: 'source',
 };

@@ -3,6 +3,7 @@
  */
 
 const transformation = {
+	simple: true,
 	props: {
 		transform: {
 			parse: ({ prop }) => prop,

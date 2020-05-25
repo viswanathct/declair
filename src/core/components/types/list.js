@@ -1,31 +1,35 @@
 import { merge, assign } from '@laufire/utils/collection';
+import { isSourceSimple } from '../../utils';
 
-const getData = ({ props }) => {
+const getData = (props, isSimple) => {
 	const { data } = props;
 
-	return props.actions
-		? () => data()?.data
-		: () => data();
+	return isSimple
+		? () => data()
+		: () => data()?.data;
 };
 
-const getTarget = ({ props }) => {
+const getTarget = (props, isSimple) => {
 	const { target } = props;
 
-	return props.actions
+	return isSimple
 		? (dataIn, itemData) => target(merge(
-			{}, { data: itemData }, dataIn
+			{}, itemData, dataIn
 		))
 		: (dataIn, itemData) => target(merge(
-			{}, itemData, dataIn
+			{}, { data: itemData }, dataIn
 		));
 };
 
 /* Exports */
 const list = {
-	parse: ({ props }) => {
+	parse: (parserArgs) => {
+		const { props } = parserArgs;
+		const isSimple = isSourceSimple(parserArgs);
+
 		assign(props, {
-			data: getData({ props }),
-			target: getTarget({ props }),
+			data: getData(props, isSimple),
+			target: getTarget(props, isSimple),
 		});
 	},
 };

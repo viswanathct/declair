@@ -51,6 +51,7 @@ const actions = {
 };
 
 const collection = {
+	simple: false,
 	props: {
 		actions: {
 			default: ['create', 'update', 'delete'],

@@ -47,15 +47,19 @@ const once = (cb) => {
 const defined = (...values) =>
 	values[values.findIndex((value) => value !== undefined)];
 
-const isObservable = (config, value) =>
-	typeof value === 'string' && Boolean(config.sources[value]);
-
 const hasSource = (sources, prop) => {
 	const processor = hasSourceProcessors[inferType(prop)];
 
 	return processor
 		? processor(sources, prop)
 		: false;
+};
+
+const isSourceSimple = (parserArgs) => {
+	const { context, parsing } = parserArgs;
+	const { data } = parsing;
+
+	return !context.isObservable(data) || context.types[data].simple;
 };
 
 const namedWrapper = (wrapper, config) =>
@@ -74,6 +78,9 @@ const setupHook = (parserArgs, cb) => {
 	};
 };
 
+const isObservable = (config, value) =>
+	typeof value === 'string' && Boolean(config.sources[value]);
+
 export {
 	doNothing,
 	sayNothing,
@@ -83,6 +90,7 @@ export {
 	hook,
 	hasSource,
 	hasActions,
+	isSourceSimple,
 	isObservable,
 	namedWrapper,
 	setupHook,
