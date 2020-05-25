@@ -1,6 +1,8 @@
 /**
- * Helps in spinning up the app with default providers.
+ * Helps in spinning up an app with default providers and customizations.
  */
+
+import { merge } from '@laufire/utils/collection';
 
 import entry from './core/entry';
 import reactState from './reactState';
@@ -12,7 +14,9 @@ import router from './router';
 const providers = { native, router, reactState, sources };
 
 /* Exports */
-const quick = (props) =>
-	entry({ providers, ...props });
+const quick = (extensions) =>
+	entry(merge(
+		{}, { providers }, extensions
+	));
 
 export default quick;
