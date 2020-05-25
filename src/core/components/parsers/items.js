@@ -1,4 +1,4 @@
-import { assign, map, clean } from '@laufire/utils/collection';
+import { map, clean } from '@laufire/utils/collection';
 import { namedWrapper } from '../../utils';
 
 const getTargetHooks = ({ items }) =>
@@ -17,8 +17,7 @@ const getPropGetter = (data, key) => (data
 	? () => data()[key]
 	: undefined);
 const getPropSetter = (data, key) => (data
-	?	(dataIn) =>
-		assign(data(), { [key]: dataIn })
+	?	(value) => data({ [key]: value })
 	: undefined);
 
 const parseItems = (parserArgs) => {

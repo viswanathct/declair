@@ -7,16 +7,21 @@ const actions = {
 };
 
 /* Helpers*/
-const targetCall = (parserArgs) => (data, renderProps) => {
+const targetCall = (parserArgs) => (state, renderProps) => {
 	const { props } = parserArgs;
 	const { action } = props;
 	const { target } = { ...renderProps, ...props };
 
 	return action
 		? (dataIn) => actions[dataIn.action](target,
-			merge({ action: action() }, { data: data() }))
-		: (dataIn) => actions[dataIn.action](target, data());
+			merge({ action: action() }, { data: state() }))
+		: (dataIn) => actions[dataIn.action](target, state());
 };
+
+const getData = (state) => (value) =>
+	(value !== undefined
+		? state({ ...state(), ...value })
+		: state());
 
 /* Exports */
 const form = {
@@ -26,8 +31,9 @@ const form = {
 		const getTarget = targetCall(parserArgs);
 
 		return (props) => {
-			const data = getState(props.data);
-			const target = getTarget(data, props);
+			const state = getState(props.data);
+			const data = getData(state);
+			const target = getTarget(state, props);
 
 			return render({ ...props, data, target });
 		};
