@@ -13,10 +13,10 @@ const getTargetHooks = ({ items }) =>
 			: undefined;
 	});
 
-const propAccessor = (data, key) => (data
+const propAccessor = (parentData, key) => (parentData
 	?	(value) => (value !== undefined
-		? data({ [key]: value })
-		: data()[key])
+		? parentData({ [key]: value })
+		: parentData()[key])
 	: undefined);
 
 const parseItems = (parserArgs) => {
@@ -28,12 +28,12 @@ const parseItems = (parserArgs) => {
 		const component = context.mount(item);
 
 		return namedWrapper((itemRenderProps) => {
-			const { data: itemData, target: itemTarget } = itemRenderProps;
+			const { data: parentData, target: parentTarget } = itemRenderProps;
 			const parsedProps = items[key].props;
-			const data = parsedProps.data || propAccessor(itemData, key);
+			const data = parsedProps.data || propAccessor(parentData, key);
 			const target = parsedProps.target || (targetHooks[key]
-				? targetHooks[key](itemTarget)
-				: propAccessor(itemData, key));
+				? targetHooks[key](parentTarget)
+				: propAccessor(parentData, key));
 
 			return component({
 				...itemRenderProps,

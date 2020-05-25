@@ -7,15 +7,15 @@ const actions = {
 };
 
 /* Helpers*/
-const targetCall = (parserArgs) => (state, renderProps) => {
+const targetBuilder = (parserArgs) => (state, renderProps) => {
 	const { props } = parserArgs;
 	const { action } = props;
 	const { target } = { ...renderProps, ...props };
 
 	return action
-		? (dataIn) => actions[dataIn.action](target,
+		? (value) => actions[value.action](target,
 			merge({ action: action() }, { data: state() }))
-		: (dataIn) => actions[dataIn.action](target, state());
+		: (value) => actions[value.action](target, state());
 };
 
 const getData = (state) => (value) =>
@@ -28,7 +28,7 @@ const form = {
 	setup: (parserArgs) => {
 		const { getState } = parserArgs.context;
 		const { render } = parserArgs.type;
-		const getTarget = targetCall(parserArgs);
+		const getTarget = targetBuilder(parserArgs);
 
 		return (props) => {
 			const state = getState(props.data);
