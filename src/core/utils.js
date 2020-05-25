@@ -62,6 +62,18 @@ const isSourceSimple = (parserArgs) => {
 	return !context.isObservable(data) || context.types[data].simple;
 };
 
+const dataCall = (parserArgs) => {
+	const { context, parsing, resolver } = parserArgs;
+	const { data } = parsing;
+	const resolve = resolver(parserArgs);
+
+	return !context.isObservable(data)
+		|| context.sources[data].type.simple
+			=== context.types[parsing.type].simple
+		? () => resolve()
+		: () => resolve()?.data;
+};
+
 const namedWrapper = (wrapper, config) =>
 	assignName(wrapper, capitalize(config.type.type));
 
@@ -91,6 +103,7 @@ export {
 	hasSource,
 	hasActions,
 	isSourceSimple,
+	dataCall,
 	isObservable,
 	namedWrapper,
 	setupHook,

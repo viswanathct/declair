@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { fill, map, merge } from '@laufire/utils/collection';
-import { doNothing } from '../../utils';
+import { doNothing, dataCall } from '../../utils';
 import parseItems from '../parsers/items';
 
 /* Data */
@@ -27,6 +27,7 @@ const whenProp = (cb) => (args) => (args.prop !== undefined
 
 /* Exports */
 const type = {
+	simple: true,
 	props: {
 		action: {},
 		actions: {
@@ -38,6 +39,9 @@ const type = {
 		available: {
 			default: true,
 			parse: ({ prop }) => () => Boolean(prop),
+		},
+		data: {
+			parse: whenProp((args) => dataCall(args)),
 		},
 		item: {
 			normalize: whenProp(({ normalize, prop, parsing }) => {

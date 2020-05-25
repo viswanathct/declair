@@ -5,7 +5,6 @@
 import { hasSource } from '../../core/utils';
 
 const value = {
-	simple: true,
 	props: {
 		data: {
 			parse: (args) => {
