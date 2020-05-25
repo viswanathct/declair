@@ -1,27 +1,10 @@
-import {
-	assign, filter, map, merge,
-	sanitize, values,
-} from '@laufire/utils/collection';
-import normalizeTypes from './context/normalizeTypes';
-import processDependencies from './context/processDependencies';
-import normalizeConfig from './context/normalizeConfig';
-import parseConfig from './context/parseConfig';
-import mount from './context/mount';
-
-/* Helpers */
-const buildContext = (config) => {
-	const context = {};
-
-	return assign(context, {
-		isObservable: (value) =>
-			typeof value === 'string' && Boolean(config.sources[value]),
-		mount: mount,
-		publish: (data) => merge(context.state, data),
-		Root: () => context.structure,
-		state: {},
-		sources: {},
-	});
-};
+import { filter, map,
+	sanitize, values } from '@laufire/utils/collection';
+import normalizeTypes from './processors/normalizeTypes';
+import processDependencies from './processors/processDependencies';
+import normalizeConfig from './processors/normalizeConfig';
+import parseConfig from './processors/parseConfig';
+import buildContext from './context/build';
 
 /* Tasks */
 const setupProviders = ({ config, context }) => {
