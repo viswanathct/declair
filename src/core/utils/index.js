@@ -88,22 +88,6 @@ const propResolver = (props, selector) => {
 	return () => map(availableProps, (dummy, key) => props[key]());
 };
 
-/* Superseded */
-const hasActions = (config, source) =>
-	typeof source === 'string' && config.sources[source]?.actions?.length > 0;
-
-const setupHook = (parserArgs, cb) => {
-	const origSetup = parserArgs.type.setup;
-
-	parserArgs.type = {
-		...parserArgs.type,
-		setup: ({ props }) => cb(origSetup, props),
-	};
-};
-
-const isObservable = (config, value) =>
-	typeof value === 'string' && Boolean(config.sources[value]);
-
 export {
 	doNothing,
 	sayNothing,
@@ -112,12 +96,9 @@ export {
 	defined,
 	hook,
 	hasSource,
-	hasActions,
 	isSourceSimple,
 	dataCall,
 	patched,
 	propResolver,
-	isObservable,
 	namedWrapper,
-	setupHook,
 };
