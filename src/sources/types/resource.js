@@ -31,21 +31,26 @@ const configProps = {
 	...optProps,
 };
 
+const httpErrorStart = 400;
+
 /* Helpers */
 const url = (config) => `${ config.url }${ config.params }`;
 const request = async (config, cb) => {
-	const response = await (
-		await fetch(url(config), select(config, optProps))).json();
+	cb({ loading: true });
 
-	cb({ data: response });
+	const response = await fetch(url(config), select(config, optProps));
+	const key = response.status < httpErrorStart ? 'data' : 'error';
+
+	cb({
+		loading: false,
+		[key]: await response.json(),
+	});
 };
 
 /* Exports */
 const resource = {
 	simple: false,
-	props: {
-		...configProps,
-	},
+	props: configProps,
 	parse: (parserArgs) => {
 		const { context, name, props } = parserArgs;
 		const config = propResolver(parserArgs.props, configProps);
