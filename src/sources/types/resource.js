@@ -4,72 +4,72 @@
  * #NOTE: JSON is the only supported type, to ensure standard interfaces.
  */
 
-import { equals, merge, fill, clean } from '@laufire/utils/collection';
+import { select } from '@laufire/utils/collection';
+import { patched, propResolver } from '../../core/utils';
+import { objToParamString } from '../../core/utils/request';
 
 /* Data */
-const defaultConfig = {
-	opts: {
-		method: 'GET',
-		headers: {},
+const optProps = {
+	params: {
+		default: {},
+		parse: (args) => {
+			const resolve = args.resolver(args);
+
+			return () => objToParamString(resolve());
+		},
 	},
+	method: {
+		default: 'GET',
+	},
+	body: {},
+	headers: {
+		default: {},
+	},
+};
+const configProps = {
+	url: {},
+	...optProps,
 };
 
 /* Helpers */
+const url = (config) => `${ config.url }${ config.params }`;
 const request = async (config, cb) => {
-	const response = await (await fetch(config.url, config.opts)).json();
+	const response = await (
+		await fetch(url(config), select(config, optProps))).json();
 
 	cb({ data: response });
 };
-
-const getConfig = (parserArgs) => {
-	const { parsing } = parserArgs;
-
-	return fill(clean({
-		url: parsing.url,
-		opts: parsing.opts,
-	}), defaultConfig);
-};
-
-const getState = (parserArgs) => ({
-	config: getConfig(parserArgs),
-	result: {},
-});
 
 /* Exports */
 const resource = {
 	simple: false,
 	props: {
-		url: {},
+		...configProps,
 	},
-	parse: (parserArgs) => { // eslint-disable-line max-lines-per-function
+	parse: (parserArgs) => {
 		const { context, name, props } = parserArgs;
-		const state = getState(parserArgs);
+		const config = propResolver(parserArgs.props, configProps);
+		const state = { config: {}, result: {}};
 		const cb = (result) => {
 			state.result = result;
-			context.updateState({
-				[name]: state.result,
-			});
+			context.updateState({ [name]: state.result });
 		};
-		const data = () => state.result;
 		const lazyData = () => {
-			props.data = data;
+			props.data = () => state.result;
 			request(state.config, cb);
 
-			return data();
+			return state.result;
 		};
 
 		props.data = lazyData;
 
-		props.request = (config) => {
-			if(!equals(config, state.config)) {
-				merge(state.config, config);
-
+		props.request = () => {
+			if(patched(state.config, config()))
 				request(state.config, cb);
-			}
 		};
 	},
-	setup: (props) => (config) => {
-		config !== undefined && props.request(config);
+	setup: (props) => () => {
+		props.request();
 
 		return props.data();
 	},

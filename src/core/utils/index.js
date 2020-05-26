@@ -1,4 +1,5 @@
-import { has, walk } from '@laufire/utils/collection';
+import { equals, has, map,
+	merge, select, walk } from '@laufire/utils/collection';
 import { inferType } from '@laufire/utils/reflection';
 
 /* Helpers */
@@ -77,6 +78,16 @@ const dataCall = (parserArgs) => {
 const namedWrapper = (wrapper, config) =>
 	assignName(wrapper, capitalize(config.type.type));
 
+const patched = (base, patch) => (!equals(patch, base)
+	? merge(base, patch)
+	: undefined);
+
+const propResolver = (props, selector) => {
+	const availableProps = select(props, selector);
+
+	return () => map(availableProps, (dummy, key) => props[key]());
+};
+
 /* Superseded */
 const hasActions = (config, source) =>
 	typeof source === 'string' && config.sources[source]?.actions?.length > 0;
@@ -104,6 +115,8 @@ export {
 	hasActions,
 	isSourceSimple,
 	dataCall,
+	patched,
+	propResolver,
 	isObservable,
 	namedWrapper,
 	setupHook,
