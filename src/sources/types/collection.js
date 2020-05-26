@@ -59,10 +59,6 @@ const collection = {
 		data: {
 			parse: (args) => {
 				const { context, name, prop } = args;
-
-				if(context.isObservable(prop))
-					return (data) => context.sources[prop](data);
-
 				const state = {
 					index: 0,
 				};
