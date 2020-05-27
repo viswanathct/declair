@@ -1,3 +1,5 @@
+import { targetCall } from '../../utils';
+
 const button = {
 	props: {
 		label: {
@@ -8,11 +10,10 @@ const button = {
 		const { render } = setupArgs.type;
 
 		return (props) => {
-			const { data, target } = props;
+			const target = targetCall(props);
 
 			return render({
-				...props,
-				target: () => target(data()),
+				...props, target,
 			});
 		};
 	},

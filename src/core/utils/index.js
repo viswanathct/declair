@@ -75,6 +75,10 @@ const dataCall = (parserArgs) => {
 		: () => resolve()?.data;
 };
 
+const targetCall = ({ action, data, target }) => (action
+	? () => target({ action: action(), data: data() })
+	: () => target(data()));
+
 const namedWrapper = (wrapper, config) =>
 	assignName(wrapper, capitalize(config.type.type));
 
@@ -98,6 +102,7 @@ export {
 	hasSource,
 	isSourceSimple,
 	dataCall,
+	targetCall,
 	patched,
 	propResolver,
 	namedWrapper,

@@ -1,22 +1,14 @@
 // #NOTE: Form doesn't reflect changes to its dependencies, during editing to provide a good UX.
 
-import { merge } from '@laufire/utils/collection';
+import { targetCall } from '../../utils';
 
 const actions = {
-	submit: (target, data) => target(data),
+	submit: (target) => target(),
 };
 
 /* Helpers*/
-const targetBuilder = (parserArgs) => (state, renderProps) => {
-	const { props } = parserArgs;
-	const { action } = props;
-	const { target } = { ...renderProps, ...props };
-
-	return action
-		? (value) => actions[value.action](target,
-			merge({ action: action() }, { data: state() }))
-		: (value) => actions[value.action](target, state());
-};
+const targetHook = (providedTarget) =>
+	(value) => actions[value.action](providedTarget);
 
 const getData = (state) => (value) =>
 	(value !== undefined
@@ -28,14 +20,16 @@ const form = {
 	setup: (parserArgs) => {
 		const { getState } = parserArgs.context;
 		const { render } = parserArgs.type;
-		const getTarget = targetBuilder(parserArgs);
 
 		return (props) => {
+			const { action, target } = props;
 			const state = getState(props.data);
 			const data = getData(state);
-			const target = getTarget(state, props);
+			const providedTarget = targetCall({ action, target, data });
 
-			return render({ ...props, data, target });
+			return render({ ...props,
+				data: data,
+				target: targetHook(providedTarget) });
 		};
 	},
 };

@@ -19,8 +19,8 @@ const list = {
 				values(map(data(), (itemData, key) =>
 					<Item {...{
 						key: defined(itemData.id, key),
-						data: () => data()[key],
-						target: (dataIn) => target(dataIn, itemData)[key],
+						data: () => itemData,
+						target: (dataIn) => target(dataIn, itemData),
 					}}/>))
 			}
 		</View>,
