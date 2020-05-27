@@ -92,6 +92,11 @@ const propResolver = (props, selector) => {
 	return () => map(availableProps, (dummy, key) => props[key]());
 };
 
+const whenData = (data, render) =>
+	(!data || (data && data() !== undefined)
+		? render()
+		: null);
+
 export {
 	doNothing,
 	sayNothing,
@@ -106,4 +111,5 @@ export {
 	patched,
 	propResolver,
 	namedWrapper,
+	whenData,
 };

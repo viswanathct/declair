@@ -1,5 +1,5 @@
-import { map, clean } from '@laufire/utils/collection';
-import { namedWrapper } from '../../utils';
+import { map } from '@laufire/utils/collection';
+import { namedWrapper, whenData } from '../../utils';
 
 const getTargetHooks = ({ items }) =>
 	map(items, (item) => {
@@ -30,15 +30,14 @@ const parseItems = (parserArgs) => {
 		return namedWrapper((itemRenderProps) => {
 			const { data: parentData, target: parentTarget } = itemRenderProps;
 			const parsedProps = items[key].props;
-			const data = parsedProps.data || propAccessor(parentData, key);
-			const target = parsedProps.target || (targetHooks[key]
-				? targetHooks[key](parentTarget)
-				: propAccessor(parentData, key));
 
-			return component({
+			return whenData(parentData, () => component({
 				...itemRenderProps,
-				...clean({ data, target }),
-			});
+				data: parsedProps.data || propAccessor(parentData, key),
+				target: parsedProps.target || (targetHooks[key]
+					? targetHooks[key](parentTarget)
+					: propAccessor(parentData, key)),
+			}));
 		}, item);
 	});
 };
