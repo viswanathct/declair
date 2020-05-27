@@ -6,18 +6,11 @@
 
 import { select } from '@laufire/utils/collection';
 import { patched, propResolver } from '../../core/utils';
-import { objToParamString } from '../../core/utils/request';
+import { url } from '../../core/utils/request';
 
 /* Data */
 const optProps = {
-	params: {
-		default: {},
-		parse: (args) => {
-			const resolve = args.resolver(args);
-
-			return () => objToParamString(resolve());
-		},
-	},
+	params: {},
 	method: {
 		default: 'GET',
 	},
@@ -34,7 +27,6 @@ const configProps = {
 const httpErrorStart = 400;
 
 /* Helpers */
-const url = (config) => `${ config.url }${ config.params }`;
 const request = async (config, cb) => {
 	cb({ loading: true });
 
