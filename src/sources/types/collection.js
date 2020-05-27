@@ -6,16 +6,15 @@
 import { assign, clone, pick, map, merge } from '@laufire/utils/collection';
 
 const actions = {
-	create: ({ cb, data, state }) => {
+	create: ({ data, state }) => {
 		const id = data.id === undefined
 			? state.index++
 			: data.id;
 
 		state.ids.push(id);
 		state.data.push(assign(clone(data), { id }));
-		cb();
 	},
-	delete: ({ cb, data, state }) => {
+	delete: ({ data, state }) => {
 		const found = state.ids.findIndex((id) => id === data.id);
 
 		if(found === -1)
@@ -23,7 +22,6 @@ const actions = {
 
 		state.ids.splice(found, 1);
 		state.data.splice(found, 1);
-		cb();
 	},
 	init: ({ data, state }) => {
 		map(data, (item) =>
@@ -35,7 +33,7 @@ const actions = {
 			ids: pick(data, 'id'),
 		});
 	},
-	update: ({ cb, data, state }) => {
+	update: ({ data, state }) => {
 		const found = state.ids.findIndex((id) => id === data.id);
 
 		if(found === -1)
@@ -46,7 +44,6 @@ const actions = {
 				{}, state.data[found], data
 			)
 		);
-		cb();
 	},
 };
 
@@ -58,20 +55,16 @@ const collection = {
 		},
 		data: {
 			parse: (args) => {
-				const { context, name, prop } = args;
+				const { prop } = args;
 				const state = {
 					index: 0,
 				};
-				const cb = () => context.updateState({
-					[name]: { data: state.data },
-				});
 
 				const data = (message) => (message
 					? actions[message.action]({
-						cb: cb,
 						data: message.data,
 						state: state,
-					})
+					}) || { data: state.data }
 					: { data: state.data });
 
 				data({ action: 'init', data: prop });
