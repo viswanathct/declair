@@ -43,22 +43,16 @@ const request = async (config, cb) => {
 const resource = {
 	simple: false,
 	props: configProps,
-	parse: (parserArgs) => { // eslint-disable-line max-lines-per-function
+	parse: (parserArgs) => {
 		const { context, name, props } = parserArgs;
-		const config = propResolver(parserArgs.props, configProps);
-		const state = { config: {}, result: {}};
+		const config = propResolver(props, configProps);
+		const state = { config: {}, result: { loading: true }};
 		const cb = (result) => {
 			state.result = result;
 			context.refreshState(name);
 		};
-		const lazyData = () => {
-			props.data = () => state.result;
-			request(state.config, cb);
 
-			return state.result;
-		};
-
-		props.data = lazyData;
+		props.data = () => state.result;
 
 		props.request = () => {
 			if(patched(state.config, config())) {
