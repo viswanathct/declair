@@ -43,13 +43,13 @@ const request = async (config, cb) => {
 const resource = {
 	simple: false,
 	props: configProps,
-	parse: (parserArgs) => {
+	parse: (parserArgs) => { // eslint-disable-line max-lines-per-function
 		const { context, name, props } = parserArgs;
 		const config = propResolver(parserArgs.props, configProps);
 		const state = { config: {}, result: {}};
 		const cb = (result) => {
 			state.result = result;
-			context.updateState({ [name]: state.result });
+			context.refreshState(name);
 		};
 		const lazyData = () => {
 			props.data = () => state.result;
@@ -61,14 +61,15 @@ const resource = {
 		props.data = lazyData;
 
 		props.request = () => {
-			if(patched(state.config, config()))
+			if(patched(state.config, config())) {
 				request(state.config, cb);
+				return true;
+			}
 		};
 	},
 	setup: (props) => () => {
-		props.request();
-
-		return props.data();
+		if(!props.request())
+			return props.data();
 	},
 	type: 'resource',
 };

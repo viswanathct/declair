@@ -38,11 +38,19 @@ const providerConfig = {
 const init = ({ config, context }) => {
 	const { updateState } = context;
 
+	const resetState = (source) =>
+		(context.state[source] = undefined);
+
+	context.refreshState = (source) => {
+		resetState(source);
+		context.updateState({ [source]: context.sources[source]() });
+	};
+
 	context.updateState = (updates) => {
 		const dependents = combine([],
 			...values(compose(updates, context.dependencyMap)));
 
-		map(dependents, (dependent) => (context.state[dependent] = undefined));
+		map(dependents, resetState);
 
 		updateState(updates);
 	};
