@@ -2,7 +2,7 @@ import { merge } from '@laufire/utils/collection';
 import container from './shared/container';
 
 /* Exports */
-const form = merge(
+const element = merge(
 	{}, container, {
 		props: {
 			style: {
@@ -14,4 +14,4 @@ const form = merge(
 	}
 );
 
-export default form;
+export default element;
