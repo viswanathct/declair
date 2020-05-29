@@ -1,14 +1,9 @@
 const choice = {
-	setup: (setupArgs) => {
-		const { render } = setupArgs.type;
-
-		return (props) => {
-			const item = props.items()[props.data()];
-
-			return render({
-				...props, item,
-			});
-		};
+	props: {
+		item: {
+			parse: ({ props }) =>
+				() => props.items()[props.data()],
+		},
 	},
 };
 

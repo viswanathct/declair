@@ -2,17 +2,14 @@ const choiceMap = {
 	true: 'yes',
 	false: 'no',
 };
+
+/* Exports */
 const fork = {
-	setup: (setupArgs) => {
-		const { render } = setupArgs.type;
-
-		return (props) => {
-			const item = props.items()[choiceMap[props.data() !== undefined]];
-
-			return render({
-				...props, item,
-			});
-		};
+	props: {
+		item: {
+			parse: ({ props }) =>
+				() => props.items()[choiceMap[props.data() !== undefined]],
+		},
 	},
 };
 

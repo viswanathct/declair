@@ -3,10 +3,13 @@ import { View } from 'react-native';
 
 /* Exports */
 const selector = {
-	render: ({ item: Item, style }) =>
-		<View { ...{ style: style() } }>
+	render: ({ item, style }) => {
+		const Item = item();
+
+		return <View { ...{ style: style() } }>
 			<Item/>
-		</View>,
+		</View>;
+	},
 };
 
 export default selector;
