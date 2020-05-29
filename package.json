@@ -76,11 +76,11 @@
     "test": "test"
   },
   "dependencies": {
-    "@laufire/utils": "^2.5.3",
+    "@laufire/utils": "^2.5.4",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
-    "react-router-dom": "^5.1.2",
-    "react-router-native": "^5.1.2",
+    "react-router-dom": "^5.2.0",
+    "react-router-native": "^5.2.0",
     "url-parse": "^1.4.7"
   },
   "peerDependencies": {
