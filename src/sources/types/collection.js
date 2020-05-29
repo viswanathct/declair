@@ -3,7 +3,8 @@
  *
  */
 
-import { assign, clone, pick, map, merge } from '@laufire/utils/collection';
+import { assign, clone, pick,
+	map, merge, contains } from '@laufire/utils/collection';
 
 const actions = {
 	create: ({ data, state }) => {
@@ -39,9 +40,11 @@ const actions = {
 		if(found === -1)
 			return;
 
-		state.data.splice(
+		const existing = state.data[found];
+
+		!contains(existing, data) && state.data.splice(
 			found, 1, merge(
-				{}, state.data[found], data
+				{}, existing, data
 			)
 		);
 	},
@@ -64,7 +67,7 @@ const collection = {
 					? actions[message.action]({
 						data: message.data,
 						state: state,
-					}) || { data: state.data }
+					}) || { data: [...state.data] }
 					: { data: state.data });
 
 				data({ action: 'init', data: prop });
