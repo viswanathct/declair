@@ -1,5 +1,6 @@
 import providerTypes from './types';
-import { combine, compose, map, values } from '@laufire/utils/collection';
+import { combine, compose, equals,
+	filter, map, values } from '@laufire/utils/collection';
 
 /* Helpers */
 const delegateToSource = (
@@ -47,12 +48,13 @@ const init = ({ config, context }) => {
 	};
 
 	context.updateState = (updates) => {
+		const changes = filter(updates, (value, source) =>
+			!equals(value, context.state[source]));
 		const dependents = combine([],
-			...values(compose(updates, context.dependencyMap)));
+			...values(compose(changes, context.dependencyMap)));
 
 		map(dependents, resetState);
-
-		updateState(updates);
+		updateState(changes);
 	};
 
 	context.publish = (updates) => map(updates,
