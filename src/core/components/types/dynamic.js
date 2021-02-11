@@ -1,4 +1,4 @@
-const choice = {
+const dynamic = {
 	props: {
 		item: {
 			parse: ({ props }) =>
@@ -7,4 +7,4 @@ const choice = {
 	},
 };
 
-export default choice;
+export default dynamic;

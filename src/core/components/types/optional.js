@@ -4,7 +4,7 @@ const choiceMap = {
 };
 
 /* Exports */
-const fork = {
+const optional = {
 	props: {
 		item: {
 			parse: ({ props }) =>
@@ -13,4 +13,4 @@ const fork = {
 	},
 };
 
-export default fork;
+export default optional;

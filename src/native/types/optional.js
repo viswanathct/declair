@@ -2,14 +2,16 @@ import React from 'react';
 import { View } from 'react-native';
 
 /* Exports */
-const choice = {
+const optional = {
 	render: ({ item, style }) => {
 		const Item = item();
 
-		return <View { ...{ style: style() } }>
-			<Item/>
-		</View>;
+		return Item
+			? <View { ...{ style: style() } }>
+				<Item/>
+			</View>
+			: null;
 	},
 };
 
-export default choice;
+export default optional;
