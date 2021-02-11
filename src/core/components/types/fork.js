@@ -1,6 +1,6 @@
 const choiceMap = {
-	true: 'yes',
-	false: 'no',
+	true: 'present',
+	false: 'absent',
 };
 
 /* Exports */
