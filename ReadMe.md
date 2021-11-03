@@ -32,6 +32,14 @@ sh ./setup.sh
 
 ### ToDo
 
-* Try to use classes, instead of object patching, to allow for future contributions.
-* Decide on the state providers between MobX and ReactHooks.
+* Prefer library functions.
+
 * Straighten the circumventions for importing reactive-router-native.
+
+### Later
+
+* Try to use classes, instead of object patching, to allow for future contributions.
+
+### Decisions
+
+* Decided to use reactHooks instead of MobX for state management to reduce complexity.
