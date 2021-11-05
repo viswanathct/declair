@@ -1,11 +1,11 @@
 # Ignores
 ## General
 .*
+*.tgz
 *.bak
 
 ## Stack
 node_modules
-/*.tgz
 
 # Excludes
 ## General
@@ -14,7 +14,7 @@ node_modules
 ## Dev
 !.editorconfig
 !.eslint*
-/dist
+dist
 
 ## Stack
 !.npmignore
