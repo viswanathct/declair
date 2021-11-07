@@ -3,17 +3,19 @@ import { contains } from '@laufire/utils/predicates';
 // inferred to be of type - block, due to the presence of the key, content
 const App = {
 	// global sources
+	// path defaults to a /
 	sources: {
-		// key is used as name
 		todoFilter: {
-			// seed value
+			// name defaults to key
 			// type defaults to simple
+			// seed value
 			data: {},
 		},
 		todoBackend: {
 			// marker for remote store
 			url: 'someURL',
 			// provides two channels result and errors
+			// returns result when the root is got
 		},
 		todos: {
 			// type simple is inferred
@@ -31,6 +33,7 @@ const App = {
 	// marker
 	content: {
 		todoForm: {
+			// path defaults to parentPath/name
 			// local source
 			sources: {
 				todoInputs: {
@@ -40,6 +43,7 @@ const App = {
 					},
 				},
 				allCompleted: {
+					// accessed on the fly, hence doesn't have dependencies
 					fn: ({ state: { todos }}) =>
 						Boolean(todos.find(contains({ isCompleted: true }))),
 				},
@@ -49,7 +53,7 @@ const App = {
 					data: 'allCompleted',
 					actions: {
 						toggleAll: {
-							target: 'todoBackend',
+							target: '/todoBackend',
 							action: 'update',
 							// change is the default event provided by the type, checkbox
 							// default is given explicitly for understanding
@@ -82,13 +86,14 @@ const App = {
 					action: 'create',
 					// default
 					data: 'todoInputs',
+					target: '/todoBackend',
 				},
 			},
 		},
 		todos: {
-			// inherits sources from parent
-			data: 'todos',
-			target: 'todoBackend',
+			// disregard current path and access the root sources
+			data: '/todos',
+			target: '/todoBackend',
 			// marker
 			item: {
 				// data is inferred to be /todos/{item id}
@@ -102,11 +107,12 @@ const App = {
 				},
 			},
 		},
-		buttons: {
+		toolbar: {
 			// evaluated with context
 			data: ({ state: { todos }}) => Boolean(todos.length),
 			choices: {
 				true: {
+					path: '/',
 					content: {
 						filterButtons: {
 							// propagated to all children
@@ -118,7 +124,7 @@ const App = {
 									// marker
 									// default
 									action: 'set',
-									data: { isCompleted: true },
+									data: {},
 								},
 								active: {
 									text: 'Active',
