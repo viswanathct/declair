@@ -2,48 +2,51 @@
 
 ## Ideas
 
+### General
+
+* **values**
+	* All strings on observable props are assumed to be sources (when available) unless explicitly mentioned as literals.
+	* Dicts are used to detail props. Ex: { type: 'literal', value: 'something' }
+
+
 ### Actions
 
 * **props**
 	* target
 	* source
 	* action (defaults to set)
-	* data (optional / received)
+	* data (optional / inherited)
 	* selector (defaults to data)
 
 ### Components
-
 * **key props**
-	* prop - a path that points to underlying data in the current sub-state of the state tree. Could either be absolute or relative. Acts as the default for both source and target. Assumes the component key to the prop.
-	* path - points to a key in state. Built automatically.
-	* data
-		* Used as seed data for the prop.
+	* path - a path that points to underlying data in the current sub-state of the state tree. Could either be absolute or relative. Acts as the default for both source and target. Defaults the component key. Progresses when group components (where sources could be declared) or encountered. Could be configured.
 	* actions
-		* event (component specific defaults).
-		* action - action name / inline action.
+		* Refer the actions section.
 	* text
-* values
-	* All strings are assumed to be sources unless explicitly mentioned as literals.
-	* Dicts are used to detail props. Ex: { type: 'literal', value: 'something' }
-* components
+* **components**
 	* display
 	* block
 		* content
 	* list
-		* item(s?)
+		* item
 	* input controls
+    * checkbox
+    * select / button group / radio group
+    * date
 	* button
-		* doesn't assume the component key to be the prop.
 	* timer
 		* state
 		* delay
-
 * attrs
+  * **To be thought through.**
 
 ### Sources
 
-* props
+* **props**
 	* selector
+  * data
+		* Used as seed data for the prop.
 
 * Single state tree.
 
@@ -62,7 +65,7 @@
 
 * Implicit sources. IE: The state tree and it's subs themselves are sources.
 
-* Inbuilt sources
+* built-in sources
 	* history / route
 
 * Custom sources
@@ -72,11 +75,9 @@
 		* selector
 		* count / [all/some/none]
 
-* Remote source has a target local source.
-
 * Errors are stored in a sub-object and are sources themselves.
 
-* Custom source are treated as  components themselves, to allow for better DevEx and lazy initialization (IE: Initialized only when the relevant page or subsection is rendered).
+* Custom source are treated as components themselves, to allow for better DevEx and lazy initialization (IE: Initialized only when the relevant page or subsection is rendered).
 
 * Parent sources are available to all children and imparted to descendants.
 
