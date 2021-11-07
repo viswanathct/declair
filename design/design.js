@@ -1,9 +1,9 @@
 import { contains } from '@laufire/utils/predicates';
 
-// inferred to be of type - block, due to the presence of the key, content
 const App = {
-	// global sources
+	// inferred to be of type - block, due to the presence of the key, content
 	// path defaults to a /
+	// global sources
 	sources: {
 		todoFilter: {
 			// name defaults to key
@@ -47,6 +47,10 @@ const App = {
 					fn: ({ state: { todos }}) =>
 						Boolean(todos.find(contains({ isCompleted: true }))),
 				},
+				buttonAction: {
+					fn: ({ data: { todoInputs: { id }}}) =>
+						(id ? 'update' : 'create'),
+				},
 			},
 			content: {
 				toggleAll: {
@@ -75,18 +79,21 @@ const App = {
 						},
 					},
 				},
-				addTodo: {
+				submit: {
 					// TODO: Reset todoInputs.
 					// TODO: Reset todoInputs only on success. Nested conditional  actions.
 					// marker
-					text: 'Add',
-					// inferred action
-					event: 'click',
-					// marker
-					action: 'create',
-					// default
-					data: 'todoInputs',
-					target: '/todoBackend',
+					text: ({ data: { buttonAction }}) =>
+						(buttonAction === 'create' ? 'Add' : 'Edit'),
+					events: {
+						click: {
+							createTodo: {
+								action: 'buttonAction',
+								data: 'todoInputs',
+								target: '/todoBackend',
+							},
+						},
+					},
 				},
 			},
 		},
@@ -103,6 +110,13 @@ const App = {
 					remove: {
 						// target is inherited
 						action: 'delete',
+					},
+				},
+				events: {
+					click: {
+						setTodo: {
+							target: 'todoInputs',
+						},
 					},
 				},
 			},
