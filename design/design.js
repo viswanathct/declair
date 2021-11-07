@@ -10,26 +10,21 @@ const App = {
 			// type defaults to simple
 			data: {},
 		},
-		todos: {
-			// type is inferred based on seed data type, as collection.
-			data: [],
-			// could be overridden through source.get
-			selector: 'todoFilter',
-		},
 		todoBackend: {
 			// marker for remote store
 			url: 'someURL',
-			// TODO: Start with plural form dictionaries. Later allow for named arrays as an alternative. Further allow for spaced strings.
-			targets: {
-				// normalized before  building
-				// action defaults to set
-				result: 'todos',
-				// action defaults to add
-				errors: {
-					// auto-created in-line source
-					name: 'errors',
-					data: [],
-				},
+			// provides two channels result and errors
+		},
+		todos: {
+			// type simple is inferred
+			// simple can also act as proxies
+			data: 'todoBackend/result',
+			// could be overridden through source.get
+			selector: 'todoFilter',
+		},
+		errors: {
+			data: {
+				remoteErrors: 'todoBackend/errors',
 			},
 		},
 	},
