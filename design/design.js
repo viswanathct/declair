@@ -1,16 +1,19 @@
 import { contains } from '@laufire/utils/predicates';
 
+// inferred to be of type - block, due to the presence of the key, content
 const App = {
 	// global sources
 	sources: {
 		// key is used as name
-		// defaults to simple
 		todoFilter: {
 			// seed value
+			// type defaults to simple
 			data: {},
 		},
 		todos: {
+			// type is inferred based on seed data type, as collection.
 			data: [],
+			// could be overridden through source.get
 			selector: 'todoFilter',
 		},
 		todoBackend: {
@@ -48,21 +51,23 @@ const App = {
 			},
 			content: {
 				toggleAll: {
-					source: 'allCompleted',
-					// asymmetric source and target
+					data: 'allCompleted',
 					actions: {
-						target: 'todoBackend',
-						action: 'update',
-						// default is given explicitly for understanding
-						selector: {},
-						// data overrides source
-						data: {
-							isCompleted: true,
+						toggleAll: {
+							target: 'todoBackend',
+							action: 'update',
+							// change is the default event provided by the type, checkbox
+							// default is given explicitly for understanding
+							selector: {},
+							// data overrides source
+							data: {
+								isCompleted: true,
+							},
 						},
 					},
 				},
 				todoInputs: {
-					source: 'todoInputs',
+					data: 'todoInputs',
 					content: {
 						text: {
 							type: 'text',
@@ -76,25 +81,27 @@ const App = {
 					// TODO: Reset todoInputs only on success. Nested conditional  actions.
 					// marker
 					text: 'Add',
+					// inferred action
+					event: 'click',
 					// marker
 					action: 'create',
 					// default
-					event: 'click',
-					source: 'todoInputs',
+					data: 'todoInputs',
 				},
 			},
 		},
 		todos: {
-			source: 'todos',
-			target: 'todoBackend',
 			// inherits sources from parent
+			data: 'todos',
+			target: 'todoBackend',
 			// marker
 			item: {
-				// source is inferred to be /todos/{item id}
+				// data is inferred to be /todos/{item id}
 				content: {
 					text: {},
 					isCompleted: {},
 					remove: {
+						// target is inherited
 						action: 'delete',
 					},
 				},
