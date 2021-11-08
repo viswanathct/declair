@@ -30,7 +30,7 @@ const App = {
 			},
 		},
 	},
-	// marker
+	// marker for block
 	content: {
 		todoForm: {
 			// path defaults to parentPath/name
@@ -48,8 +48,12 @@ const App = {
 						Boolean(todos.find(contains({ isCompleted: true }))),
 				},
 				buttonAction: {
-					fn: ({ data: { todoInputs: { id }}}) =>
-						(id ? 'update' : 'create'),
+					// dependencies for the fn
+					data: {
+						currentTodoID: '/todoInputs/id',
+					},
+					fn: ({ data: { currentTodoID }}) =>
+						(currentTodoID ? 'update' : 'create'),
 				},
 			},
 			content: {
@@ -82,7 +86,7 @@ const App = {
 				submit: {
 					// TODO: Reset todoInputs.
 					// TODO: Reset todoInputs only on success. Nested conditional  actions.
-					// marker
+					// marker for button
 					text: ({ data: { buttonAction }}) =>
 						(buttonAction === 'create' ? 'Add' : 'Edit'),
 					events: {
@@ -101,7 +105,7 @@ const App = {
 			// disregard current path and access the root sources
 			data: '/todos',
 			target: '/todoBackend',
-			// marker
+			// marker for list
 			item: {
 				// data is inferred to be /todos/{item id}
 				content: {
@@ -109,6 +113,8 @@ const App = {
 					isCompleted: {},
 					remove: {
 						// target is inherited
+						// event defaults to click
+						// marker for button
 						action: 'delete',
 					},
 				},
@@ -122,7 +128,7 @@ const App = {
 			},
 		},
 		toolbar: {
-			// evaluated with context
+			// evaluated with context, on every render cycle
 			data: ({ state: { todos }}) => Boolean(todos.length),
 			choices: {
 				true: {
@@ -133,11 +139,8 @@ const App = {
 							target: 'todoFilter',
 							content: {
 								all: {
-									// marker
 									text: 'All',
-									// marker
-									// default
-									action: 'set',
+									// action defaults to set
 									data: {},
 								},
 								active: {
